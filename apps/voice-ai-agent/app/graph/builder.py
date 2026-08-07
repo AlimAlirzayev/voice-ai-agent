@@ -36,10 +36,10 @@ class ChatState(TypedDict):
 
 def build_graph(checkpointer, llm: BaseChatModel | None = None):
     """Compile the agent. `llm` is injectable so tests can pass a fake model."""
-    model = llm if llm is not None else build_llm()
     keep = settings.MAX_HISTORY_MESSAGES
 
     async def agent(state: ChatState) -> dict:
+        model = llm if llm is not None else build_llm()
         reply = await model.ainvoke(
             [SystemMessage(content=SYSTEM_PROMPT), *state["messages"]]
         )

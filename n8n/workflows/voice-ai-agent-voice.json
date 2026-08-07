@@ -1,0 +1,72 @@
+{
+  "name": "Voice AI Agent Voice Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voice-ai-agent-voice",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f3c78d26-7c1b-48ed-8b72-d8b34c6dcf38",
+      "name": "Voice Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [320, 300],
+      "webhookId": "voice-ai-agent-voice"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/voice' }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "thread_id",
+              "value": "={{ $json.body?.thread_id || $json.thread_id || 'n8n-voice' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f1f5b6bf-c83d-47bd-8ec8-0e9d43a52d70",
+      "name": "Call Voice AI Agent API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "c9f2223a-9e8c-437a-bd2d-20c6bb3bfa62",
+      "name": "Respond With Voice Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [800, 300]
+    }
+  ],
+  "connections": {
+    "Voice Webhook": {
+      "main": [[{"node": "Call Voice AI Agent API", "type": "main", "index": 0}]]
+    },
+    "Call Voice AI Agent API": {
+      "main": [[{"node": "Respond With Voice Result", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "active": true,
+  "pinData": {},
+  "versionId": "5f3a1fa8-c818-4a07-89f0-5df8ab1ec0a8",
+  "triggerCount": 0,
+  "tags": []
+}

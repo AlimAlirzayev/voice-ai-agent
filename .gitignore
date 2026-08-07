@@ -1,7 +1,19 @@
 __pycache__/
-*.pyc
-.env
-.venv/
+*.py[cod]
+*.pyo
 
+.env
+.env.*
+!.env.example
+
+.venv/
+.pytest_cache/
+.coverage
+.DS_Store
+*.egg-info/
+.n8n-local/
 
 .idea/
+
+apps/voice-ai-agent/database/*.sqlite*
+!apps/voice-ai-agent/database/.gitkeep

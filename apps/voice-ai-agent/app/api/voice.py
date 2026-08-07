@@ -6,6 +6,7 @@ from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
 from app.graph import run_turn
 from app.models.schemas import VoiceResponse
+from app.services.llm import LLMError
 from app.services.voice import VoiceError, synthesize, transcribe
 
 router = APIRouter(tags=["voice"])
@@ -32,7 +33,10 @@ async def voice(
     if not transcript:
         raise HTTPException(status_code=422, detail="No speech detected in the audio")
 
-    reply, history_length = await run_turn(request.app.state.graph, transcript, thread_id)
+    try:
+        reply, history_length = await run_turn(request.app.state.graph, transcript, thread_id)
+    except LLMError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     try:
         spoken, mime, provider = await synthesize(reply)

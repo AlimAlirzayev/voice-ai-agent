@@ -1,0 +1,98 @@
+{
+  "name": "Voice AI Agent Chat Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voice-ai-agent-chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "3d53f1a2-d40d-4857-9b46-22291a78a57b",
+      "name": "Chat Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        320,
+        300
+      ],
+      "webhookId": "voice-ai-agent-chat"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/chat' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{ $json.body?.message || $json.message || 'Salam' }}"
+            },
+            {
+              "name": "thread_id",
+              "value": "={{ $json.body?.thread_id || $json.thread_id || 'n8n-demo' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6be4be33-cd8c-48d6-9d1c-5a74d5fc6b77",
+      "name": "Call Voice AI Agent API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "48b6c41b-fbe7-48e2-99fb-68a9ccf0a9f1",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Webhook": {
+      "main": [
+        [
+          {
+            "node": "Call Voice AI Agent API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Voice AI Agent API": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": true,
+  "pinData": {},
+  "versionId": "b26b33cf-f7ff-4937-86c2-6f297a5bce67",
+  "triggerCount": 0,
+  "tags": []
+}

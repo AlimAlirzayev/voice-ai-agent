@@ -17,8 +17,12 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 class Settings(BaseSettings):
     # --- LLM (Lesson 31) ---
+    # "auto" uses Groq when GROQ_API_KEY is present, otherwise OpenAI.
+    LLM_PROVIDER: str = "auto"
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4.1-mini"
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
 
     # --- Speech to text: Whisper (Lesson 26) ---
     # Hosted Whisper, so the demo needs no torch/ffmpeg install on macOS.
@@ -62,6 +66,25 @@ class Settings(BaseSettings):
     @property
     def tts_provider(self) -> str:
         return "elevenlabs" if self.ELEVENLABS_API_KEY else "openai"
+
+    @property
+    def chat_provider(self) -> str:
+        provider = self.LLM_PROVIDER.lower().strip()
+        if provider == "auto":
+            return "groq" if self.GROQ_API_KEY else "openai"
+        if provider not in {"openai", "groq"}:
+            return "openai"
+        return provider
+
+    @property
+    def chat_model(self) -> str:
+        return self.GROQ_MODEL if self.chat_provider == "groq" else self.OPENAI_MODEL
+
+    @property
+    def llm_ready(self) -> bool:
+        if self.chat_provider == "groq":
+            return bool(self.GROQ_API_KEY)
+        return bool(self.OPENAI_API_KEY)
 
 
 settings = Settings()

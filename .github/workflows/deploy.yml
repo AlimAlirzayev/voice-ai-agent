@@ -1,8 +1,13 @@
-﻿name: Deploy to Hetzner
+name: Deploy to Hetzner
 
 on:
   push:
     branches: [main]
+    paths:
+      - "apps/voice-ai-agent/**"
+      - "docker-compose.yml"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -16,21 +21,21 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
-            APP_DIR="/opt/ai-saas-skeleton"
-            REPO_URL="https://github.com/AlimAlirzayev/ai-saas-skeleton.git"
-            
+            APP_DIR="/opt/voice-ai-agent"
+            REPO_URL="https://github.com/AlimAlirzayev/voice-ai-agent.git"
+
             if [ ! -d "$APP_DIR/.git" ]; then
               git clone "$REPO_URL" "$APP_DIR"
             fi
-            
+
             cd "$APP_DIR"
             git fetch origin main
             git reset --hard origin/main
-            
+
             if [ ! -f .env ]; then
-              echo "ERROR: .env tapilmadi!" >&2
+              echo "ERROR: $APP_DIR/.env tapılmadı. .env.example faylından yaradıb secret-ləri doldur." >&2
               exit 1
             fi
-            
+
             docker compose up -d --build --remove-orphans
             docker image prune -f

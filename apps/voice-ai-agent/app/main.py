@@ -40,7 +40,8 @@ async def root() -> dict:
     """Health check that also reports what is actually wired up."""
     return {
         "status": "ok",
-        "llm": settings.OPENAI_MODEL if settings.OPENAI_API_KEY else "MISSING OPENAI_API_KEY",
+        "llm": settings.chat_model if settings.llm_ready else "MISSING LLM API KEY",
+        "llm_provider": settings.chat_provider,
         "stt": settings.OPENAI_STT_MODEL,
         "tts": settings.tts_provider,
         "langsmith_tracing": settings.tracing_enabled,
