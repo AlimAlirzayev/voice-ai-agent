@@ -1,9 +1,13 @@
+"""The single place where the chat model is constructed."""
+
 from langchain_openai import ChatOpenAI
 
 from app.core.config import settings
 
-llm = ChatOpenAI(
-    model="gpt-4.1-mini",
-    api_key=settings.OPENAI_API_KEY,
-    temperature=0.7,
-)
+
+def build_llm() -> ChatOpenAI:
+    return ChatOpenAI(
+        model=settings.OPENAI_MODEL,
+        api_key=settings.OPENAI_API_KEY,
+        temperature=0.7,
+    )
