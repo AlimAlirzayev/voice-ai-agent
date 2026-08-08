@@ -1,0 +1,184 @@
+{
+  "name": "Voice AI Agent Telegram Voice",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "7c9a3c5e-c7a0-4c66-9a49-9f39d0a2f2a1",
+      "name": "Telegram Voice Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "voice-ai-agent-telegram",
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Voice AI Agent Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "voice-message-condition",
+              "leftValue": "={{ $json.message?.voice?.file_id || $json.message?.audio?.file_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3de7f5f7-0fd1-4c4c-b9e7-f2d85ef4b0df",
+      "name": "Is Voice Message",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/voice' }}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "thread_id",
+              "value": "={{ 'tg-' + $json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2d4bf3d4-82a0-4dbe-8a91-474927e7cf3d",
+      "name": "Call Voice AI Agent API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const audio = Buffer.from($json.audio_base64, 'base64');\n\nreturn {\n  json: {\n    ...$json,\n    chat_id: $('Telegram Voice Trigger').item.json.message.chat.id,\n  },\n  binary: {\n    data: await this.helpers.prepareBinaryData(\n      audio,\n      'voice-ai-reply.ogg',\n      $json.audio_mime || 'audio/ogg',\n    ),\n  },\n};"
+      },
+      "id": "d1e1b6e1-2b3a-4825-b117-f33781e41f7d",
+      "name": "Decode Voice Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendVoice",
+        "chatId": "={{ $json.chat_id }}",
+        "binaryData": true,
+        "inputDataFieldName": "data",
+        "additionalFields": {
+          "caption": "={{ '🎙 ' + $json.transcript + '\\n\\n💬 ' + $json.reply }}"
+        }
+      },
+      "id": "a8c16e0f-02c9-474d-8127-7eb3e8794789",
+      "name": "Send Voice Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1180,
+        220
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Voice AI Agent Telegram"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Voice Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Voice Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Voice Message": {
+      "main": [
+        [
+          {
+            "node": "Call Voice AI Agent API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Call Voice AI Agent API": {
+      "main": [
+        [
+          {
+            "node": "Decode Voice Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decode Voice Reply": {
+      "main": [
+        [
+          {
+            "node": "Send Voice Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "tags": []
+}
