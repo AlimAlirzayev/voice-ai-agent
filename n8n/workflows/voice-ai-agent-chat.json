@@ -22,6 +22,15 @@
       "parameters": {
         "method": "POST",
         "url": "={{ $env.BACKEND_URL + '/chat' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Agent-Channel",
+              "value": "n8n"
+            }
+          ]
+        },
         "sendBody": true,
         "contentType": "json",
         "bodyParameters": {

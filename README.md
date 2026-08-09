@@ -161,6 +161,25 @@ Lokal API tracing-i üçün isə bu layihənin `.env` faylı kifayətdir.
 
 Konfiqurasiya: [`config.py`](apps/voice-ai-agent/app/core/config.py)
 
+### Trace-lərdə hansı məlumatlar görünməlidir?
+
+Hər LangGraph turn-ı təhlükəsiz metadata ilə işarələnir. Telegram botu və n8n
+backend-ə kanal header-i göndərir:
+
+```text
+channel: api / telegram / n8n
+modality: text / voice
+llm_provider: openai / groq
+llm_model: gpt-4.1-mini / ...
+environment: local / staging / production
+app_version: git commit və ya deployment versiyası
+thread_id_hash: anonimləşdirilmiş söhbət identifikatoru
+```
+
+Bu metadata qırmızı trace-in səbəbini ayırmağa kömək edir: problem text və ya
+voice axınındadır, hansı provider/model istifadə olunub və hansı versiyada baş
+verib. Raw `thread_id` və API key-lər trace metadata-sına yazılmır.
+
 ## 7. Lokal layihəni işə salmaq
 
 ### Hazırkı lokal portlar
@@ -273,6 +292,21 @@ cd apps/voice-ai-agent
 
 Graph testi eyni `thread_id` ilə iki turn arasında yaddaşın qorunduğunu
 göstərir: [`test_graph.py`](apps/voice-ai-agent/tests/test_graph.py).
+
+Offline golden evaluation-ı provider çağırmadan işlətmək üçün:
+
+```bash
+cd apps/voice-ai-agent
+.venv/bin/python -m app.evals.run
+```
+
+Dataset: [`golden.json`](apps/voice-ai-agent/app/evals/golden.json). Bu suite cavab
+formatı, qısa və Azərbaycan dilində cavab, memory tarixçəsi və voice audio
+payload contract-ını yoxlayır. Canlı LLM keyfiyyəti isə eyni case ID-lər ilə
+LangSmith evaluator mərhələsində ölçülməlidir.
+
+CI-də həm pytest, həm də bu offline golden suite işləyir. Beləliklə response
+contract və əvvəl düzəldilmiş məlum regressiyalar hər push-da yoxlanılır.
 
 Layihənin əsas axını:
 

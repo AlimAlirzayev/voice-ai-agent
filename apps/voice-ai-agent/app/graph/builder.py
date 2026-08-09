@@ -11,6 +11,8 @@
                 its own memory that survives a restart.
 """
 
+import hashlib
+import os
 from typing import Annotated, TypedDict
 
 from langchain_core.language_models import BaseChatModel
@@ -63,11 +65,39 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
     return builder.compile(checkpointer=checkpointer)
 
 
-async def run_turn(graph, message: str, thread_id: str) -> tuple[str, int]:
+def _trace_config(thread_id: str, *, channel: str, modality: str) -> dict:
+    """Build safe LangSmith metadata without exposing raw conversation ids."""
+    provider = settings.chat_provider
+    model = settings.chat_model
+    thread_hash = hashlib.sha256(thread_id.encode()).hexdigest()[:12]
+    return {
+        "configurable": {"thread_id": thread_id},
+        "run_name": "voice-ai-agent-turn",
+        "tags": ["voice-ai-agent", channel, modality, provider],
+        "metadata": {
+            "channel": channel,
+            "modality": modality,
+            "llm_provider": provider,
+            "llm_model": model,
+            "environment": os.getenv("APP_ENV", "local"),
+            "app_version": os.getenv("APP_VERSION", "unversioned"),
+            "thread_id_hash": thread_hash,
+        },
+    }
+
+
+async def run_turn(
+    graph,
+    message: str,
+    thread_id: str,
+    *,
+    channel: str = "api",
+    modality: str = "text",
+) -> tuple[str, int]:
     """Run one conversation turn and return (reply text, history length)."""
     result = await graph.ainvoke(
         {"messages": [HumanMessage(content=message)]},
-        config={"configurable": {"thread_id": thread_id}},
+        config=_trace_config(thread_id, channel=channel, modality=modality),
     )
     messages = result["messages"]
     reply = messages[-1].content if messages else ""

@@ -12,6 +12,11 @@ from app.services.voice import VoiceError, synthesize, transcribe
 router = APIRouter(tags=["voice"])
 
 
+def _channel(request: Request) -> str:
+    value = request.headers.get("x-agent-channel", "api").lower()
+    return value if value in {"api", "telegram", "n8n"} else "api"
+
+
 @router.post("/voice", response_model=VoiceResponse)
 async def voice(
     request: Request,
@@ -34,7 +39,13 @@ async def voice(
         raise HTTPException(status_code=422, detail="No speech detected in the audio")
 
     try:
-        reply, history_length = await run_turn(request.app.state.graph, transcript, thread_id)
+        reply, history_length = await run_turn(
+            request.app.state.graph,
+            transcript,
+            thread_id,
+            channel=_channel(request),
+            modality="voice",
+        )
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 

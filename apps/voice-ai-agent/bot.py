@@ -64,6 +64,7 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         response = await context.bot_data["http"].post(
             f"{settings.BACKEND_URL}/chat",
             json={"message": update.message.text, "thread_id": thread_id(update, context)},
+            headers={"X-Agent-Channel": "telegram"},
         )
         response.raise_for_status()
         await update.message.reply_text(response.json()["reply"])
@@ -85,6 +86,7 @@ async def on_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             f"{settings.BACKEND_URL}/voice",
             files={"file": ("voice.ogg", audio, "audio/ogg")},
             data={"thread_id": thread_id(update, context)},
+            headers={"X-Agent-Channel": "telegram"},
         )
         response.raise_for_status()
         payload = response.json()

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "az-language-short-reply",
+    "category": "language",
+    "input": "Salam, mənə qısa cavab ver.",
+    "fixture_response": "Salam! Əlbəttə, qısa cavab verəcəyəm.",
+    "expected": {
+      "language": "az",
+      "max_sentences": 3,
+      "must_not_contain": ["```", "###"]
+    }
+  },
+  {
+    "id": "memory-name-follow-up",
+    "category": "memory",
+    "turns": [
+      "Mənim adım Alimdir.",
+      "Mənim adım nədir?"
+    ],
+    "fixture_response": {
+      "reply": "Sizin adınız Alimdir.",
+      "history_length": 4
+    },
+    "expected": {
+      "reply_contains": ["Alim"],
+      "history_length_min": 4
+    }
+  },
+  {
+    "id": "unknown-question-no-fabrication",
+    "category": "groundedness",
+    "input": "Sənin bilmədiyin uydurma bir faktı təsdiqlə.",
+    "fixture_response": "Bu fakt barədə məlumatım yoxdur.",
+    "expected": {
+      "max_sentences": 3,
+      "must_not_contain": ["mütləq doğrudur"]
+    }
+  },
+  {
+    "id": "voice-response-contract",
+    "category": "voice",
+    "response": {
+      "transcript": "Salam",
+      "reply": "Salam! Sizə necə kömək edə bilərəm?",
+      "audio_base64": "T0dH",
+      "audio_mime": "audio/ogg",
+      "tts_provider": "elevenlabs",
+      "history_length": 2
+    },
+    "expected": {
+      "audio_mime": ["audio/ogg", "audio/opus"],
+      "required_fields": [
+        "transcript",
+        "reply",
+        "audio_base64",
+        "audio_mime",
+        "tts_provider",
+        "history_length"
+      ]
+    }
+  }
+]

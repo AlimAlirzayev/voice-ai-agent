@@ -19,6 +19,15 @@
       "parameters": {
         "method": "POST",
         "url": "={{ $env.BACKEND_URL + '/voice' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Agent-Channel",
+              "value": "n8n"
+            }
+          ]
+        },
         "sendBody": true,
         "contentType": "multipart-form-data",
         "bodyParameters": {

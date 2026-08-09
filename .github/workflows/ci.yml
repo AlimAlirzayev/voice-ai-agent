@@ -24,3 +24,5 @@ jobs:
           python -m pip install -e ".[dev]"
       - name: Test
         run: pytest
+      - name: Offline golden evaluation
+        run: python -m app.evals.run

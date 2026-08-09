@@ -10,6 +10,11 @@ from app.services.llm import LLMError
 router = APIRouter(tags=["chat"])
 
 
+def _channel(request: Request) -> str:
+    value = request.headers.get("x-agent-channel", "api").lower()
+    return value if value in {"api", "telegram", "n8n"} else "api"
+
+
 @router.post("/chat", response_model=ChatResponse)
 async def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     """One conversation turn.
@@ -22,6 +27,7 @@ async def chat(payload: ChatRequest, request: Request) -> ChatResponse:
             request.app.state.graph,
             payload.message,
             payload.thread_id,
+            channel=_channel(request),
         )
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
