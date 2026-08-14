@@ -125,6 +125,17 @@ const api = {
     if (!res.ok) throw new Error(await safeErrText(res));
     return res.json();
   },
+  async voicelabNext(skip) {
+    const url = skip == null ? "/voicelab/next" : "/voicelab/next?skip=" + skip;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(await safeErrText(res));
+    return res.json();
+  },
+  async voicelabSample(formData) {
+    const res = await fetch("/voicelab/sample", { method: "POST", body: formData });
+    if (!res.ok) throw new Error(await safeErrText(res));
+    return res.json();
+  },
 };
 
 /* ---------------------------------------------------------------------- *
@@ -784,8 +795,164 @@ async function refreshStats() {
 }
 
 /* ---------------------------------------------------------------------- *
+ * Voice Lab (Səs Məktəbi) — teach the narrator clone, sentence by sentence.
+ * Mirrors the Telegram /ses flow: read the target sentence aloud, get a
+ * word-level trainer-vs-clone comparison back, recording becomes cloning
+ * material. File upload is the fallback for insecure origins (plain HTTP),
+ * where the browser refuses getUserMedia.
+ * ---------------------------------------------------------------------- */
+
+const $labSentence = document.getElementById("lab-sentence");
+const $labFocus = document.getElementById("lab-focus");
+const $labRemaining = document.getElementById("lab-remaining");
+const $labMic = document.getElementById("lab-mic");
+const $labMicLabel = document.getElementById("lab-mic-label");
+const $labTimer = document.getElementById("lab-timer");
+const $labFile = document.getElementById("lab-file");
+const $labSkip = document.getElementById("lab-skip");
+const $labError = document.getElementById("lab-error");
+const $labResults = document.getElementById("lab-results");
+
+let lab = null;
+let labRecorder = null;
+let labStream = null;
+let labChunks = [];
+let labTimerHandle = null;
+let labSeconds = 0;
+
+async function labLoad(skip) {
+  try {
+    lab = await api.voicelabNext(skip);
+    $labSentence.textContent = "«" + lab.text + "»";
+    $labFocus.textContent = "🎯 " + lab.focus;
+    $labRemaining.textContent = lab.remaining + " cümlə qalıb";
+  } catch (err) {
+    $labSentence.textContent = "Cümləni yükləyə bilmədim.";
+    $labError.textContent = err.message;
+  }
+}
+
+async function labStartRecording() {
+  $labError.textContent = "";
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    $labError.textContent =
+      "Bu ünvanda brauzer mikrofonu açmır (HTTPS tələb edir) — sağdakı «Fayl yüklə» ilə hazır yazını göndər.";
+    return;
+  }
+  try {
+    labStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    $labError.textContent = "Mikrofona icazə verilmədi (" + err.message + ").";
+    return;
+  }
+  const mime = pickMimeType();
+  try {
+    labRecorder = mime ? new MediaRecorder(labStream, { mimeType: mime }) : new MediaRecorder(labStream);
+  } catch {
+    labRecorder = new MediaRecorder(labStream);
+  }
+  labChunks = [];
+  labRecorder.ondataavailable = (e) => {
+    if (e.data && e.data.size > 0) labChunks.push(e.data);
+  };
+  labRecorder.onstop = () => {
+    const mimeType = (labRecorder && labRecorder.mimeType) || "audio/webm";
+    const blob = new Blob(labChunks, { type: mimeType });
+    if (blob.size < 400) {
+      $labError.textContent = "Yazı çox qısa oldu — cümləni tam oxu.";
+      return;
+    }
+    labSubmit(blob, "reading." + extFor(mimeType));
+  };
+  labRecorder.start();
+
+  labSeconds = 0;
+  $labTimer.textContent = fmtTimer(0);
+  labTimerHandle = setInterval(() => {
+    labSeconds++;
+    $labTimer.textContent = fmtTimer(labSeconds);
+  }, 1000);
+
+  $labMic.classList.add("recording");
+  $labMicLabel.textContent = "Dayandır";
+}
+
+function labStopRecording() {
+  if (labRecorder && labRecorder.state !== "inactive") labRecorder.stop();
+  if (labStream) labStream.getTracks().forEach((t) => t.stop());
+  clearInterval(labTimerHandle);
+  $labMic.classList.remove("recording");
+  $labMicLabel.textContent = "Oxu";
+}
+
+function labDiffLine(label, transcript, diffs) {
+  const wrap = document.createElement("div");
+  wrap.className = "lab-cmp";
+  const head = document.createElement("b");
+  head.textContent = label;
+  const said = document.createElement("div");
+  said.className = "lab-said";
+  said.textContent = transcript || "(boş)";
+  const diff = document.createElement("div");
+  diff.className = "lab-diffs" + (diffs.length ? " bad" : " good");
+  diff.textContent = diffs.length
+    ? diffs.map((d) => "«" + d.expected + "» → «" + (d.heard || "(düşüb)") + "»").join(";  ")
+    : "fərq yoxdur ✅";
+  wrap.append(head, said, diff);
+  return wrap;
+}
+
+async function labSubmit(blob, filename) {
+  if (!lab) return;
+  $labError.textContent = "";
+  const box = document.createElement("div");
+  box.className = "lab-result";
+  box.textContent = "⏳ Təhlil olunur — Whisper hər iki oxunuşu dinləyir…";
+  $labResults.prepend(box);
+  try {
+    const fd = new FormData();
+    fd.append("file", blob, filename);
+    fd.append("expected_text", lab.text);
+    fd.append("index", String(lab.index));
+    const data = await api.voicelabSample(fd);
+
+    box.textContent = "";
+    const title = document.createElement("div");
+    title.className = "lab-result-title";
+    title.textContent = "«" + lab.text + "»";
+    box.appendChild(title);
+    box.appendChild(labDiffLine("👤 Səndən eşidilən", data.trainer_transcript, data.trainer_diffs));
+    box.appendChild(labDiffLine("🤖 Klondan eşidilən", data.clone_transcript, data.clone_diffs));
+    const audio = document.createElement("audio");
+    audio.controls = true;
+    audio.src = b64ToBlobUrl(data.clone_audio_base64, data.clone_audio_mime || "audio/ogg");
+    box.appendChild(audio);
+
+    toast("Yazı qəbul olundu — klon materialına əlavə edildi.");
+    labLoad();
+  } catch (err) {
+    box.remove();
+    $labError.textContent = "Göndərmə alınmadı: " + err.message;
+  }
+}
+
+$labMic.addEventListener("click", () => {
+  if (labRecorder && labRecorder.state === "recording") labStopRecording();
+  else labStartRecording();
+});
+
+$labFile.addEventListener("change", () => {
+  const file = $labFile.files && $labFile.files[0];
+  if (file) labSubmit(file, file.name);
+  $labFile.value = "";
+});
+
+$labSkip.addEventListener("click", () => labLoad(lab ? lab.index : undefined));
+
+/* ---------------------------------------------------------------------- *
  * Init
  * ---------------------------------------------------------------------- */
 
 refreshStats();
 setInterval(refreshStats, 30000);
+labLoad();

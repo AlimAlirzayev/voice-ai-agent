@@ -685,3 +685,45 @@ footer.credit {
   .brand .seal-mark { font-size: 21px; }
   .fbstats { flex-wrap: wrap; }
 }
+
+/* =========================================================================
+   Voice Lab (Səs Məktəbi) — practice sentence, trainer-vs-clone comparison
+   ========================================================================= */
+
+.lab-panel { display: flex; flex-direction: column; gap: 14px; }
+
+.lab-task {
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+.lab-sentence { font-size: 1.15rem; line-height: 1.5; }
+.lab-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: var(--ink3);
+}
+
+.lab-upload, .lab-skip { cursor: pointer; }
+
+.lab-result {
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.92rem;
+}
+.lab-result-title { color: var(--ink2); font-size: 0.85rem; }
+.lab-cmp { display: flex; flex-direction: column; gap: 3px; }
+.lab-said { color: var(--ink1); }
+.lab-diffs { font-size: 0.85rem; }
+.lab-diffs.good { color: var(--good); }
+.lab-diffs.bad { color: var(--warn); }
+.lab-result audio { width: 100%; margin-top: 4px; }

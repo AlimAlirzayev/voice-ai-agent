@@ -174,6 +174,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             Səs
           </button>
+          <button type="button" data-mode="lab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12.5v4.5c3 2.6 9 2.6 12 0v-4.5"/></svg>
+            Səs Məktəbi
+          </button>
         </div>
 
         <div class="mode-panel on" data-mode="text">
@@ -194,6 +198,29 @@
               <span class="rec-hint">Mikrofona sual söyləyin, sonra "Dayandır" düyməsinə basın — Whisper mətnə çevirəcək.</span>
             </div>
             <div class="voice-error" id="voice-error"></div>
+          </div>
+        </div>
+
+        <div class="mode-panel" data-mode="lab">
+          <div class="lab-panel">
+            <div class="lab-task">
+              <div class="lab-sentence" id="lab-sentence">Cümlə yüklənir…</div>
+              <div class="lab-meta"><span id="lab-focus"></span><span id="lab-remaining"></span></div>
+            </div>
+            <div class="rec-row">
+              <button type="button" id="lab-mic" class="mic-btn" aria-label="Cümləni oxu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                <span id="lab-mic-label">Oxu</span>
+              </button>
+              <span class="rec-timer" id="lab-timer">00:00</span>
+              <label class="btn lab-upload" for="lab-file">Fayl yüklə</label>
+              <input type="file" id="lab-file" accept="audio/*" hidden />
+              <button type="button" id="lab-skip" class="btn lab-skip">Növbəti →</button>
+            </div>
+            <div class="voice-error" id="lab-error"></div>
+            <p class="rec-hint">Cümləni oxu (mikrofonla və ya hazır yazını yüklə) — sistem sənin oxunuşunla
+            klonun oxunuşunu söz-söz müqayisə edir, yazın isə klonun təkmilləşdirmə materialına əlavə olunur.</p>
+            <div id="lab-results"></div>
           </div>
         </div>
 

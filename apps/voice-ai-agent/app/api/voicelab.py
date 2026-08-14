@@ -32,7 +32,10 @@ class PronounceEntry(BaseModel):
 
 
 @router.get("/voicelab/next")
-async def next_sentence() -> dict:
+async def next_sentence(skip: int | None = None) -> dict:
+    """Next practice sentence; pass `skip=<index>` to mark one done and move on."""
+    if skip is not None:
+        voicelab.mark_done(skip)
     return voicelab.next_sentence()
 
 
