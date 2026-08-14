@@ -14,7 +14,7 @@
       "typeVersion": 2,
       "position": [
         320,
-        300
+        220
       ],
       "webhookId": "voice-ai-agent-chat"
     },
@@ -53,7 +53,79 @@
       "typeVersion": 4.2,
       "position": [
         560,
-        300
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voice-ai-agent-chat-resume",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1c2e3f4-1111-4a2b-9c3d-4e5f6a7b8c9d",
+      "name": "Chat Resume Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        320,
+        420
+      ],
+      "webhookId": "voice-ai-agent-chat-resume"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/chat/resume' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Agent-Channel",
+              "value": "n8n"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "thread_id",
+              "value": "={{ $json.body?.thread_id || $json.thread_id || 'n8n-demo' }}"
+            },
+            {
+              "name": "decision",
+              "value": "={{ $json.body?.decision || $json.decision || 'approve' }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.body?.text || $json.text || '' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2d3f4a5-2222-4b3c-8d4e-5f6a7b8c9d0e",
+      "name": "Call Chat Resume API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ChatResponse (unlike VoiceResponse) already carries `status` and\n// `approval` from the backend (see app/models/schemas.py), so this is a\n// straight pass-through - we only add a short, explicit hint so a caller\n// that ignores `status` doesn't mistake the approval question for the\n// final answer.\nconst body = $json;\n\nif (body.status === 'pending_approval') {\n  return {\n    json: {\n      ...body,\n      resume_hint: \"This is a draft awaiting human sign-off (Koroglu spoke), not the final answer. POST {thread_id, decision: 'approve'|'reject'|'edit', text?} to /webhook/voice-ai-agent-chat-resume to get the real reply.\",\n    },\n  };\n}\n\nreturn { json: body };"
+      },
+      "id": "c3e4f5a6-3333-4c4d-9e5f-6a7b8c9d0e1f",
+      "name": "Format Chat Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        320
       ]
     },
     {
@@ -67,8 +139,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        800,
-        300
+        1040,
+        320
       ]
     }
   ],
@@ -85,6 +157,39 @@
       ]
     },
     "Call Voice AI Agent API": {
+      "main": [
+        [
+          {
+            "node": "Format Chat Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Resume Webhook": {
+      "main": [
+        [
+          {
+            "node": "Call Chat Resume API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Chat Resume API": {
+      "main": [
+        [
+          {
+            "node": "Format Chat Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Chat Response": {
       "main": [
         [
           {

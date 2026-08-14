@@ -12,7 +12,7 @@
       "name": "Voice Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [320, 300],
+      "position": [320, 220],
       "webhookId": "voice-ai-agent-voice"
     },
     {
@@ -49,7 +49,70 @@
       "name": "Call Voice AI Agent API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [560, 300]
+      "position": [560, 220]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voice-ai-agent-voice-resume",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "d4e5f6a7-4444-4d5e-af6a-7b8c9d0e1f2a",
+      "name": "Voice Resume Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [320, 420],
+      "webhookId": "voice-ai-agent-voice-resume"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/voice/resume' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Agent-Channel",
+              "value": "n8n"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "thread_id",
+              "value": "={{ $json.body?.thread_id || $json.thread_id || 'n8n-voice' }}"
+            },
+            {
+              "name": "decision",
+              "value": "={{ $json.body?.decision || $json.decision || 'approve' }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.body?.text || $json.text || '' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-5555-4e6f-b07b-8c9d0e1f2a3b",
+      "name": "Call Voice Resume API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 420]
+    },
+    {
+      "parameters": {
+        "jsCode": "// VoiceResponse (app/models/schemas.py) has no `status`/`approval` field\n// the way ChatResponse does - the backend never tells a /voice or\n// /voice/resume caller explicitly that a reply is a pending Koroglu\n// draft. The only stable signal available is that a paused turn always\n// answers with this exact fixed sign-off question (see approval_gate in\n// app/graph/builder.py). This is a best-effort text heuristic, not a real\n// contract field - if that fixed sentence ever changes on the backend,\n// this flag silently stops firing.\nconst body = $json;\nconst HITL_MARKER = 'cəsarətli tövsiyəsidir';\nconst hitlSuspected = typeof body.reply === 'string' && body.reply.includes(HITL_MARKER);\n\nreturn {\n  json: {\n    ...body,\n    segments: Array.isArray(body.segments) ? body.segments : [],\n    hitl_suspected: hitlSuspected,\n    ...(hitlSuspected\n      ? {\n          hitl_note:\n            \"Best-effort heuristic: this looks like a Koroglu approval draft awaiting a human decision, not a finished answer (the /voice response has no explicit status field). POST {thread_id, decision: 'approve'|'reject'|'edit', text?} to /webhook/voice-ai-agent-voice-resume to get the real reply.\",\n        }\n      : {}),\n  },\n};"
+      },
+      "id": "f6a7b8c9-6666-4f70-9c1d-0e1f2a3b4c5d",
+      "name": "Format Voice Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 320]
     },
     {
       "parameters": {
@@ -61,7 +124,7 @@
       "name": "Respond With Voice Result",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [800, 300]
+      "position": [1040, 320]
     }
   ],
   "connections": {
@@ -69,6 +132,15 @@
       "main": [[{"node": "Call Voice AI Agent API", "type": "main", "index": 0}]]
     },
     "Call Voice AI Agent API": {
+      "main": [[{"node": "Format Voice Response", "type": "main", "index": 0}]]
+    },
+    "Voice Resume Webhook": {
+      "main": [[{"node": "Call Voice Resume API", "type": "main", "index": 0}]]
+    },
+    "Call Voice Resume API": {
+      "main": [[{"node": "Format Voice Response", "type": "main", "index": 0}]]
+    },
+    "Format Voice Response": {
       "main": [[{"node": "Respond With Voice Result", "type": "main", "index": 0}]]
     }
   },

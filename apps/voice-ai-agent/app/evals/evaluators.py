@@ -104,10 +104,61 @@ def evaluate_voice(case: dict[str, Any], response: dict[str, Any]) -> Evaluation
     )
 
 
+def evaluate_chat(case: dict[str, Any], response: dict[str, Any]) -> EvaluationResult:
+    """Checks the Divan-specific contract: who got consulted, and whether a
+    turn correctly paused for (or correctly skipped) human approval."""
+    expected = case["expected"]
+    checks: list[str] = []
+    failures: list[str] = []
+
+    if "status" in expected:
+        if response.get("status") == expected["status"]:
+            checks.append(f"status:{expected['status']}")
+        else:
+            failures.append(
+                f"expected status {expected['status']!r}, got {response.get('status')!r}"
+            )
+
+    consulted = response.get("consulted") or []
+    consulted_any = expected.get("consulted_any", [])
+    if consulted_any:
+        if any(advisor in consulted for advisor in consulted_any):
+            checks.append("consulted_any")
+        else:
+            failures.append(f"none of {consulted_any} were consulted (got {consulted})")
+
+    overreach = [a for a in expected.get("consulted_none_of", []) if a in consulted]
+    if "consulted_none_of" in expected:
+        if overreach:
+            failures.append(f"unexpected advisor(s) consulted: {overreach}")
+        else:
+            checks.append("no_overreach")
+
+    if "approval_advisor" in expected:
+        approval = response.get("approval") or {}
+        if approval.get("advisor") == expected["approval_advisor"]:
+            checks.append("approval_advisor")
+        else:
+            failures.append(
+                f"expected approval from {expected['approval_advisor']!r}, "
+                f"got {approval.get('advisor')!r}"
+            )
+
+    return EvaluationResult(
+        case["id"],
+        case["category"],
+        not failures,
+        tuple(checks),
+        tuple(failures),
+    )
+
+
 def evaluate_case(case: dict[str, Any]) -> EvaluationResult:
     """Evaluate a recorded fixture without calling an external provider."""
     if "response" in case:
         return evaluate_voice(case, case["response"])
+    if "chat_response" in case:
+        return evaluate_chat(case, case["chat_response"])
     fixture = case.get("fixture_response", "")
     if isinstance(fixture, dict):
         case = {

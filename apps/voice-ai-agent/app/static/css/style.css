@@ -1,0 +1,687 @@
+/* =========================================================================
+   Divan — Əfsanələr Şurası
+   Design tokens, council chamber, chat/voice UI, feedback, toast.
+   Zero build step: plain CSS, no preprocessor, no external font/CDN.
+   ========================================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* -- surfaces / ink (page tokens, distinct from --seat-* identity colors) */
+  --page: #0a0b0e;
+  --page-2: #0d0f13;
+  --surface: #14161b;
+  --surface2: #1b1f26;
+  --surface3: #21252d;
+  --hair: rgba(255, 255, 255, 0.08);
+  --hair-2: rgba(255, 255, 255, 0.14);
+  --ink1: #f4f6f8;
+  --ink2: #aeb6c2;
+  --ink3: #7b8494;
+
+  /* -- brand chrome: a single "seal" gold, used sparingly (CTA, focus, hub) */
+  --seal: #caa15a;
+  --seal-soft: rgba(202, 161, 90, 0.16);
+
+  /* -- council seat identity colors — a validated categorical set (dataviz
+     skill: 6 slots, adjacency-ordered, all pass CVD/contrast checks against
+     this page's dark surfaces). Never reused for status/chrome meaning. */
+  --c-nesreddin: #3987e5;
+  --c-koroglu: #d95926;
+  --c-simurg: #199e70;
+  --c-nesimi: #9085e9;
+  --c-dedeqorqud: #c98500;
+  --c-nizami: #d55181;
+
+  /* -- status palette (fixed, never themed — reserved, never a seat color) */
+  --good: #0ca30c;
+  --warn: #fab219;
+  --serious: #ec835a;
+  --bad: #d03b3b;
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --font: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { color-scheme: dark; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 480px at 18% -10%, rgba(202, 161, 90, 0.07), transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, rgba(57, 135, 229, 0.06), transparent 55%),
+    var(--page);
+  color: var(--ink1);
+  font-family: var(--font);
+  padding: 28px 20px 60px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+/* ---------------------------------------------------------------------- *
+ * Header
+ * ---------------------------------------------------------------------- */
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.brand { display: flex; flex-direction: column; gap: 6px; max-width: 640px; }
+
+.brand .seal-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink1);
+}
+.brand .seal-mark svg { width: 30px; height: 30px; color: var(--seal); flex: none; }
+.brand .seal-mark .tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border: 1px solid var(--hair-2);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-left: 2px;
+}
+
+.brand p.sub {
+  margin: 0;
+  color: var(--ink2);
+  font-size: 13.5px;
+  max-width: 58ch;
+}
+.brand p.sub code {
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ink1);
+}
+
+/* -- feedback stats: unobtrusive KPI row (dataviz skill: stat-tile row,
+   status-palette icons, values stay in ink tokens — icon carries color,
+   never the number/text, per "text never wears the data color"). */
+.fbstats {
+  display: flex;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  flex: none;
+}
+.fbstat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border-radius: var(--radius-sm);
+  min-width: 64px;
+}
+.fbstat svg { width: 15px; height: 15px; flex: none; }
+.fbstat .n {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink1);
+  font-variant-numeric: proportional-nums;
+}
+.fbstat .l {
+  font-size: 10px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.fbstat .nl { display: flex; flex-direction: column; line-height: 1.15; }
+.fbstat.up svg { color: var(--good); }
+.fbstat.down svg { color: var(--bad); }
+.fbstat.corr svg { color: var(--warn); }
+.fbstat.total svg { color: var(--ink3); }
+.fbstats-loading { color: var(--ink3); font-size: 12px; padding: 8px 10px; }
+
+/* ---------------------------------------------------------------------- *
+ * Grid shell
+ * ---------------------------------------------------------------------- */
+
+.grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px; align-items: start; }
+@media (max-width: 940px) { .grid { grid-template-columns: 1fr; } }
+/* Grid items default to min-width:auto, so a wide-content descendant (the
+   chamber's min-width, below) would otherwise force this whole column — and
+   with it the page — wider than the viewport instead of scrolling internally.
+   Letting the item shrink is what makes .chamber-wrap's overflow-x:auto an
+   internal scroll region rather than a page-wide one. */
+.grid > div { min-width: 0; }
+
+.card {
+  background: linear-gradient(180deg, var(--surface), var(--page-2) 140%);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+.card + .card { margin-top: 18px; }
+.card h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 .rule { flex: 1; height: 1px; background: var(--hair); }
+
+/* ---------------------------------------------------------------------- *
+ * Council chamber (SVG): hub + 6 seats on an arc, animated beams
+ * ---------------------------------------------------------------------- */
+
+/* The diagram's SVG text scales with its viewBox, so past a certain
+   shrink factor the seat labels stop being legible. Let it fill the card
+   fluidly down to a readable floor, then hand off to horizontal scroll
+   rather than keep shrinking into illegible text (same tradeoff as a wide
+   data table on a small screen). */
+.chamber-wrap { margin-bottom: 6px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+.chamber { width: 100%; min-width: 480px; height: auto; display: block; overflow: visible; }
+
+/* Always fully drawn (no dash tricks) so the hub-and-spoke wiring of the
+   chamber reads as one connected council even before anyone asks a
+   question — only opacity/color/width change to show routing state. */
+.beam {
+  fill: none;
+  stroke: var(--hair-2);
+  stroke-width: 1.5;
+  opacity: 0.5;
+  transition: stroke 0.35s ease, stroke-width 0.35s ease, opacity 0.35s ease;
+}
+.chamber.thinking .beam {
+  stroke: var(--seal);
+  opacity: 0.8;
+  animation: beam-pulse 1.4s ease-in-out infinite;
+}
+.beam.lit { opacity: 1; stroke: var(--seat-hue, var(--seal)); stroke-width: 2; }
+@keyframes beam-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.95; }
+}
+
+.hub circle.core {
+  fill: var(--surface2);
+  stroke: var(--hair-2);
+  stroke-width: 1.5;
+  transition: stroke .3s ease;
+}
+.hub .ring {
+  fill: none;
+  stroke: var(--seal);
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.chamber.thinking .hub .ring {
+  opacity: 0.55;
+  animation: hub-ring 1.6s ease-out infinite;
+}
+.chamber.thinking .hub circle.core { stroke: var(--seal); }
+/* The Divan's own (unattributed) segment plays through the hub rather than
+   a seat — same idea as .seat.speaking, applied to the hub instead. */
+.hub.speaking .ring { opacity: 0.9; animation: hub-ring 0.9s ease-in-out infinite; }
+.hub.speaking circle.core { stroke: var(--seal); }
+@keyframes hub-ring {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+.hub .glyph { color: var(--seal); pointer-events: none; }
+.hub .label {
+  font-size: 10.5px;
+  fill: var(--ink3);
+  text-anchor: middle;
+  letter-spacing: 0.06em;
+}
+
+/* cursor:help rather than default — the <title> tooltip (each advisor's
+   domain) is the only place that text lives for a mouse user, so hint that
+   hovering does something. */
+.seat { cursor: help; }
+.seat.preview circle.plate { stroke: var(--seat-hue); }
+.seat.preview .glyph { color: var(--seat-hue); }
+.seat.preview .name { fill: var(--ink1); }
+.seat .halo {
+  fill: none;
+  stroke: var(--seat-hue);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.seat.active .halo { opacity: 0.9; animation: seat-pop 0.6s cubic-bezier(.2,.9,.3,1.4); }
+.seat.speaking .halo { opacity: 1; animation: seat-speak 1.1s ease-in-out infinite; }
+@keyframes seat-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  55% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+@keyframes seat-speak {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+.seat circle.plate {
+  fill: var(--surface2);
+  stroke: var(--hair-2);
+  stroke-width: 1.4;
+  transition: fill .35s ease, stroke .35s ease;
+}
+.seat.active circle.plate,
+.seat.speaking circle.plate {
+  fill: color-mix(in srgb, var(--seat-hue) 18%, var(--surface2));
+  stroke: var(--seat-hue);
+}
+.seat .glyph {
+  color: var(--ink3);
+  transition: color .35s ease;
+  pointer-events: none;
+}
+.seat.active .glyph, .seat.speaking .glyph { color: var(--seat-hue); }
+
+.seat .name {
+  font-size: 11.5px;
+  fill: var(--ink3);
+  text-anchor: middle;
+  transition: fill .35s ease;
+}
+.seat.active .name, .seat.speaking .name { fill: var(--ink1); font-weight: 600; }
+
+.seat.nesreddin  { --seat-hue: var(--c-nesreddin); }
+.seat.koroglu    { --seat-hue: var(--c-koroglu); }
+.seat.simurg     { --seat-hue: var(--c-simurg); }
+.seat.nesimi     { --seat-hue: var(--c-nesimi); }
+.seat.dedeqorqud { --seat-hue: var(--c-dedeqorqud); }
+.seat.nizami     { --seat-hue: var(--c-nizami); }
+
+.beam-nesreddin  { --seat-hue: var(--c-nesreddin); }
+.beam-koroglu    { --seat-hue: var(--c-koroglu); }
+.beam-simurg     { --seat-hue: var(--c-simurg); }
+.beam-nesimi     { --seat-hue: var(--c-nesimi); }
+.beam-dedeqorqud { --seat-hue: var(--c-dedeqorqud); }
+.beam-nizami     { --seat-hue: var(--c-nizami); }
+
+.chamber-caption {
+  text-align: center;
+  color: var(--ink3);
+  font-size: 12px;
+  margin: 2px 0 16px;
+}
+.chamber-caption b { color: var(--ink2); font-weight: 600; }
+
+/* ---------------------------------------------------------------------- *
+ * Mode tabs (Yazı / Səs)
+ * ---------------------------------------------------------------------- */
+
+.modes {
+  display: inline-flex;
+  gap: 3px;
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 3px;
+  margin-bottom: 12px;
+}
+.modes button {
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s ease, color .2s ease;
+}
+.modes button svg { width: 14px; height: 14px; }
+.modes button.on { background: var(--surface3); color: var(--ink1); }
+.modes button:hover:not(.on) { color: var(--ink2); }
+
+.mode-panel { display: none; }
+.mode-panel.on { display: block; }
+
+/* ---------------------------------------------------------------------- *
+ * Text input form
+ * ---------------------------------------------------------------------- */
+
+form.textform { display: flex; gap: 8px; margin-bottom: 16px; }
+input[type=text] {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  color: var(--ink1);
+  font-size: 14px;
+  font-family: inherit;
+}
+input[type=text]:focus { outline: 2px solid var(--seal-soft); border-color: var(--seal); }
+
+:focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
+.seat:focus-visible .plate, .hub:focus-visible circle.core { outline: none; stroke: var(--seal); }
+
+button { font-family: inherit; }
+.btn {
+  background: var(--seal);
+  color: #1a1206;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: filter .15s ease, transform .1s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: default; filter: none; transform: none; }
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--hair-2);
+  color: var(--ink1);
+  font-weight: 600;
+}
+.btn.ghost:hover { border-color: var(--ink3); }
+.btn.approve { background: var(--good); color: #06210a; }
+/* White, not the near-black used by approve/edit: --bad is a darker (less
+   luminant) swatch than --good/--warn, so a near-black label only reaches
+   ~3.8:1 here — under the 4.5:1 AA floor for 14px bold text. White clears
+   ~4.8:1. */
+.btn.reject { background: var(--bad); color: #fff; }
+.btn.edit { background: var(--warn); color: #2a1c02; }
+.btn.small { padding: 7px 12px; font-size: 12.5px; border-radius: 7px; }
+
+/* ---------------------------------------------------------------------- *
+ * Voice recorder
+ * ---------------------------------------------------------------------- */
+
+.voice-panel { margin-bottom: 16px; }
+.rec-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.mic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--surface2);
+  border: 1px solid var(--hair-2);
+  color: var(--ink1);
+  border-radius: 999px;
+  padding: 11px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.mic-btn svg { width: 17px; height: 17px; }
+.mic-btn:hover { border-color: var(--seal); }
+.mic-btn.recording {
+  background: rgba(208, 59, 59, 0.14);
+  border-color: var(--bad);
+  color: #ffb3b3;
+  animation: mic-glow 1.4s ease-in-out infinite;
+}
+@keyframes mic-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(208,59,59,0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(208,59,59,0); }
+}
+.rec-timer {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink2);
+  font-size: 13px;
+  min-width: 40px;
+}
+.rec-hint { color: var(--ink3); font-size: 12.5px; }
+.voice-error { color: var(--bad); font-size: 12.5px; margin-top: 8px; }
+
+/* ---------------------------------------------------------------------- *
+ * Conversation log
+ * ---------------------------------------------------------------------- */
+
+#log {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: 4px;
+}
+#log:empty::before {
+  content: "Bir sual yazın və ya səsli mesaj göndərin — Divan sizi dinləyir.";
+  color: var(--ink3);
+  font-size: 13px;
+  font-style: italic;
+  display: block;
+  padding: 18px 4px;
+}
+
+.turn { display: flex; flex-direction: column; gap: 6px; }
+.msg {
+  padding: 11px 13px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 92%;
+  white-space: pre-wrap;
+}
+.msg.user {
+  background: var(--surface2);
+  align-self: flex-end;
+  border: 1px solid var(--hair);
+}
+.msg.bot {
+  background: rgba(57, 135, 229, 0.10);
+  border: 1px solid rgba(57, 135, 229, 0.22);
+  align-self: flex-start;
+}
+.msg.pending {
+  background: rgba(250, 178, 25, 0.09);
+  border: 1px solid rgba(250, 178, 25, 0.35);
+  align-self: flex-start;
+}
+.msg.rejected {
+  background: rgba(236, 131, 90, 0.09);
+  border: 1px solid rgba(236, 131, 90, 0.32);
+  align-self: flex-start;
+}
+.msg .via {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.msg .via svg { width: 11px; height: 11px; }
+
+.approval-box { display: flex; gap: 8px; align-self: flex-start; flex-wrap: wrap; }
+
+/* -- per-turn advisor chips (who spoke), reused by voice + text turns */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; align-self: flex-start; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 3px 10px 3px 4px;
+  font-size: 11.5px;
+  color: var(--ink2);
+}
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chip-hue, var(--ink3)); flex: none; }
+.chip.nesreddin  { --chip-hue: var(--c-nesreddin); }
+.chip.koroglu    { --chip-hue: var(--c-koroglu); }
+.chip.simurg     { --chip-hue: var(--c-simurg); }
+.chip.nesimi     { --chip-hue: var(--c-nesimi); }
+.chip.dedeqorqud { --chip-hue: var(--c-dedeqorqud); }
+.chip.nizami     { --chip-hue: var(--c-nizami); }
+
+/* -- voice segment player: sequential clips, one per council member */
+.player {
+  align-self: flex-start;
+  background: var(--surface2);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 92%;
+}
+.player-head { display: flex; align-items: center; gap: 8px; }
+.player-head .lbl { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.06em; }
+.player-seq { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface3);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 5px 10px 5px 5px;
+  font-size: 12px;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.seg .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--seg-hue, var(--seal)); flex: none; }
+.seg.playing { border-color: var(--seg-hue, var(--seal)); background: color-mix(in srgb, var(--seg-hue, var(--seal)) 16%, var(--surface3)); color: var(--ink1); }
+.seg.nesreddin  { --seg-hue: var(--c-nesreddin); }
+.seg.koroglu    { --seg-hue: var(--c-koroglu); }
+.seg.simurg     { --seg-hue: var(--c-simurg); }
+.seg.nesimi     { --seg-hue: var(--c-nesimi); }
+.seg.dedeqorqud { --seg-hue: var(--c-dedeqorqud); }
+.seg.nizami     { --seg-hue: var(--c-nizami); }
+
+/* ---------------------------------------------------------------------- *
+ * Feedback controls
+ * ---------------------------------------------------------------------- */
+
+.feedback-row { display: flex; align-items: center; gap: 6px; align-self: flex-start; }
+.fbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--hair);
+  color: var(--ink3);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease;
+}
+.fbtn svg { width: 13px; height: 13px; }
+.fbtn:hover { color: var(--ink1); border-color: var(--ink3); }
+.fbtn.on-up.sent { color: var(--good); border-color: var(--good); background: rgba(12,163,12,0.1); }
+.fbtn.on-down.sent { color: var(--bad); border-color: var(--bad); background: rgba(208,59,59,0.1); }
+.fbtn.on-corr.sent { color: var(--warn); border-color: var(--warn); background: rgba(250,178,25,0.1); }
+.fbtn:disabled { cursor: default; opacity: .8; }
+
+/* ---------------------------------------------------------------------- *
+ * Steps panel (LangGraph concepts)
+ * ---------------------------------------------------------------------- */
+
+.step { display: flex; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--hair); font-size: 13px; }
+.step:last-child { border-bottom: none; }
+.step .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--surface3); border: 1px solid var(--hair-2);
+  margin-top: 5px; flex: none; transition: background .25s ease, border-color .25s ease;
+}
+.step.done .dot { background: var(--good); border-color: var(--good); }
+.step.live .dot { background: var(--seal); border-color: var(--seal); box-shadow: 0 0 0 4px var(--seal-soft); }
+.step b { color: var(--ink1); }
+.step .concept { color: var(--ink2); font-size: 12px; display: block; margin-top: 2px; }
+.step code { background: var(--surface2); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+
+/* -- roster legend (right panel, bottom) */
+.roster { display: flex; flex-direction: column; gap: 9px; }
+.roster-item { display: flex; align-items: center; gap: 10px; }
+.roster-item .swatch { width: 10px; height: 10px; border-radius: 50%; background: var(--r-hue); flex: none; }
+.roster-item .info b { font-size: 13px; color: var(--ink1); display: block; }
+.roster-item .info span { font-size: 11.5px; color: var(--ink3); }
+.roster-item.nesreddin  { --r-hue: var(--c-nesreddin); }
+.roster-item.koroglu    { --r-hue: var(--c-koroglu); }
+.roster-item.simurg     { --r-hue: var(--c-simurg); }
+.roster-item.nesimi     { --r-hue: var(--c-nesimi); }
+.roster-item.dedeqorqud { --r-hue: var(--c-dedeqorqud); }
+.roster-item.nizami     { --r-hue: var(--c-nizami); }
+
+/* ---------------------------------------------------------------------- *
+ * Toasts
+ * ---------------------------------------------------------------------- */
+
+.toasts {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+  max-width: 320px;
+}
+.toast {
+  background: var(--surface3);
+  border: 1px solid var(--hair-2);
+  border-left: 3px solid var(--seal);
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 13px;
+  color: var(--ink1);
+  box-shadow: 0 12px 32px -12px rgba(0,0,0,.6);
+  animation: toast-in .25s ease;
+}
+.toast.ok { border-left-color: var(--good); }
+.toast.err { border-left-color: var(--bad); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.toast.leaving { animation: toast-out .2s ease forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translateY(4px); } }
+
+footer.credit {
+  text-align: center;
+  color: var(--ink3);
+  font-size: 11.5px;
+  margin-top: 26px;
+}
+
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  body { padding: 18px 12px 40px; }
+  .brand .seal-mark { font-size: 21px; }
+  .fbstats { flex-wrap: wrap; }
+}

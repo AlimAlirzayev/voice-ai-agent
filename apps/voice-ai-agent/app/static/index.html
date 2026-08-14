@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Divan — Əfsanələr Şurası</title>
+<link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Hidden icon library: 6 persona monograms (line-art, currentColor only)
+     plus one "seal" glyph used for brand chrome and the council hub. -->
+<svg style="display:none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+
+    <symbol id="icon-seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="3.2"/>
+      <path d="M12,2.4 L12,4.6 M12,19.4 L12,21.6 M2.4,12 L4.6,12 M19.4,12 L21.6,12 M5.5,5.5 L7.1,7.1 M16.9,16.9 L18.5,18.5 M18.5,5.5 L16.9,7.1 M7.1,16.9 L5.5,18.5"/>
+    </symbol>
+
+    <!-- Molla Nəsrəddin — crescent moon reflected in the well, rope trying to fish it out -->
+    <symbol id="icon-nesreddin" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28,10 A9,9 0 1,0 28,28 A6.5,6.5 0 1,1 28,10 Z"/>
+      <path d="M22,26 L19,31 Q16,33 19,34"/>
+      <path d="M8,34 Q12,31 16,34 Q20,37 24,34 Q28,31 32,34 Q36,37 40,34"/>
+      <path d="M8,39 Q12,36.5 16,39 Q20,41.5 24,39 Q28,36.5 32,39 Q36,41.5 40,39"/>
+    </symbol>
+
+    <!-- Koroğlu — sword rising above the crenellated walls of Çənlibel -->
+    <symbol id="icon-koroglu" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6,36 L6,30 L12,30 L12,36 L18,36 L18,30 L24,30 L24,36 L30,36 L30,30 L36,30 L36,36 L42,36"/>
+      <path d="M24,7 L24,33"/>
+      <path d="M17,21 L31,21"/>
+      <circle cx="24" cy="34.5" r="1.6" fill="currentColor" stroke="none"/>
+    </symbol>
+
+    <!-- Simurğ — mythical bird, wings spread wide in flight -->
+    <symbol id="icon-simurg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M24,20 C16,9 8,12 6,21 M24,20 C32,9 40,12 42,21"/>
+      <path d="M24,20 L24,29"/>
+      <path d="M24,29 L17,36 M24,29 L24,38 M24,29 L31,36"/>
+      <circle cx="24" cy="17" r="1.8" fill="currentColor" stroke="none"/>
+    </symbol>
+
+    <!-- Nəsimi — the flame of "Ənəl-Həqq", an inner curve for two worlds within one -->
+    <symbol id="icon-nesimi" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M24,8 C31,14 30,22 26,26 C34,28 32,36 24,39 C16,36 14,28 22,26 C18,22 17,14 24,8 Z"/>
+      <path d="M24,14 C21,20 27,26 24,34"/>
+    </symbol>
+
+    <!-- Dədə Qorqud — the qopuz: resonator body, long neck, strings, tuning pegs -->
+    <symbol id="icon-dedeqorqud" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="16" cy="32" rx="8" ry="6"/>
+      <path d="M22,27 L37,9"/>
+      <path d="M18,29 L33,11 M15,33 L30,15"/>
+      <path d="M33,9 L29,7 M38,7 L41,6"/>
+    </symbol>
+
+    <!-- Nizami Gəncəvi — quill, ink flowing into a small rose-bud curl -->
+    <symbol id="icon-nizami" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M32,8 L14,28"/>
+      <path d="M32,8 C38,10 38,16 30,16"/>
+      <path d="M14,28 C9,32 10,37 16,38 C20,38.5 22,36 20,34 C18.5,32.5 16.5,34 17.5,35.5"/>
+    </symbol>
+
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <div class="seal-mark">
+        <svg viewBox="0 0 24 24"><use href="#icon-seal"></use></svg>
+        Divan
+        <span class="tag">canlı nümayiş</span>
+      </div>
+      <p class="sub">
+        Əfsanələr Şurası: Molla Nəsrəddin, Koroğlu, Simurğ, Nəsimi, Dədə Qorqud və Nizami Gəncəvi —
+        hər sualınıza ən uyğun 1–2 üzv cavab verir, sonra Divan bunları tək cavaba birləşdirir.
+        Koroğlunun cəsarətli tövsiyəsi hər dəfə <b>insan təsdiqi</b> gözləyir —
+        LangGraph-ın <code>interrupt()</code> mexanizmi ilə, real vaxtda.
+      </p>
+    </div>
+    <div class="fbstats" id="fbstats">
+      <div class="fbstats-loading">Statistika yüklənir…</div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div>
+      <div class="card">
+        <h2>Şura otağı<span class="rule"></span></h2>
+
+        <div class="chamber-wrap">
+          <svg id="chamber" class="chamber" viewBox="0 -16 720 316" width="720" height="316">
+
+            <path class="beam beam-nesreddin"  pathLength="1" d="M360,40 Q258.6,47.2 157.2,94.4"/>
+            <path class="beam beam-koroglu"    pathLength="1" d="M360,40 Q285.8,94.3 211.5,188.5"/>
+            <path class="beam beam-simurg"     pathLength="1" d="M360,40 Q332.9,121.5 305.7,242.9"/>
+            <path class="beam beam-nesimi"     pathLength="1" d="M360,40 Q387.2,121.5 414.4,242.9"/>
+            <path class="beam beam-dedeqorqud" pathLength="1" d="M360,40 Q434.3,94.3 508.5,188.5"/>
+            <path class="beam beam-nizami"     pathLength="1" d="M360,40 Q461.5,47.2 562.9,94.4"/>
+
+            <g class="hub">
+              <text class="label" x="360" y="8">Divanbəyi</text>
+              <circle class="ring" cx="360" cy="40" r="22"/>
+              <circle class="core" cx="360" cy="40" r="22"/>
+              <use class="glyph" href="#icon-seal" x="348" y="28" width="24" height="24"/>
+            </g>
+
+            <g class="seat nesreddin" transform="translate(157.2,94.4)">
+              <title>Molla Nəsrəddin — gündəlik problemlər, yumor və zəka, gözlənilməz baxış bucağı</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-nesreddin" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Molla Nəsrəddin</text>
+            </g>
+
+            <g class="seat koroglu" transform="translate(211.5,188.5)">
+              <title>Koroğlu — cəsarət, qətiyyət, risk, haqsızlığa qarşı mübarizə (təsdiq tələb edir)</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-koroglu" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Koroğlu</text>
+            </g>
+
+            <g class="seat simurg" transform="translate(305.7,242.9)">
+              <title>Simurğ — dərin həyat sualları, uzunmüddətli perspektiv, mənəvi müdriklik</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-simurg" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Simurğ</text>
+            </g>
+
+            <g class="seat nesimi" transform="translate(414.4,242.9)">
+              <title>Nəsimi — özünəinam, mənəvi kimlik, tənqid qarşısında dözüm</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-nesimi" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Nəsimi</text>
+            </g>
+
+            <g class="seat dedeqorqud" transform="translate(508.5,188.5)">
+              <title>Dədə Qorqud — ailə və icma, nəsihət, həyat keçidlərində istiqamət</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-dedeqorqud" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Dədə Qorqud</text>
+            </g>
+
+            <g class="seat nizami" transform="translate(562.9,94.4)">
+              <title>Nizami Gəncəvi — sevgi, ədalət, əxlaqi seçimlər, düzgün qərar</title>
+              <circle class="halo" r="36"/>
+              <circle class="plate" r="30"/>
+              <use class="glyph" href="#icon-nizami" x="-17" y="-17" width="34" height="34"/>
+              <text class="name" y="46">Nizami Gəncəvi</text>
+            </g>
+
+          </svg>
+        </div>
+        <p class="chamber-caption">
+          <b>Divanbəyi</b> hər sualı təhlil edir və ən uyğun 1–2 üzvü çağırır — heç vaxt bütün şuranı birdən.
+        </p>
+
+        <div class="modes">
+          <button type="button" class="on" data-mode="text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            Yazı
+          </button>
+          <button type="button" data-mode="voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Səs
+          </button>
+        </div>
+
+        <div class="mode-panel on" data-mode="text">
+          <form id="form" class="textform">
+            <input type="text" id="input" aria-label="Suala yazın" placeholder="Məsələn: İşimdən çıxıb öz bizneslə riskə atılmalıyammı?" autocomplete="off" />
+            <button type="submit" class="btn">Göndər</button>
+          </form>
+        </div>
+
+        <div class="mode-panel" data-mode="voice">
+          <div class="voice-panel">
+            <div class="rec-row">
+              <button type="button" id="mic-btn" class="mic-btn" aria-label="Səsli mesaj yaz">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                <span id="mic-label">Danış</span>
+              </button>
+              <span class="rec-timer" id="rec-timer">00:00</span>
+              <span class="rec-hint">Mikrofona sual söyləyin, sonra "Dayandır" düyməsinə basın — Whisper mətnə çevirəcək.</span>
+            </div>
+            <div class="voice-error" id="voice-error"></div>
+          </div>
+        </div>
+
+        <div id="log"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Nə baş verir?<span class="rule"></span></h2>
+        <div id="steps">
+          <div class="step" data-step="route">
+            <div class="dot"></div>
+            <div><b>Supervisor routing</b>
+              <span class="concept">LangGraph <code>Command(goto=...)</code> — sual təhlil olunur, uyğun üzv(lər) seçilir.</span>
+            </div>
+          </div>
+          <div class="step" data-step="advisors">
+            <div class="dot"></div>
+            <div><b>Üzvlərin fikirləri</b>
+              <span class="concept">Hər üzv öz sahəsində qısa fikir bildirir, sonra supervisor-a qayıdır (dövrü qraf).</span>
+            </div>
+          </div>
+          <div class="step" data-step="synthesize">
+            <div class="dot"></div>
+            <div><b>Sintez</b>
+              <span class="concept">Fikirlər vahid, səslə oxunacaq cavaba birləşdirilir.</span>
+            </div>
+          </div>
+          <div class="step" data-step="hitl">
+            <div class="dot"></div>
+            <div><b>Human-in-the-Loop</b>
+              <span class="concept">Koroğlu danışanda <code>interrupt()</code> qrafı dayandırır, insan qərarı gözlənilir.</span>
+            </div>
+          </div>
+          <div class="step" data-step="memory">
+            <div class="dot"></div>
+            <div><b>Davamlı yaddaş</b>
+              <span class="concept">SQLite checkpoint — söhbət <code>thread_id</code> üzrə serverin yenidən başlamasından sonra da qalır.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Şura üzvləri<span class="rule"></span></h2>
+        <div class="roster">
+          <div class="roster-item nesreddin"><span class="swatch"></span><div class="info"><b>Molla Nəsrəddin</b><span>gündəlik problemlər, yumor və zəka</span></div></div>
+          <div class="roster-item koroglu"><span class="swatch"></span><div class="info"><b>Koroğlu</b><span>cəsarət, risk, haqsızlığa qarşı mübarizə</span></div></div>
+          <div class="roster-item simurg"><span class="swatch"></span><div class="info"><b>Simurğ</b><span>dərin həyat sualları, uzunmüddətli müdriklik</span></div></div>
+          <div class="roster-item nesimi"><span class="swatch"></span><div class="info"><b>Nəsimi</b><span>özünəinam, daxili həqiqət, dözüm</span></div></div>
+          <div class="roster-item dedeqorqud"><span class="swatch"></span><div class="info"><b>Dədə Qorqud</b><span>ailə, icma, nəsihət</span></div></div>
+          <div class="roster-item nizami"><span class="swatch"></span><div class="info"><b>Nizami Gəncəvi</b><span>sevgi, ədalət, əxlaqi seçim</span></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="credit">Divan — FastAPI + LangGraph + Whisper + ElevenLabs. Bütün cavablar, səslər və statistika canlı backend-dən gəlir.</footer>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="/static/js/app.js" defer></script>
+</body>
+</html>

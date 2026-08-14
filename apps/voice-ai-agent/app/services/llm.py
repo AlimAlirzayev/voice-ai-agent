@@ -1,15 +1,29 @@
 """The single place where the chat model is constructed."""
 
 from functools import lru_cache
+from typing import Any
 
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 
 from app.core.config import settings
+from app.services.retry import call_with_retry
 
 
 class LLMError(RuntimeError):
     """Raised when the chat model cannot be used."""
+
+
+async def ainvoke_with_retry(model: Any, messages: list, *, label: str = "llm-call") -> Any:
+    """Call `model.ainvoke(messages)`, retrying transient failures.
+
+    Shared by every LLM call site in `app/graph/builder.py` (supervisor
+    routing, each advisor, synthesis) so a single dropped connection or rate
+    limit doesn't kill a whole turn that may otherwise need several calls.
+    `model` is duck-typed on purpose - both the real `ChatOpenAI`/`ChatGroq`
+    and the fake models used in tests only need an async `ainvoke`.
+    """
+    return await call_with_retry(lambda: model.ainvoke(messages), label=label)
 
 
 @lru_cache(maxsize=1)

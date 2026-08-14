@@ -11,6 +11,7 @@ def test_health_works_without_openai_key(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "OPENAI_API_KEY", "")
     monkeypatch.setattr(settings, "GROQ_API_KEY", "")
     monkeypatch.setattr(settings, "SQLITE_PATH", str(tmp_path / "checkpoints.sqlite"))
+    monkeypatch.setattr(settings, "FEEDBACK_PATH", str(tmp_path / "feedback.sqlite"))
 
     with TestClient(app) as client:
         response = client.get("/")
@@ -26,6 +27,7 @@ def test_chat_returns_clear_error_without_openai_key(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "OPENAI_API_KEY", "")
     monkeypatch.setattr(settings, "GROQ_API_KEY", "")
     monkeypatch.setattr(settings, "SQLITE_PATH", str(tmp_path / "checkpoints.sqlite"))
+    monkeypatch.setattr(settings, "FEEDBACK_PATH", str(tmp_path / "feedback.sqlite"))
 
     with TestClient(app) as client:
         response = client.post(

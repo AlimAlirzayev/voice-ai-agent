@@ -15,7 +15,7 @@ from app.evals.evaluators import evaluate_case
 
 
 def main() -> int:
-    dataset = json.loads((Path(__file__).with_name("golden.json")).read_text())
+    dataset = json.loads((Path(__file__).with_name("golden.json")).read_text(encoding="utf-8"))
     results = [evaluate_case(case) for case in dataset]
     for result in results:
         state = "PASS" if result.passed else "FAIL"

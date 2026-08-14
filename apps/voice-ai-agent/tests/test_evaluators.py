@@ -1,6 +1,6 @@
 import base64
 
-from app.evals.evaluators import evaluate_text, evaluate_voice
+from app.evals.evaluators import evaluate_chat, evaluate_text, evaluate_voice
 
 
 def test_text_evaluator_catches_language_and_format_regressions():
@@ -42,3 +42,28 @@ def test_voice_evaluator_validates_audio_contract():
 
     response["audio_base64"] = "not-base64"
     assert not evaluate_voice(case, response).passed
+
+
+def test_chat_evaluator_catches_wrong_routing_and_missed_approval():
+    overreach_case = {
+        "id": "no-overreach",
+        "category": "routing",
+        "expected": {"consulted_none_of": ["koroglu", "simurg"]},
+    }
+    assert evaluate_chat(overreach_case, {"status": "ok", "consulted": []}).passed
+    assert not evaluate_chat(overreach_case, {"status": "ok", "consulted": ["koroglu"]}).passed
+
+    hitl_case = {
+        "id": "hitl",
+        "category": "hitl",
+        "expected": {"status": "pending_approval", "approval_advisor": "Koroğlu"},
+    }
+    good = evaluate_chat(
+        hitl_case,
+        {"status": "pending_approval", "approval": {"advisor": "Koroğlu"}},
+    )
+    assert good.passed
+
+    missed = evaluate_chat(hitl_case, {"status": "ok", "approval": None})
+    assert not missed.passed
+    assert any("expected status" in failure for failure in missed.failures)

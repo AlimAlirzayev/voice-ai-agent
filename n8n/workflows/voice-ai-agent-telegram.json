@@ -16,7 +16,7 @@
       "typeVersion": 1.2,
       "position": [
         240,
-        300
+        420
       ],
       "webhookId": "voice-ai-agent-telegram",
       "credentials": {
@@ -55,7 +55,7 @@
       "typeVersion": 2.2,
       "position": [
         460,
-        300
+        420
       ]
     },
     {
@@ -94,20 +94,76 @@
       "typeVersion": 4.2,
       "position": [
         700,
-        220
+        200
       ]
     },
     {
       "parameters": {
-        "jsCode": "const audio = Buffer.from($json.audio_base64, 'base64');\n\nreturn {\n  json: {\n    ...$json,\n    chat_id: $('Telegram Voice Trigger').item.json.message.chat.id,\n  },\n  binary: {\n    data: await this.helpers.prepareBinaryData(\n      audio,\n      'voice-ai-reply.ogg',\n      $json.audio_mime || 'audio/ogg',\n    ),\n  },\n};"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-transcript",
+              "leftValue": "={{ $json.transcript }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a7b8c9d0-7777-4a81-8d2e-1f2a3b4c5d6e",
+      "name": "Has Transcript",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Telegram Voice Trigger').item.json.message.chat.id }}",
+        "text": "={{ '🎙 ' + $json.transcript }}",
+        "additionalFields": {}
+      },
+      "id": "b8c9d0e1-8888-4b92-9e3f-2a3b4c5d6e7f",
+      "name": "Send Transcript",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1180,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Voice AI Agent Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Turn one backend reply (/voice or /voice/resume) into one item per\n// spoken segment, matching bot.py's _send_voice_segments: one Telegram\n// voice note per council member who actually spoke, captioned with their\n// name, in speaking order.\n//\n// HITL caveat: VoiceResponse (app/models/schemas.py) has no `status` /\n// `approval` field the way ChatResponse does, so this workflow cannot\n// know for certain that a reply is a paused Koroglu draft awaiting\n// approval. The only stable signal left is that approval_gate() in\n// app/graph/builder.py always answers with this exact fixed question\n// while paused - a best-effort heuristic, not a real contract field.\nconst body = $input.first().json;\nconst chatId = $('Telegram Voice Trigger').first().json.message.chat.id;\nconst threadId = 'tg-' + chatId;\n\nconst HITL_MARKER = 'cəsarətli tövsiyəsidir';\nconst hitlSuspected = typeof body.reply === 'string' && body.reply.includes(HITL_MARKER);\n\nconst segments = Array.isArray(body.segments) && body.segments.length\n  ? body.segments\n  : [{ name: 'Divan', advisor: '', audio_base64: body.audio_base64, audio_mime: body.audio_mime }];\n\nconst items = [];\nfor (let i = 0; i < segments.length; i++) {\n  const segment = segments[i];\n  const audio = Buffer.from(segment.audio_base64, 'base64');\n  items.push({\n    json: {\n      chat_id: chatId,\n      thread_id: threadId,\n      turn_id: body.turn_id || '',\n      name: segment.name || '',\n      is_last: i === segments.length - 1,\n      hitl_suspected: hitlSuspected,\n    },\n    binary: {\n      data: await this.helpers.prepareBinaryData(\n        audio,\n        `voice-ai-reply-${i}.ogg`,\n        segment.audio_mime || 'audio/ogg',\n      ),\n    },\n  });\n}\n\nreturn items;"
       },
       "id": "d1e1b6e1-2b3a-4825-b117-f33781e41f7d",
-      "name": "Decode Voice Reply",
+      "name": "Prepare Voice Segments",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        940,
-        220
+        1420,
+        200
       ]
     },
     {
@@ -118,7 +174,7 @@
         "binaryData": true,
         "inputDataFieldName": "data",
         "additionalFields": {
-          "caption": "={{ '🎙 ' + $json.transcript + '\\n\\n💬 ' + $json.reply }}"
+          "caption": "={{ $json.name ? '🏛 ' + $json.name : '' }}"
         }
       },
       "id": "a8c16e0f-02c9-474d-8127-7eb3e8794789",
@@ -126,8 +182,202 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
+        1660,
+        200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Voice AI Agent Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-last-segment",
+              "leftValue": "={{ $json.is_last }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "is-hitl-suspected",
+              "leftValue": "={{ $json.hitl_suspected }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e2f3a4b5-9999-4ca3-af40-3b4c5d6e7f80",
+      "name": "Is Last HITL Segment",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=🏛 Bu, Koroğlunun cəsarətli tövsiyəsidir və insan təsdiqini gözləyir (backend `/voice` cavabında ayrıca `status` sahəsi yoxdur - bu bayraq mətn əsaslı best-effort həssaslıqdır).\n\nTəsdiq üçün: /tesdiqle\nİmtina üçün: /imtina\nDəyişdirmək üçün: /duzelis Yeni mətn buraya",
+        "additionalFields": {}
+      },
+      "id": "f3a4b5c6-aaaa-4db4-b051-4c5d6e7f8091",
+      "name": "Send HITL Instructions",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2140,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Voice AI Agent Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cmd-approve",
+              "leftValue": "={{ ($json.message?.text || '').trim() }}",
+              "rightValue": "/tesdiqle",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "cmd-reject",
+              "leftValue": "={{ ($json.message?.text || '').trim() }}",
+              "rightValue": "/imtina",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "cmd-edit",
+              "leftValue": "={{ ($json.message?.text || '').trim() }}",
+              "rightValue": "/duzelis",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "a4b5c6d7-bbbb-4ec5-c162-5d6e7f809142",
+      "name": "Is Decision Command",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Text-command based resolution for a paused Koroglu approval, used\n// instead of Telegram inline-keyboard buttons: this repo's pinned n8n\n// Telegram node version/schema for reply_markup could not be verified\n// against a live instance, so a byte-perfect inline keyboard would be a\n// guess. Plain commands (/tesdiqle, /imtina, /duzelis <text>) use the\n// same well-documented sendMessage/sendVoice nodes already proven\n// elsewhere in this workflow, so the round trip is real and working, not\n// just documented.\nconst text = ($json.message.text || '').trim();\nconst lower = text.toLowerCase();\nconst chatId = $json.message.chat.id;\n\nlet decision = 'approve';\nlet extra = '';\nif (lower.startsWith('/imtina')) {\n  decision = 'reject';\n} else if (lower.startsWith('/duzelis')) {\n  decision = 'edit';\n  const spaceIdx = text.indexOf(' ');\n  extra = spaceIdx === -1 ? '' : text.slice(spaceIdx + 1).trim();\n}\n\nreturn {\n  json: {\n    thread_id: 'tg-' + chatId,\n    chat_id: chatId,\n    decision,\n    text: extra,\n  },\n};"
+      },
+      "id": "b5c6d7e8-cccc-4fd6-d273-6e7f80914253",
+      "name": "Parse Decision Command",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.BACKEND_URL + '/voice/resume' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Agent-Channel",
+              "value": "n8n"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "thread_id",
+              "value": "={{ $json.thread_id }}"
+            },
+            {
+              "name": "decision",
+              "value": "={{ $json.decision }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c6d7e8f9-dddd-4017-e384-7f8091425364",
+      "name": "Call Voice Resume API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
         1180,
-        220
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "Bu mesajı başa düşmədim. Səsli mesaj göndər, ya da gözlənilən Koroğlu tövsiyəsi varsa: /tesdiqle, /imtina, /duzelis <yeni mətn> yaz.",
+        "additionalFields": {}
+      },
+      "id": "d7e8f9a0-eeee-4128-f495-809142536475",
+      "name": "Send Unrecognized Text Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        800
       ],
       "credentials": {
         "telegramApi": {
@@ -158,25 +408,123 @@
             "index": 0
           }
         ],
-        []
-      ]
-    },
-    "Call Voice AI Agent API": {
-      "main": [
         [
           {
-            "node": "Decode Voice Reply",
+            "node": "Is Decision Command",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Decode Voice Reply": {
+    "Call Voice AI Agent API": {
+      "main": [
+        [
+          {
+            "node": "Has Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Transcript": {
+      "main": [
+        [
+          {
+            "node": "Send Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Voice Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Transcript": {
+      "main": [
+        [
+          {
+            "node": "Prepare Voice Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Voice Segments": {
       "main": [
         [
           {
             "node": "Send Voice Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Voice Reply": {
+      "main": [
+        [
+          {
+            "node": "Is Last HITL Segment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Last HITL Segment": {
+      "main": [
+        [
+          {
+            "node": "Send HITL Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Is Decision Command": {
+      "main": [
+        [
+          {
+            "node": "Parse Decision Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Unrecognized Text Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Decision Command": {
+      "main": [
+        [
+          {
+            "node": "Call Voice Resume API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Voice Resume API": {
+      "main": [
+        [
+          {
+            "node": "Prepare Voice Segments",
             "type": "main",
             "index": 0
           }

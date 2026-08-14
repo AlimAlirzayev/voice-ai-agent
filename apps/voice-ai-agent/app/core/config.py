@@ -35,6 +35,20 @@ class Settings(BaseSettings):
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"
 
+    # --- Divan council: one distinct real voice per legendary advisor ---
+    ELEVENLABS_VOICE_ID_NESREDDIN: str = "JBFqnCBsd6RMkjVDRZzb"  # George: warm, mature
+    ELEVENLABS_VOICE_ID_KOROGLU: str = "VR6AewLTigWG4xSOukaG"  # Arnold: deep, intense
+    ELEVENLABS_VOICE_ID_SIMURG: str = "21m00Tcm4TlvDq8ikWAM"  # Rachel: calm, clear
+    ELEVENLABS_VOICE_ID_NESIMI: str = "ErXwobaYiN019PkySvjV"  # Antoni: resonant, proclaiming
+    ELEVENLABS_VOICE_ID_DEDEQORQUD: str = "pNInz6obpgDQGcFmaJgB"  # Adam: deep, elder authority
+    ELEVENLABS_VOICE_ID_NIZAMI: str = "TxGEqnHWrfWFTfGW9XjX"  # Josh: warm, refined
+    OPENAI_TTS_VOICE_NESREDDIN: str = "onyx"
+    OPENAI_TTS_VOICE_KOROGLU: str = "echo"
+    OPENAI_TTS_VOICE_SIMURG: str = "nova"
+    OPENAI_TTS_VOICE_NESIMI: str = "fable"
+    OPENAI_TTS_VOICE_DEDEQORQUD: str = "onyx"
+    OPENAI_TTS_VOICE_NIZAMI: str = "shimmer"
+
     # --- Observability (Lesson 30) ---
     LANGSMITH_API_KEY: str = ""
     LANGSMITH_TRACING: bool = True
@@ -49,6 +63,44 @@ class Settings(BaseSettings):
     SQLITE_PATH: str = "database/checkpoints.sqlite"
     MAX_HISTORY_MESSAGES: int = 12
 
+    # --- User feedback (Lesson 11.2) ---
+    FEEDBACK_PATH: str = "database/feedback.sqlite"
+
+    # --- Safety guardrail (not a course lesson - baseline for any public AI product) ---
+    # Deliberately generic and number-free by default: a wrong crisis hotline
+    # number is worse than none. Override with a real, currently-verified
+    # local resource before a public deployment.
+    CRISIS_RESPONSE_TEXT: str = (
+        "Dediklərin mənə çox ağır gəldi və bunu tək daşımamalısan. Divan bunun "
+        "üçün doğru yer deyil. Zəhmət olmasa dərhal təcili tibbi yardımla "
+        "əlaqə saxla və ya yanındakı etibar etdiyin bir insana - ailə üzvünə, "
+        "dostuna və ya həkiminə - bunu de. Sən dəyərlisən və kömək almağa "
+        "layiqsən."
+    )
+
+    # --- Abuse protection: per-IP rate limiting (not a course lesson -
+    # baseline for any publicly-reachable AI product) ---
+    # Single-process, in-memory limiter (see `app/core/rate_limit.py`): this
+    # app runs as one container with no horizontal scaling (see
+    # docker-compose.yml), so no shared store (e.g. Redis) is needed yet.
+    # `/chat` and `/voice` share one budget per IP - both trigger the same
+    # costly council (+ TTS) pipeline. `/feedback` gets its own, more
+    # generous budget: cheap to serve, but still worth capping against spam.
+    RATE_LIMIT_PER_MINUTE: int = 20
+    RATE_LIMIT_FEEDBACK_PER_MINUTE: int = 60
+    RATE_LIMIT_WINDOW_SECONDS: float = 60.0
+
+    # --- Secondary safety net: OpenAI moderation (not a course lesson -
+    # defense in depth alongside the deterministic self-harm check in
+    # `app/graph/guardrails.py`) ---
+    # Deliberately narrow: only categories the moderation model is actually
+    # built to classify (hate/threatening, harassment/threatening, illicit
+    # activity, graphic violence, sexual content involving minors). See
+    # `app/services/moderation.py` for why impersonation of real people is
+    # deliberately NOT handled here.
+    MODERATION_ENABLED: bool = True
+    MODERATION_MODEL: str = "omni-moderation-latest"
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         extra="ignore",
@@ -60,12 +112,37 @@ class Settings(BaseSettings):
         return path if path.is_absolute() else BASE_DIR / path
 
     @property
+    def feedback_file(self) -> Path:
+        path = Path(self.FEEDBACK_PATH)
+        return path if path.is_absolute() else BASE_DIR / path
+
+    @property
     def tracing_enabled(self) -> bool:
         return bool(self.LANGSMITH_TRACING and self.LANGSMITH_API_KEY)
 
     @property
     def tts_provider(self) -> str:
         return "elevenlabs" if self.ELEVENLABS_API_KEY else "openai"
+
+    def elevenlabs_voice_for(self, advisor: str | None) -> str:
+        return {
+            "nesreddin": self.ELEVENLABS_VOICE_ID_NESREDDIN,
+            "koroglu": self.ELEVENLABS_VOICE_ID_KOROGLU,
+            "simurg": self.ELEVENLABS_VOICE_ID_SIMURG,
+            "nesimi": self.ELEVENLABS_VOICE_ID_NESIMI,
+            "dedeqorqud": self.ELEVENLABS_VOICE_ID_DEDEQORQUD,
+            "nizami": self.ELEVENLABS_VOICE_ID_NIZAMI,
+        }.get(advisor or "", self.ELEVENLABS_VOICE_ID)
+
+    def openai_voice_for(self, advisor: str | None) -> str:
+        return {
+            "nesreddin": self.OPENAI_TTS_VOICE_NESREDDIN,
+            "koroglu": self.OPENAI_TTS_VOICE_KOROGLU,
+            "simurg": self.OPENAI_TTS_VOICE_SIMURG,
+            "nesimi": self.OPENAI_TTS_VOICE_NESIMI,
+            "dedeqorqud": self.OPENAI_TTS_VOICE_DEDEQORQUD,
+            "nizami": self.OPENAI_TTS_VOICE_NIZAMI,
+        }.get(advisor or "", self.OPENAI_TTS_VOICE)
 
     @property
     def chat_provider(self) -> str:

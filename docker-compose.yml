@@ -14,6 +14,7 @@ services:
     environment:
       BACKEND_URL: http://api:8000
       SQLITE_PATH: /data/checkpoints.sqlite
+      FEEDBACK_PATH: /data/feedback.sqlite
     volumes:
       - voice_memory:/data
     healthcheck:
