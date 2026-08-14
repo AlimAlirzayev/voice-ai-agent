@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api import chat, feedback, voice
+from app.api import chat, feedback, voice, voicelab
 from app.core.config import settings
 from app.graph import build_graph
 from app.memory.feedback import FeedbackStore
@@ -43,6 +43,7 @@ app = FastAPI(
 app.include_router(chat.router)
 app.include_router(voice.router)
 app.include_router(feedback.router)
+app.include_router(voicelab.router)
 
 if STATIC_DIR.is_dir():
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

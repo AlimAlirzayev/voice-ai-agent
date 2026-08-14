@@ -14,6 +14,7 @@ from elevenlabs.client import AsyncElevenLabs
 from openai import AsyncOpenAI
 
 from app.core.config import settings
+from app.services import pronounce
 from app.services.retry import call_with_retry
 
 log = logging.getLogger(__name__)
@@ -60,6 +61,7 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
     preferred; if its key is missing or the call fails, OpenAI TTS takes over
     with its own per-advisor voice so a live session never ends in silence.
     """
+    text = pronounce.apply(text)
     if settings.ELEVENLABS_API_KEY:
         try:
             return await _elevenlabs_tts(text, advisor), OGG, "elevenlabs"

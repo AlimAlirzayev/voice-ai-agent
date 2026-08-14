@@ -49,6 +49,7 @@ WELCOME = (
     "🧠 Söhbəti yadda saxlayıram: adını de, sonra soruş.\n"
     "⚖️ Koroğlu cəsarətli bir tövsiyə verəndə, təsdiqini gözləyəcəm.\n"
     "👍👎 Cavabı qiymətləndir, ✍️ ilə düzəliş yaza bilərsən.\n"
+    "🎓 /ses — Səs Məktəbi: cümlələri oxu, klonumu native danışmağa öyrət.\n"
     "/reset — yaddaşı təmizlə."
 )
 
@@ -115,7 +116,75 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.chat_data["generation"] = context.chat_data.get("generation", 0) + 1
     context.chat_data.pop("pending_modality", None)
+    context.chat_data.pop("voicelab", None)
     await update.message.reply_text("Yaddaş təmizləndi. Təzə söhbətə başlayırıq.")
+
+
+async def _send_lab_sentence(message, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Fetch the next practice sentence and put the chat into Voice Lab mode."""
+    response = await context.bot_data["http"].get(f"{settings.BACKEND_URL}/voicelab/next")
+    response.raise_for_status()
+    payload = response.json()
+    context.chat_data["voicelab"] = payload
+    await message.reply_text(
+        "🎓 Səs Məktəbi — bu cümləni səsli mesajla, təbii oxu:\n\n"
+        f"«{payload['text']}»\n\n"
+        f"🎯 Fokus: {payload['focus']}\n"
+        "Çıxmaq üçün: /bitdi"
+    )
+
+
+async def on_lab_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        await _send_lab_sentence(update.message, context)
+    except Exception as exc:  # noqa: BLE001 - always answer the user
+        log.exception("voicelab start failed")
+        await update.message.reply_text(f"Səs Məktəbini aça bilmədim: {_short(exc)}")
+
+
+async def on_lab_stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    context.chat_data.pop("voicelab", None)
+    await update.message.reply_text("🎓 Səs Məktəbi bağlandı. Sağ ol — hər yazı klonu bir az da yaxşılaşdırır!")
+
+
+async def _on_lab_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """A voice note received while in Voice Lab mode: store it as training
+    material and answer with the trainer-vs-clone comparison."""
+    lab = context.chat_data["voicelab"]
+    message = update.message
+    source = message.voice or message.audio
+
+    remote = await source.get_file()
+    audio = bytes(await remote.download_as_bytearray())
+
+    response = await context.bot_data["http"].post(
+        f"{settings.BACKEND_URL}/voicelab/sample",
+        files={"file": ("sample.ogg", audio, "audio/ogg")},
+        data={"expected_text": lab["text"], "index": str(lab["index"])},
+        headers={"X-Agent-Channel": "telegram"},
+    )
+    response.raise_for_status()
+    payload = response.json()
+
+    def _fmt(diffs: list[dict]) -> str:
+        if not diffs:
+            return "fərq yoxdur ✅"
+        return "; ".join(
+            f"«{d['expected']}» → «{d['heard'] or '(düşüb)'}»" for d in diffs
+        )
+
+    await message.reply_text(
+        "📥 Yazı qəbul olundu, klon materialına əlavə edildi.\n\n"
+        f"👤 Səndən eşidilən: {payload['trainer_transcript']}\n"
+        f"↳ {_fmt(payload['trainer_diffs'])}\n\n"
+        f"🤖 Klondan eşidilən: {payload['clone_transcript']}\n"
+        f"↳ {_fmt(payload['clone_diffs'])}"
+    )
+    await message.reply_voice(
+        voice=base64.b64decode(payload["clone_audio_base64"]),
+        caption="🤖 Klon hazırda belə oxuyur"[:CAPTION_LIMIT],
+    )
+    await _send_lab_sentence(message, context)
 
 
 async def _submit_feedback(context: ContextTypes.DEFAULT_TYPE, *, turn_id: str, tid: str, kind: str, text: str | None = None) -> None:
@@ -182,6 +251,14 @@ async def _send_voice_segments(message, segments: list[dict], keyboard=None) -> 
 
 
 async def on_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if context.chat_data.get("voicelab"):
+        try:
+            await _on_lab_voice(update, context)
+        except Exception as exc:  # noqa: BLE001 - always answer the user
+            log.exception("voicelab sample failed")
+            await update.message.reply_text(f"Yazını işləyə bilmədim: {_short(exc)}")
+        return
+
     await update.effective_chat.send_action(ChatAction.RECORD_VOICE)
     message = update.message
     source = message.voice or message.audio
@@ -316,6 +393,8 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("reset", reset))
+    application.add_handler(CommandHandler("ses", on_lab_start))
+    application.add_handler(CommandHandler("bitdi", on_lab_stop))
     application.add_handler(CallbackQueryHandler(on_approval, pattern=r"^da:[ar]:"))
     application.add_handler(CallbackQueryHandler(on_feedback, pattern=r"^fb:[udc]:"))
     application.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, on_voice))
