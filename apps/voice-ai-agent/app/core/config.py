@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     # --- Text to speech: ElevenLabs, with OpenAI as fallback (Lesson 26) ---
     ELEVENLABS_API_KEY: str = ""
     ELEVENLABS_VOICE_ID: str = "JBFqnCBsd6RMkjVDRZzb"
-    ELEVENLABS_MODEL: str = "eleven_multilingual_v2"
+    ELEVENLABS_MODEL: str = "eleven_v3"  # supports Azerbaijani (aze); multilingual_v2 does not
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"
 
