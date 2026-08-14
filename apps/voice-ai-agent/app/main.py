@@ -4,11 +4,12 @@ The graph and its SQLite checkpointer are built once at startup and shared by
 every request, so all conversations write into the same memory file.
 """
 
+import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api import chat, feedback, voice, voicelab
@@ -18,6 +19,8 @@ from app.memory.feedback import FeedbackStore
 from app.memory.sqlite import Checkpointer
 
 STATIC_DIR = Path(__file__).parent / "static"
+
+log = logging.getLogger("app.client")
 
 
 @asynccontextmanager
@@ -68,6 +71,26 @@ async def root() -> dict:
 
 
 @app.get("/demo", tags=["health"], include_in_schema=False)
-async def demo() -> FileResponse:
-    """The live Divan council demo page (chat + HITL approval, in the browser)."""
-    return FileResponse(STATIC_DIR / "index.html")
+async def demo() -> HTMLResponse:
+    """The live Divan council demo page (chat + HITL approval, in the browser).
+
+    Asset URLs carry a `?v=<mtime>` stamp so a redeploy always busts the
+    browser cache - a stale cached app.js against fresh HTML once shipped a
+    silently dead feature (the Voice Lab tab stuck on its loading text).
+    """
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    version = str(int((STATIC_DIR / "js" / "app.js").stat().st_mtime))
+    return HTMLResponse(html.replace("__V__", version))
+
+
+@app.post("/client-log", include_in_schema=False)
+async def client_log(request: Request) -> dict:
+    """Browser-side errors land here (window.onerror / unhandledrejection),
+    so a broken frontend is visible in `docker compose logs api` instead of
+    dying silently in the user's console."""
+    try:
+        payload = await request.json()
+    except Exception:  # noqa: BLE001 - malformed beacon must not 500
+        payload = {"raw": (await request.body())[:300].decode(errors="replace")}
+    log.warning("client-error: %s", str(payload)[:600])
+    return {"ok": True}

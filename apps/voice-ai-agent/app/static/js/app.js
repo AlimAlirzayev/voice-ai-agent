@@ -41,6 +41,42 @@ const ICONS = {
  * State
  * ---------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------- *
+ * Client-side error telemetry — every uncaught browser error is beaconed to
+ * POST /client-log, so frontend failures show up in the backend logs
+ * instead of dying silently in the visitor's console.
+ * ---------------------------------------------------------------------- */
+
+function reportClientError(kind, message, source) {
+  try {
+    const body = JSON.stringify({
+      kind,
+      message: String(message).slice(0, 300),
+      source: String(source || "").slice(0, 150),
+      url: location.href,
+      ua: navigator.userAgent.slice(0, 120),
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/client-log", new Blob([body], { type: "application/json" }));
+    } else {
+      fetch("/client-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch {
+    /* telemetry must never break the page */
+  }
+}
+window.addEventListener("error", (e) =>
+  reportClientError("error", e.message, (e.filename || "") + ":" + (e.lineno || ""))
+);
+window.addEventListener("unhandledrejection", (e) =>
+  reportClientError("unhandledrejection", (e.reason && e.reason.message) || e.reason)
+);
+
 const state = {
   threadId: "web-" + Math.random().toString(36).slice(2, 10),
   // { modality: 'text'|'voice' } while a turn is parked at approval_gate on
@@ -630,7 +666,10 @@ async function startRecording() {
   }
   $voiceError.textContent = "";
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    $voiceError.textContent = "Bu brauzer mikrofon yazısını dəstəkləmir.";
+    $voiceError.textContent =
+      "Brauzer bu ünvanda mikrofonu açmır — mikrofon yalnız HTTPS və ya localhost-da işləyir. " +
+      "Səs Məktəbi tabındakı «Fayl yüklə» ilə hazır yazı göndərə bilərsiniz.";
+    reportClientError("mic-unavailable", "insecure origin, getUserMedia missing");
     return;
   }
   try {
