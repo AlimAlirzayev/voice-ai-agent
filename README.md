@@ -134,7 +134,8 @@ fərqimiz budur.
 |---|---|---|---|
 | 1 | **Native Azərbaycan səsi** | `eleven_v3` (AZ dəstəkli) → native danışıqçılardan voice cloning; ehtiyat: Azure `az-AZ` neural səsləri | ✅ v3-ə keçid edildi |
 | 2 | **Grounded personalar (agentic RAG)** | Hər üzvün öz korpusu (Xəmsə, Kitabi-Dədə Qorqud, Koroğlu dastanı, Nəsimi divanı — public domain) → retrieval-as-tool + sənəd qiymətləndirmə + sual yenidənyazma dövrü; cavablar real beyt/boy sitatı ilə | 🔜 növbəti |
-| 3 | **Eval intizamı** | Mövcud golden suite üstünə: LLM-as-judge gecə regressiyaları + sitat sədaqəti (groundedness) yoxlamaları | planda |
+| 3 | **Öyrənən yaddaş** | Reflection qrafı: hər sessiyanın kəşfləri LangGraph node-u ilə çıxarılıb bilik bazasına ([`docs/knowledge/`](docs/knowledge/) → vektor store) yazılır və sonrakı cavablarda geri çağırılır — sistem öz təcrübəsindən nəticə çıxarır | planda |
+| 3.5 | **Eval intizamı** | Mövcud golden suite üstünə: LLM-as-judge gecə regressiyaları + sitat sədaqəti (groundedness) yoxlamaları | planda |
 | 4 | **Production quruluşu** | Postgres checkpoint, auth, feedback dashboard, GitHub Actions auto-deploy | planda |
 | 5 | **Danışan portretlər** | Öz native səsimizi qəbul edən avatar qatı: Simli tipli speech-to-video (real-time üçün Tavus / HeyGen LiveAvatar) — dodaq sinxronu ilə canlı sima | vizyon |
 | 6 | **Üslub dərinliyi** | Few-shot + RAG → sonra ədəbi korpusla SFT/LoRA (personajın öz üslubunda şeir) | vizyon |

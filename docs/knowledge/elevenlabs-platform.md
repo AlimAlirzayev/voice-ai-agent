@@ -57,6 +57,25 @@ TTS models exclude AZ (see above), and our differentiators (Divan LangGraph brai
 native cloned voices) argue for keeping the brain ours and treating any avatar/voice
 platform as an output layer that accepts OUR audio.
 
+## CORRECTION (2026-08-14, from Alim): the AZ voice market is alive
+
+Alim pushed back on the "artificial AZ is inevitable" reading — correctly. Local
+practice already produces commercial AZ voice content and even LIVE agents:
+
+- **Autocalls.ai** sells Azerbaijani AI phone agents (inbound/outbound call centers,
+  lead qualification, booking) — real-time AZ conversation is commercially shipped.
+- **Soniox** offers streaming Azerbaijani STT built for voice agents (candidate to
+  replace/augment Whisper for a live AZ pipeline).
+- **LOVO, SpeechGen, Speechify, Narakeet** list AZ TTS voices (mostly Azure-backed).
+- Local practitioners publish AZ voice-over guides (anarrustamli.com); social teams
+  produce AZ ads/podcasts/radio with ElevenLabs today.
+
+Reading: my flash-tier limitation note stands for ElevenLabs specifically, but the
+market solves real-time AZ with other stacks (Azure voices, Soniox STT, custom
+pipelines). Lesson: verify against what practitioners ship, not only against model
+capability tables. TODO: scrape/study concrete AZ social examples (YouTube/LinkedIn)
+to learn their exact settings and pre-processing tricks.
+
 ## Also seen in the dashboard (not yet used)
 
 Voice Isolator, Voice Changer (STS), Dubbing, Music, Sound Effects, Speech to Text,
