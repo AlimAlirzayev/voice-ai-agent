@@ -14,7 +14,7 @@ import base64
 import logging
 
 import httpx
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, Header, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
 from app.core.config import settings
@@ -29,6 +29,14 @@ router = APIRouter(tags=["voicelab"])
 class PronounceEntry(BaseModel):
     word: str = Field(min_length=1, max_length=80)
     respelling: str = Field(min_length=1, max_length=120)
+
+
+def _require_token(token: str | None) -> None:
+    """Mutating Voice Lab endpoints alter what the live bot SAYS — on a public
+    deployment they must not be open to anyone with curl. Empty setting keeps
+    local development frictionless."""
+    if settings.VOICELAB_TOKEN and token != settings.VOICELAB_TOKEN:
+        raise HTTPException(status_code=403, detail="X-Voicelab-Token required")
 
 
 @router.get("/voicelab/next")
@@ -73,7 +81,11 @@ async def sample(
 
 
 @router.post("/voicelab/dictionary")
-async def add_pronunciation(payload: PronounceEntry) -> dict:
+async def add_pronunciation(
+    payload: PronounceEntry,
+    x_voicelab_token: str | None = Header(default=None),
+) -> dict:
+    _require_token(x_voicelab_token)
     entries = pronounce.add(payload.word, payload.respelling)
     return {"stored": True, "entries": len(entries)}
 
@@ -89,8 +101,9 @@ async def status() -> dict:
 
 
 @router.post("/voicelab/retrain")
-async def retrain() -> dict:
+async def retrain(x_voicelab_token: str | None = Header(default=None)) -> dict:
     """Push accumulated samples into the narrator's ElevenLabs voice (IVC edit)."""
+    _require_token(x_voicelab_token)
     files = voicelab.sample_files()[-25:]  # ElevenLabs accepts up to 25 files
     if not files:
         raise HTTPException(status_code=422, detail="no samples collected yet")

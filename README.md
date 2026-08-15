@@ -43,6 +43,8 @@ FastAPI backend-də. Kanallar (Telegram, web, n8n) yalnız eyni API-ni çağıra
 | **Tracing** | LangSmith | Hər model və qraf icrası kanal/model/versiya metadata-sı ilə izlənilir | [`config.py`](apps/voice-ai-agent/app/core/config.py) |
 | **Evaluation** | Oflayn "golden" suite (7 case) | Routing, HITL, cavab formatı hər push-da CI-də yoxlanılır | [`evals/`](apps/voice-ai-agent/app/evals/) |
 | **Feedback loop** | 👍/👎/düzəliş → SQLite | Hər cavabın `turn_id`-si üzrə rəy toplanır; düzəliş mətni ən güclü siqnaldır | [`feedback.py`](apps/voice-ai-agent/app/memory/feedback.py) |
+| **Səs Məktəbi (Voice Lab)** | Canlı öyrənmə dövrü: Telegram `/ses` + web tab | İstifadəçi cümləni oxuyur → sistem onun oxunuşu ilə klonun oxunuşunu Whisper-lə söz-söz tutuşdurur; yazılar klon materialına, xətalar tələffüz lüğətinə yığılır | [`voicelab.py`](apps/voice-ai-agent/app/api/voicelab.py) |
+| **Observability (frontend)** | `?v=` keş-möhürü + `/client-log` | Brauzer xətaları anında server loguna düşür; köhnə keşlənmiş JS sinfi səhvlər mümkünsüzdür | [`main.py`](apps/voice-ai-agent/app/main.py) |
 | **API** | FastAPI | `/chat`, `/voice`, `/chat/resume`, `/voice/resume`, `/feedback`, `/demo` | [`main.py`](apps/voice-ai-agent/app/main.py) |
 | **Avtomatlaşdırma** | n8n (lokal profil) | Eyni API-yə qoşulan vizual workflow adapterləri — 3 hazır workflow | [`n8n/`](n8n/) |
 | **Deployment** | Docker Compose + DigitalOcean | `api` + `telegram-bot` konteynerləri canlı serverdə | [`docker-compose.yml`](docker-compose.yml), [`DEPLOY.md`](DEPLOY.md) |
@@ -132,7 +134,7 @@ fərqimiz budur.
 
 | Faza | İş | Texnologiya | Status |
 |---|---|---|---|
-| 1 | **Native Azərbaycan səsi** | `eleven_v3` (AZ dəstəkli) → native danışıqçılardan voice cloning; ehtiyat: Azure `az-AZ` neural səsləri | ✅ v3-ə keçid edildi |
+| 1 | **Native Azərbaycan səsi** | `eleven_v3` (AZ dəstəkli) + native klon (dastançı) + Səs Məktəbi öyrənmə dövrü; ehtiyat: Azure `az-AZ` neural səsləri | ✅ işləyir, klonlar genişlənir |
 | 2 | **Grounded personalar (agentic RAG)** | Hər üzvün öz korpusu (Xəmsə, Kitabi-Dədə Qorqud, Koroğlu dastanı, Nəsimi divanı — public domain) → retrieval-as-tool + sənəd qiymətləndirmə + sual yenidənyazma dövrü; cavablar real beyt/boy sitatı ilə | 🔜 növbəti |
 | 3 | **Öyrənən yaddaş** | Reflection qrafı: hər sessiyanın kəşfləri LangGraph node-u ilə çıxarılıb bilik bazasına ([`docs/knowledge/`](docs/knowledge/) → vektor store) yazılır və sonrakı cavablarda geri çağırılır — sistem öz təcrübəsindən nəticə çıxarır | planda |
 | 3.5 | **Eval intizamı** | Mövcud golden suite üstünə: LLM-as-judge gecə regressiyaları + sitat sədaqəti (groundedness) yoxlamaları | planda |

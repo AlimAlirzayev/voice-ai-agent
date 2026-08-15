@@ -78,6 +78,7 @@ async def _elevenlabs_tts(text: str, advisor: str | None) -> bytes:
             text=text,
             model_id=settings.ELEVENLABS_MODEL,
             output_format="opus_48000_64",
+            voice_settings={"stability": settings.ELEVENLABS_STABILITY},
         )
         chunks = [chunk async for chunk in stream]
         audio = b"".join(chunks)

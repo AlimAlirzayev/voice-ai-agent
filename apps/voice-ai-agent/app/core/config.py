@@ -32,6 +32,13 @@ class Settings(BaseSettings):
     ELEVENLABS_API_KEY: str = ""
     ELEVENLABS_VOICE_ID: str = "JBFqnCBsd6RMkjVDRZzb"
     ELEVENLABS_MODEL: str = "eleven_v3"  # supports Azerbaijani (aze); multilingual_v2 does not
+    # 1.0 = "robust": measured 2026-08-15, lower values let v3 drift the clone
+    # into Turkish phonetics mid-sentence; eleven_v3 rejects language_code=aze,
+    # so stability is the only consistency lever we have.
+    ELEVENLABS_STABILITY: float = 1.0
+    # Shared secret for mutating Voice Lab endpoints (dictionary/retrain);
+    # empty disables the check (local dev). Set it on any public deployment.
+    VOICELAB_TOKEN: str = ""
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"
 

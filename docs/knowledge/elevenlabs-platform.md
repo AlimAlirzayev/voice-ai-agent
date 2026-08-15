@@ -57,6 +57,23 @@ TTS models exclude AZ (see above), and our differentiators (Divan LangGraph brai
 native cloned voices) argue for keeping the brain ours and treating any avatar/voice
 platform as an output layer that accepts OUR audio.
 
+## Consistency findings (2026-08-15, measured on the live clone)
+
+- ✓ `eleven_v3` REJECTS `language_code=aze` (HTTP 400 "does not support") even
+  though aze is in its language list — v3 is auto-detect only. With an AZ clone
+  voice, default settings let the model drift into Turkish phonetics
+  mid-sentence ("Selam, ben Köroğlu'yum").
+- ✓ `voice_settings.stability=1.0` (robust) markedly reduces that drift — now
+  the code default (`ELEVENLABS_STABILITY`). Trade-off: less expressive.
+- ✓ Respelling experiments are UNRELIABLE at n=1: "Koroğlu-yam" passed the
+  TTS→Whisper loop once, then failed 0/2 confirmation runs. Rule: a respelling
+  enters the pronunciation dictionary only after 2/2 consecutive passes
+  (harness: `apps/voice-ai-agent/scripts/tune_pronunciation.py`).
+- Open problem words: "Koroğluyam", "igidlərin" — no confirmed respelling yet;
+  candidates tried and failed are logged in the session history. Next levers:
+  better/longer clone material (Voice Lab samples + /voicelab/retrain), or
+  Azure `az-AZ` for correctness-critical narration.
+
 ## CORRECTION (2026-08-14, from Alim): the AZ voice market is alive
 
 Alim pushed back on the "artificial AZ is inevitable" reading — correctly. Local
