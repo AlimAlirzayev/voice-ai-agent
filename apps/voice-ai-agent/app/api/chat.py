@@ -69,6 +69,7 @@ async def chat(payload: ChatRequest, request: Request) -> ChatResponse:
         consulted=result.consulted or [],
         turn_id=result.turn_id,
         narration=result.narration or [],
+        citations=result.citations or [],
     )
 
 
@@ -91,4 +92,5 @@ async def chat_resume(payload: ResumeRequest, request: Request) -> ChatResponse:
         consulted=result.consulted or [],
         turn_id=result.turn_id,
         narration=result.narration or [],
+        citations=result.citations or [],
     )

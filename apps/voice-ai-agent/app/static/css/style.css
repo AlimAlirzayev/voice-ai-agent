@@ -727,3 +727,28 @@ footer.credit {
 .lab-diffs.good { color: var(--good); }
 .lab-diffs.bad { color: var(--warn); }
 .lab-result audio { width: 100%; margin-top: 4px; }
+
+/* =========================================================================
+   Citations — grounded-reply receipts under a bot bubble
+   ========================================================================= */
+
+.citations {
+  margin: 8px 0 2px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-left: 2px solid var(--seal);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.citations-head {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--seal);
+}
+.citation { font-size: 0.85rem; line-height: 1.45; }
+.citation-quote { color: var(--ink2); font-style: italic; }
+.citation-ref { color: var(--ink3); margin-left: 6px; white-space: nowrap; }

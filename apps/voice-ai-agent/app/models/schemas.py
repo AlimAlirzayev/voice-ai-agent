@@ -37,6 +37,11 @@ class ChatResponse(BaseModel):
         default_factory=list,
         description="Divanbəyi's own brief lines explaining what the graph did, in order.",
     )
+    citations: list[dict] = Field(
+        default_factory=list,
+        description="Corpus passages the consulted advisors were grounded on: "
+        "{advisor, name, work, ref, quote, source}. The receipt behind the reply.",
+    )
 
 
 class FeedbackRequest(BaseModel):

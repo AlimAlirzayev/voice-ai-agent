@@ -581,6 +581,31 @@ function appendPendingBox(turn, approval, modality) {
   });
 }
 
+/* Citations — the receipt behind a grounded reply: which real passages the
+   consulted advisors leaned on ({work, ref, quote}). */
+function appendCitations(turn, citations) {
+  if (!citations || !citations.length) return;
+  const box = document.createElement("div");
+  box.className = "citations";
+  const head = document.createElement("div");
+  head.className = "citations-head";
+  head.textContent = "📜 Mənbələr";
+  box.appendChild(head);
+  citations.forEach((c) => {
+    const row = document.createElement("div");
+    row.className = "citation";
+    const quote = document.createElement("span");
+    quote.className = "citation-quote";
+    quote.textContent = "«" + c.quote + (c.quote.length >= 160 ? "…" : "") + "»";
+    const ref = document.createElement("span");
+    ref.className = "citation-ref";
+    ref.textContent = "— " + (c.name ? c.name + ": " : "") + c.work + ", " + c.ref;
+    row.append(quote, ref);
+    box.appendChild(row);
+  });
+  turn.appendChild(box);
+}
+
 /* ---------------------------------------------------------------------- *
  * Text chat flow
  * ---------------------------------------------------------------------- */
@@ -610,6 +635,7 @@ async function submitText(message) {
       setSteps({ hitl: "done", memory: "done" });
       appendBotBubble(turn, data.reply, "bot");
       appendChips(turn, data.consulted);
+      appendCitations(turn, data.citations);
       appendFeedbackRow(turn, data.turn_id, data.thread_id);
     }
   } catch (err) {

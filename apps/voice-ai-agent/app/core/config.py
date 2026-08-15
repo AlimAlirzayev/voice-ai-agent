@@ -119,6 +119,10 @@ class Settings(BaseSettings):
         return path if path.is_absolute() else BASE_DIR / path
 
     @property
+    def rag_index_file(self) -> Path:
+        return self.sqlite_file.parent / "rag" / "index.json"
+
+    @property
     def feedback_file(self) -> Path:
         path = Path(self.FEEDBACK_PATH)
         return path if path.is_absolute() else BASE_DIR / path

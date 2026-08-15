@@ -61,6 +61,7 @@ from app.prompts.divan import (
     advisor_prompt,
     supervisor_prompt,
 )
+from app.rag.retriever import evidence_for
 from app.services.llm import ainvoke_with_retry, build_llm
 
 ADVISOR_KEYS = tuple(ROSTER.keys())
@@ -87,6 +88,7 @@ class ChatState(TypedDict):
     draft: str
     needs_approval: bool
     narration: list[str]
+    citations: list[dict]
 
 
 @dataclass
@@ -102,6 +104,7 @@ class TurnResult:
     opinions: list[dict] | None = None
     turn_id: str = ""
     narration: list[str] | None = None
+    citations: list[dict] | None = None
 
 
 def build_graph(checkpointer, llm: BaseChatModel | None = None):
@@ -119,6 +122,7 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
             "draft": "",
             "needs_approval": False,
             "narration": [],
+            "citations": [],
         }
 
     async def supervisor(state: ChatState) -> Command:
@@ -154,16 +158,44 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
 
     def make_advisor(key: str):
         async def advisor(state: ChatState) -> Command:
+            # Grounding (Phase 2): pull passages from this advisor's own corpus
+            # for the user's question. Evidence feeds the character, it does
+            # not replace it - and below the relevance gate the advisor simply
+            # answers uncited (see app/rag/retriever.py).
+            query = next(
+                (m.content for m in reversed(state["messages"]) if isinstance(m, HumanMessage)),
+                "",
+            )
+            evidence = await evidence_for(key, query) if query else []
+
+            system = advisor_prompt(key)
+            if evidence:
+                passages = "\n".join(
+                    f"[{i + 1}] «{e['text']}» — {e['work']}, {e['ref']}"
+                    for i, e in enumerate(evidence)
+                )
+                system += (
+                    "\n\nÖz mənbələrindən sənə aid parçalar (yalnız sualla doğrudan "
+                    "səsləşərsə istifadə et, uyğun deyilsə, sərbəst cavab ver):\n"
+                    f"{passages}"
+                )
+
             reply = await ainvoke_with_retry(
                 get_model(),
-                [SystemMessage(content=advisor_prompt(key)), *state["messages"]],
+                [SystemMessage(content=system), *state["messages"]],
                 label=f"llm-advisor-{key}",
             )
             opinion = {"advisor": key, "name": ROSTER[key]["name"], "text": reply.content}
+            new_citations = [
+                {"advisor": key, "name": ROSTER[key]["name"], "work": e["work"],
+                 "ref": e["ref"], "quote": e["text"][:160], "source": e["source"]}
+                for e in evidence
+            ]
             return Command(
                 update={
                     "opinions": state.get("opinions", []) + [opinion],
                     "consulted": state.get("consulted", []) + [key],
+                    "citations": state.get("citations", []) + new_citations,
                 },
                 goto="supervisor",
             )
@@ -304,6 +336,7 @@ def _extract_result(raw: dict) -> TurnResult:
             opinions=raw.get("opinions", []),
             turn_id=_new_turn_id(),
             narration=raw.get("narration", []),
+            citations=raw.get("citations", []),
         )
     messages = raw.get("messages", [])
     reply = messages[-1].content if messages else ""
@@ -315,6 +348,7 @@ def _extract_result(raw: dict) -> TurnResult:
         opinions=raw.get("opinions", []),
         turn_id=_new_turn_id(),
         narration=raw.get("narration", []),
+        citations=raw.get("citations", []),
     )
 
 
