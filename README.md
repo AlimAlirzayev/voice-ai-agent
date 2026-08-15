@@ -8,8 +8,9 @@ istifadəçi mətn və ya səsli mesaj göndərir, **Divanbəyi** (supervisor ag
 
 | 🔗 Canlı | Ünvan |
 |---|---|
-| Demo səhifəsi | http://207.154.231.255/demo |
-| API sənədləri (Swagger) | http://207.154.231.255/docs |
+| Demo səhifəsi (HTTPS — mikrofon işləyir) | https://207-154-231-255.sslip.io/demo |
+| Demo səhifəsi (HTTP) | http://207.154.231.255/demo |
+| API sənədləri (Swagger) | https://207-154-231-255.sslip.io/docs |
 | Telegram bot | serverdə 24/7 işləyir |
 
 ## Arxitektura — bir baxışda

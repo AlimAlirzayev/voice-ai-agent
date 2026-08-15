@@ -11,10 +11,15 @@ necə davam etdirməyi izah edir.
 
 | Nə | Ünvan |
 |---|---|
-| Canlı demo səhifəsi | http://207.154.231.255/demo |
+| Canlı demo (HTTPS — brauzer mikrofonu burada işləyir) | https://207-154-231-255.sslip.io/demo |
+| Canlı demo (HTTP, köhnə link) | http://207.154.231.255/demo |
 | Health / status | http://207.154.231.255/ |
-| API sənədləri (Swagger) | http://207.154.231.255/docs |
+| API sənədləri (Swagger) | https://207-154-231-255.sslip.io/docs |
 | Telegram | botunuz serverdə işləyir, birbaşa yazın |
+
+HTTPS `sslip.io` ilə pulsuzdur: `207-154-231-255.sslip.io` adı avtomatik həmin IP-yə
+yönəlir, sertifikatı Let's Encrypt verir, TLS-i host-dakı **Caddy** proksisi idarə
+edir (`/etc/caddy/Caddyfile`). Domen alınsa, Caddyfile-da adı dəyişmək kifayətdir.
 
 Server: DigitalOcean droplet, Ubuntu 24.04, Frankfurt (FRA1), `207.154.231.255`.
 Tətbiq `/opt/voice-ai-agent` qovluğunda, Docker Compose ilə işləyir.
@@ -113,12 +118,14 @@ docker compose --profile telegram up -d --force-recreate
 | Port | Vəziyyət | Qeyd |
 |---|---|---|
 | 22 | açıq | SSH |
-| 80 | açıq | tətbiq (konteynerdə 8000 → hostda 80) |
+| 80 | açıq | Caddy: HTTP (IP linki) + Let's Encrypt yoxlaması |
+| 443 | açıq | Caddy: HTTPS (`207-154-231-255.sslip.io`) |
+| 8080 | daxili | api konteyneri (konteynerdə 8000 → hostda 8080); trafik Caddy-dən keçir |
 
-Port `.env`-dəki `API_PORT` ilə idarə olunur. 80 seçilib ki, məhdud şəbəkələrdən
-(kurs wifi, telefon) problemsiz açılsın və URL-də `:8000` görünməsin.
+Axın: brauzer → Caddy (80/443) → `127.0.0.1:8080` → api konteyneri.
+Konteyner portu `.env`-dəki `API_PORT=8080` ilə idarə olunur.
 
-Firewall (UFW) yalnız 22 və 80-ə icazə verir:
+Firewall (UFW) yalnız 22, 80 və 443-ə icazə verir:
 
 ```bash
 ufw status
