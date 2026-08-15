@@ -9,6 +9,7 @@ project story lives in the root [README.md](../../README.md) (Azerbaijani).
 |---|---|
 | [elevenlabs-platform.md](elevenlabs-platform.md) | Verified facts about the ElevenLabs account, models, cloning and the AZ voice gap |
 | [architecture-landscape-2026.md](architecture-landscape-2026.md) | Agentic RAG pattern, citation grounding, avatar/talking-head landscape, eval discipline |
+| [storage-policy.md](storage-policy.md) | Where data lives: git / Drive warehouse / server volume, and why dictionaries stay out of the vector index |
 
 Rules: date every claim, mark verified facts (✓ = tested against the live API/account,
 not read from marketing). Never store API keys or account identifiers here — the repo
