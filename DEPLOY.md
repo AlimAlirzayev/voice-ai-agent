@@ -151,17 +151,53 @@ yuxarıdakı əl ilə deploy addımları işləyir.
 
 ## 7. Yeni Claude Code sessiyasına nə demək
 
-Yeni kompüterdə söhbət tarixçəsi keçmir. İşi davam etdirmək üçün qısaca bunu
-deyin:
+Yeni sessiyada söhbət tarixçəsi keçmir. Bunu yapışdırmaq kifayətdir:
 
-> Bu layihə "Divan" adlı çoxagentli AI şurasıdır (LangGraph supervisor + 6
-> tarixi Azərbaycan personajı, HITL təsdiq, hər personaj üçün ayrı ElevenLabs
-> səsi, feedback loop, təhlükəsizlik qapısı). Kod GitHub-dadır, canlı server
-> `207.154.231.255`-də işləyir. Ətraflı: `README.md` və `DEPLOY.md`.
+> Divan layihəsində işləyirik: `~/PyCharmMiscProject/voice-ai-agent`.
+> Əvvəlcə `DEPLOY.md` § 7 və `README.md` yol xəritəsini oxu — vəziyyət və
+> növbəti addımlar oradadır. Canlı: https://207-154-231-255.sslip.io/demo
 
-Layihənin texniki izahı tam şəkildə [`README.md`](README.md)-dədir: qraf
-topologiyası, HITL axını, hər personajın tarixi mənbəyi, API nümunələri və
-test/eval əmrləri.
+### Hazırkı vəziyyət (2026-08-16)
+
+- **Şura tam işləkdir**: 6 personajın hər biri öz ElevenLabs səsi ilə danışır
+  və öz korpusundan sitat gətirir (392 parça, `citations` sahəsi).
+- **Səs Məktəbi** canlıdır — Telegram `/ses` və demo səhifəsindəki üçüncü tab:
+  istifadəçi cümlə oxuyur, sistem onun oxunuşu ilə klonun oxunuşunu Whisper-lə
+  müqayisə edir, yazılar klon materialına, xətalar tələffüz lüğətinə yığılır.
+- **Avtomatik tələffüz düzəlişi**: `scripts/scan_pronunciation.py` problemləri
+  tapır, `scripts/auto_tune_pronunciation.py` LLM ilə namizəd yazılış təklif
+  edib TTS→Whisper dövründə **2/2 təsdiqlə** lüğətə yazır.
+- 79 test keçir; GitHub və server sinxrondur.
+
+### Növbəti addımlar (README yol xəritəsi ilə eyni)
+
+1. **Faza 3 — öyrənən yaddaş**: sessiya kəşflərini `docs/knowledge/`-ə yazan
+   reflection qrafı (indi bu, əl ilə edilir).
+2. **Faza 3.5 — eval intizamı**: LLM-as-judge gecə regressiyaları + sitat
+   sədaqəti (groundedness) yoxlamaları.
+3. **Faza 4 — production**: Postgres checkpoint, auth, GitHub Actions deploy.
+4. **Faza 5 — «Zəngin» vizyonu**: danışan portretlər (avatar qatı **bizim öz
+   audio axınımızı** qəbul etməlidir — Simli tipli speech-to-video; platformanın
+   öz TTS-i native AZ səsi itirər).
+5. Alimin əlində qalan: Koroğlu üçün obrazlı səs yazısı, Səs Məktəbində 12
+   cümləni oxumaq (~10 dəq) → sonra `POST /voicelab/retrain`.
+
+### Vaxt itirməmək üçün bilinməli olanlar
+
+| Tələ | Həqiqət |
+|---|---|
+| Lokal port | `.env`-dəki `API_PORT` səbəbindən **8011** (8000 yox) |
+| Serverdə port | api **8080**-dədir, qarşısında Caddy (80/443) durur |
+| Mikrofon | yalnız HTTPS ünvanında işləyir, `http://IP`-də brauzer bloklayır |
+| RAG indeksi | **törəmə datadır**, commit olunmur — korpus dəyişəndə hər hostda `docker compose exec api python -m app.rag.ingest` |
+| `scripts/` | Dockerfile-a daxil deyil; konteynerdə işlətmək üçün `docker cp` + `PYTHONPATH=/app` |
+| Whisper | `language="az"` **mütləqdir** — olmasa türkcəyə sürüşür və ölçmələri korlayır |
+| eleven_v3 | `language_code=aze` qəbul etmir; sabitlik üçün `stability=1.0` |
+| Tələffüz düzəlişi | tək uğurlu sınaq **etibarsızdır**, 2/2 təsdiq şərtdir |
+| Voicelab yazma API-ləri | serverdə `X-Voicelab-Token` tələb edir (serverin `.env`-ində) |
+
+Layihənin texniki izahı [`README.md`](README.md)-dədir; toplanmış araşdırma və
+platforma faktları [`docs/knowledge/`](docs/knowledge/) qovluğundadır.
 
 ## 8. Sağlamlıq yoxlaması
 
