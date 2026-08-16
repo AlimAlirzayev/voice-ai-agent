@@ -135,8 +135,8 @@ fərqimiz budur.
 
 | Faza | İş | Texnologiya | Status |
 |---|---|---|---|
-| 1 | **Native Azərbaycan səsi** | `eleven_v3` (AZ dəstəkli) + native klon (dastançı) + Səs Məktəbi öyrənmə dövrü; ehtiyat: Azure `az-AZ` neural səsləri | ✅ işləyir, klonlar genişlənir |
-| 2 | **Grounded personalar (RAG)** | Hər üzvün öz korpusu (Vikimənbə, public domain) → embedding retrieval + uyğunluq qapısı; cavablar real bənd/boy sitatı ilə (`citations`) | ✅ 3 üzv: Nəsimi, Dədə Qorqud, Koroğlu; qalan 3-ü korpus gözləyir |
+| 1 | **Native Azərbaycan səsi** | `eleven_v3` + Voice Design ilə hər üzvə fərqli, obrazına uyğun səs (6/6) + native dastançı klonu + Səs Məktəbi öyrənmə dövrü + avtomatik tələffüz-düzəltmə boru xətti | ✅ 6/6 üzv fərqli səslə danışır |
+| 2 | **Grounded personalar (RAG)** | Hər üzvün öz korpusu (Vikimənbə, public domain) → embedding retrieval + uyğunluq qapısı; cavablar real bənd/boy sitatı ilə (`citations`) | ✅ 4 üzv, 300 parça: Nəsimi, Dədə Qorqud, Koroğlu, Molla Nəsrəddin; Simurğ/Nizami üçün açıq lisenziyalı AZ mətn tapılmadı (tərcümə hüququ) |
 | 3 | **Öyrənən yaddaş** | Reflection qrafı: hər sessiyanın kəşfləri LangGraph node-u ilə çıxarılıb bilik bazasına ([`docs/knowledge/`](docs/knowledge/) → vektor store) yazılır və sonrakı cavablarda geri çağırılır — sistem öz təcrübəsindən nəticə çıxarır | planda |
 | 3.5 | **Eval intizamı** | Mövcud golden suite üstünə: LLM-as-judge gecə regressiyaları + sitat sədaqəti (groundedness) yoxlamaları | planda |
 | 4 | **Production quruluşu** | Postgres checkpoint, auth, feedback dashboard, GitHub Actions auto-deploy | planda |
