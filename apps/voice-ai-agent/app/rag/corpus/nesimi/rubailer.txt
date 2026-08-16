@@ -1,0 +1,43 @@
+# work: Rübailər
+# author: İmadəddin Nəsimi
+# advisor: nesimi
+# type: poem
+# source: https://az.wikisource.org/wiki/Rübailər_(Nəsimi)
+# license: public-domain work; transcription: Vikimənbə CC BY-SA
+
+{{Başlıq
+| başlıq             = 
+| müəllif            = İmadəddin Nəsimi
+| keçidsiz müəllif   = 
+| tərcüməçi          = 
+| keçidsiz tərcüməçi = 
+| bölmə              = 
+| əvvəlki            = 
+| növbəti            = 
+| il                 =  
+| qeydlər            = 
+| mənbə              = 
+| vikipediya_keçidi  = 
+| vikisitat_keçidi   = 
+| commons_keçidi     = 
+}}
+
+Fəzli həqdir vaqifi əsrarımız 
+Fəzli həqdəndir qamu ənvarımız 
+Fəzl həq göstərmiş idi karımız 
+Fəzli həqdir, Fəzli həq memarımız.
+
+Ey özündən bixəbər qafil, oyan 
+Həqqə gəl kim, həq deyil batil, oyan 
+Olma fani aləmə mail, oyan 
+Mərifətdən nəsnə qıl hasil, oyan.
+
+Həq-təala Adəm oğlu özüdür 
+Otuz iki həq kəlamı sözüdür 
+Cümlə aləm bil ki, Allah özüdür 
+Adəm ol candır ki, günəş özüdür.
+
+Ay ilə günəş üzün heyranıdır 
+Müşk ilə ənbər saçın tərxanıdır 
+Çün Nəsimi əyyamın sultanıdır 
+Dövr anın, dövran anın dövranıdır.

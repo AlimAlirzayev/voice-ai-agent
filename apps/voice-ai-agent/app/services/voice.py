@@ -39,7 +39,18 @@ def _elevenlabs() -> AsyncElevenLabs:
 
 
 async def transcribe(audio: bytes, filename: str = "audio.ogg") -> str:
-    """Speech to text with Whisper."""
+    """Speech to text with Whisper.
+
+    `language="az"` matters more than it looks: without it, Whisper
+    autodetects and - measured 2026-08-15 via scripts/scan_pronunciation.py -
+    drifts to Turkish (phonetically the closest language) on a large fraction
+    of otherwise-correct Azerbaijani audio: "qovuşmaz" heard as "kovuşmaz",
+    "hər" as "her", "cahan" as "cehennem" (Turkish for "hell"), one utterance
+    came back transliterated into Persian script entirely. That was our own
+    measurement instrument lying about the TTS, not a TTS problem - a "fix"
+    based on those transcripts would have forced the voice to say the WRONG
+    thing to satisfy a mis-set STT. Pinning the language stops the drift.
+    """
     if not audio:
         raise VoiceError("The uploaded audio file is empty")
 
@@ -47,6 +58,7 @@ async def transcribe(audio: bytes, filename: str = "audio.ogg") -> str:
         lambda: _openai().audio.transcriptions.create(
             model=settings.OPENAI_STT_MODEL,
             file=(filename, audio),
+            language="az",
         ),
         label="whisper-transcribe",
     )

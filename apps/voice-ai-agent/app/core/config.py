@@ -42,13 +42,16 @@ class Settings(BaseSettings):
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"
 
-    # --- Divan council: one distinct real voice per legendary advisor ---
-    ELEVENLABS_VOICE_ID_NESREDDIN: str = "JBFqnCBsd6RMkjVDRZzb"  # George: warm, mature
-    ELEVENLABS_VOICE_ID_KOROGLU: str = "VR6AewLTigWG4xSOukaG"  # Arnold: deep, intense
-    ELEVENLABS_VOICE_ID_SIMURG: str = "21m00Tcm4TlvDq8ikWAM"  # Rachel: calm, clear
-    ELEVENLABS_VOICE_ID_NESIMI: str = "ErXwobaYiN019PkySvjV"  # Antoni: resonant, proclaiming
-    ELEVENLABS_VOICE_ID_DEDEQORQUD: str = "pNInz6obpgDQGcFmaJgB"  # Adam: deep, elder authority
-    ELEVENLABS_VOICE_ID_NIZAMI: str = "TxGEqnHWrfWFTfGW9XjX"  # Josh: warm, refined
+    # --- Divan council: one distinct real voice per legendary advisor.
+    # Designed 2026-08-15 via ElevenLabs Voice Design (text-to-voice), one
+    # in-character description per advisor, then saved permanently to the
+    # account - replaces the earlier generic English premade voices. ---
+    ELEVENLABS_VOICE_ID_NESREDDIN: str = "upFQswkYdMAgtWgjZXkL"  # warm wry folk storyteller
+    ELEVENLABS_VOICE_ID_KOROGLU: str = "o0yt6WKWDl2XhHqGDcxJ"  # deep heroic warrior
+    ELEVENLABS_VOICE_ID_SIMURG: str = "0veO3zcg0atchaW6fibk"  # ethereal mythical bird
+    ELEVENLABS_VOICE_ID_NESIMI: str = "F3jd2648HUXkUl5m169e"  # intense mystic poet
+    ELEVENLABS_VOICE_ID_DEDEQORQUD: str = "t9lFw8Q0LywmkFAU7PfJ"  # ancient wise elder
+    ELEVENLABS_VOICE_ID_NIZAMI: str = "D19FXtjmMLZnfSG9IkSO"  # refined poet-philosopher
     OPENAI_TTS_VOICE_NESREDDIN: str = "onyx"
     OPENAI_TTS_VOICE_KOROGLU: str = "echo"
     OPENAI_TTS_VOICE_SIMURG: str = "nova"
