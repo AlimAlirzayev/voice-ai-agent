@@ -88,11 +88,35 @@ def chunk_prose(body: str) -> list[tuple[str, str]]:
     return [(text, f"hissə {i + 1}") for i, text in enumerate(chunks)]
 
 
+def is_usable(body: str) -> bool:
+    """Guard against garbage entering the index.
+
+    Wikimedia (and most sites) answer a failed fetch with an HTML error page
+    under HTTP 200; the markup cleaner strips the tags and produces
+    plausible-looking "text" that would be embedded and later quoted at a user
+    as if it were Nizami. One such page reached the corpus on 2026-08-16
+    before this check existed.
+
+    Structural markers do the real work here. The length floor only catches
+    redirect stubs and is deliberately low: a genuine ghazal can be six lines
+    (two of Nəsimi's are), and a 200-char floor silently dropped them.
+    """
+    lowered = body[:2000].lower()
+    if any(marker in lowered for marker in ("<!doctype html", "wikimedia error", "wikimedia foundation")):
+        return False
+    if "{" in body[:200] and "}" in body[:200]:  # unstripped template markup
+        return False
+    return len(body) >= 80
+
+
 def collect_chunks() -> list[dict]:
     chunks = []
     for path in sorted(CORPUS_DIR.rglob("*.txt")):
         meta, body = parse_source(path)
         if not body or "advisor" not in meta:
+            continue
+        if not is_usable(body):
+            print(f"SKIP (failed validation): {path.relative_to(CORPUS_DIR)}")
             continue
         chunker = chunk_poem if meta.get("type") == "poem" else chunk_prose
         for text, ref in chunker(body):

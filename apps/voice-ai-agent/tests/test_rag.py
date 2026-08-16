@@ -7,7 +7,7 @@ import pytest
 
 from app.core.config import settings
 from app.rag import ingest, retriever
-from app.rag.ingest import chunk_poem, chunk_prose, collect_chunks, parse_source
+from app.rag.ingest import chunk_poem, chunk_prose, collect_chunks, is_usable, parse_source
 from app.rag.retriever import Retriever, _cosine, evidence_for, get_retriever
 
 
@@ -43,11 +43,35 @@ def test_chunk_prose_packs_paragraphs():
     assert all(len(text) <= ingest.MAX_PROSE_CHUNK + 250 for text, _ in chunks)
 
 
-def test_repo_corpus_parses_into_chunks_for_three_advisors():
+def test_repo_corpus_parses_into_chunks_for_every_advisor():
     chunks = collect_chunks()
     advisors = {c["advisor"] for c in chunks}
-    assert {"nesimi", "dedeqorqud", "koroglu"} <= advisors
+    assert {"nesimi", "dedeqorqud", "koroglu", "nesreddin", "nizami", "simurg"} <= advisors
     assert all(c["work"] and c["ref"] and c["text"] for c in chunks)
+
+
+def test_is_usable_rejects_fetch_failures_and_markup():
+    # A site error page served under HTTP 200 must never become "corpus text".
+    assert not is_usable("<!DOCTYPE html>\n<html>\nWikimedia Error\n" + "x" * 400)
+    assert not is_usable("{{Başlıq | müəllif = X }} unstripped template " + "y" * 300)
+    assert not is_usable("çox qısa mətn")
+    assert is_usable("Məndə sığar iki cahan, mən bu cahanə sığmazam,\n" * 10)
+    # a real six-line ghazal is short but must survive (regression: the first
+    # length floor silently dropped two genuine Nəsimi poems)
+    assert is_usable(
+        "Zühur eylədi cümlə əşyada həq,\nQanı bir bəsirətli, açıqnəzər.\n\n"
+        "Nəsimi kimi vahid ol yarilən,\nIkilik sifətdən ikilik bitər.\n\n"
+        "Ikilikdə qalan əzazil olur,\nMələksiyrət insan ol anı gidər."
+    )
+
+
+def test_no_corpus_file_contains_fetch_failure_markers():
+    """Regression guard for 2026-08-16: two Wikimedia error pages were cleaned
+    into 'text' and written to the corpus before validation existed."""
+    for chunk in collect_chunks():
+        lowered = chunk["text"].lower()
+        assert "wikimedia error" not in lowered
+        assert "<!doctype" not in lowered
 
 
 def test_cosine_basics():

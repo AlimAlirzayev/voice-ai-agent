@@ -53,14 +53,14 @@ FastAPI backend-də. Kanallar (Telegram, web, n8n) yalnız eyni API-ni çağıra
 
 ## Şuranın 6 üzvü
 
-| Üzv | Sahəsi |
-|---|---|
-| **Molla Nəsrəddin** | gündəlik problemlər, yumor, fərqli baxış |
-| **Koroğlu** | cəsarət, risk, haqsızlığa qarşı çıxmaq *(HITL tetikleyicisi)* |
-| **Simurğ** | dərin həyat sualları, müdriklik |
-| **Nəsimi** | özünəinam, mənəvi kimlik |
-| **Dədə Qorqud** | ailə, nəsihət, böyük keçidlər |
-| **Nizami Gəncəvi** | sevgi, münasibətlər, ədalət |
+| Üzv | Sahəsi | Danışdığı mətn (RAG korpusu) |
+|---|---|---|
+| **Molla Nəsrəddin** | gündəlik problemlər, yumor, fərqli baxış | xalq lətifələri |
+| **Koroğlu** | cəsarət, risk, haqsızlığa qarşı çıxmaq *(HITL tetikleyicisi)* | Koroğlu dastanı — 5 qol |
+| **Simurğ** | dərin həyat sualları, müdriklik | Məlikməmməd nağılı (Zümrüd quşu), quşlar qəsidəsi |
+| **Nəsimi** | özünəinam, mənəvi kimlik | «Sığmazam» və digər qəzəllər, rübailər |
+| **Dədə Qorqud** | ailə, nəsihət, böyük keçidlər | Kitabi-Dədə Qorqud — 4 boy |
+| **Nizami Gəncəvi** | sevgi, münasibətlər, ədalət | Sirlər Xəzinəsi, Leyli və Məcnun, Xosrov və Şirin |
 
 Hər üzvün xarakter promptu real tarixi/ədəbi mənbəyə əsaslanır:
 [`divan.py`](apps/voice-ai-agent/app/prompts/divan.py). Hər üzvə ElevenLabs-da ayrı səs təyin olunub.
@@ -136,7 +136,7 @@ fərqimiz budur.
 | Faza | İş | Texnologiya | Status |
 |---|---|---|---|
 | 1 | **Native Azərbaycan səsi** | `eleven_v3` + Voice Design ilə hər üzvə fərqli, obrazına uyğun səs (6/6) + native dastançı klonu + Səs Məktəbi öyrənmə dövrü + avtomatik tələffüz-düzəltmə boru xətti | ✅ 6/6 üzv fərqli səslə danışır |
-| 2 | **Grounded personalar (RAG)** | Hər üzvün öz korpusu (Vikimənbə, public domain) → embedding retrieval + uyğunluq qapısı; cavablar real bənd/boy sitatı ilə (`citations`) | ✅ 4 üzv, 300 parça: Nəsimi, Dədə Qorqud, Koroğlu, Molla Nəsrəddin; Simurğ/Nizami üçün açıq lisenziyalı AZ mətn tapılmadı (tərcümə hüququ) |
+| 2 | **Grounded personalar (RAG)** | Hər üzvün öz korpusu (Vikimənbə) → embedding retrieval + uyğunluq qapısı; cavablar real bənd/boy sitatı ilə (`citations`) | ✅ **6/6 üzv, 392 parça** — hər üzv öz mətnindən danışır |
 | 3 | **Öyrənən yaddaş** | Reflection qrafı: hər sessiyanın kəşfləri LangGraph node-u ilə çıxarılıb bilik bazasına ([`docs/knowledge/`](docs/knowledge/) → vektor store) yazılır və sonrakı cavablarda geri çağırılır — sistem öz təcrübəsindən nəticə çıxarır | planda |
 | 3.5 | **Eval intizamı** | Mövcud golden suite üstünə: LLM-as-judge gecə regressiyaları + sitat sədaqəti (groundedness) yoxlamaları | planda |
 | 4 | **Production quruluşu** | Postgres checkpoint, auth, feedback dashboard, GitHub Actions auto-deploy | planda |
