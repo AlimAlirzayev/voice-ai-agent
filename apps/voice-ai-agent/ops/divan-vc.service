@@ -1,0 +1,14 @@
+[Unit]
+Description=Divan - owner timbre converter (OpenVoice v2, CPU) on 127.0.0.1:8941
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/divan/vc
+ExecStart=/opt/divan/vc/.venv/bin/python server.py
+Restart=on-failure
+RestartSec=5
+MemoryMax=1500M
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

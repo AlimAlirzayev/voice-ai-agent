@@ -90,7 +90,11 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
         try:
             return await clone_voice.speak(text, advisor), OGG, "clone"
         except clone_voice.CloneUnavailable as exc:
-            log.warning("cloned voice unavailable, Microsoft voice speaks: %s", exc)
+            log.warning("OmniVoice clone unavailable, converting the Microsoft voice: %s", exc)
+        try:
+            return await _edge_tts(text, advisor, owner=True), OGG, "owner-vc"
+        except clone_voice.CloneUnavailable as exc:
+            log.warning("owner timbre converter unavailable, Microsoft voice speaks: %s", exc)
             provider = "edge"
 
     if provider == "elevenlabs":
@@ -106,7 +110,7 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
     return await _openai_tts(text, advisor), OGG, "openai"
 
 
-async def _edge_tts(text: str, advisor: str | None) -> bytes:
+async def _edge_tts(text: str, advisor: str | None, owner: bool = False) -> bytes:
     """Free Microsoft neural Azerbaijani voices (edge-tts), re-encoded to OGG/Opus.
 
     edge-tts only emits MP3; ffmpeg turns it into the same OGG/Opus the other
@@ -123,9 +127,14 @@ async def _edge_tts(text: str, advisor: str | None) -> bytes:
         )
         if not mp3:
             raise VoiceError("edge-tts returned no audio")
-        return await _mp3_to_ogg(mp3)
+        return mp3
 
-    return await call_with_retry(_once, label="edge-tts")
+    mp3 = await call_with_retry(_once, label="edge-tts")
+    if owner:
+        from app.services import clone_voice
+
+        return await clone_voice.to_owner(mp3)
+    return await _mp3_to_ogg(mp3)
 
 
 async def _mp3_to_ogg(mp3: bytes) -> bytes:

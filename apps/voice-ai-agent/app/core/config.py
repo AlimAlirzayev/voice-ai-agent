@@ -78,6 +78,9 @@ class Settings(BaseSettings):
     CLONE_REF_TEXT: str = ""
     CLONE_SPACE: str = "k2-fsa/OmniVoice"
     CLONE_TIMEOUT: float = 45.0
+    # Second rung of the owner voice: local timbre converter (divan-vc service).
+    VC_URL: str = "http://127.0.0.1:8941"
+    VC_TIMEOUT: float = 40.0
     HF_TOKEN: str = ""
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"

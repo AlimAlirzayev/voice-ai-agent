@@ -17,6 +17,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import tempfile
+import time
 from functools import lru_cache
 from pathlib import Path
 
@@ -27,6 +28,19 @@ log = logging.getLogger(__name__)
 
 class CloneUnavailable(RuntimeError):
     """The cloned voice cannot speak this turn (no reference, Space down, timeout)."""
+
+
+# The free Hugging Face tier gives a few minutes of GPU a day (measured 2026-09-25:
+# dry after about seven clips). Once it says so, stop knocking until it refills,
+# so every turn does not pay a failed round trip before the converter speaks.
+QUOTA_COOLDOWN = 3600.0
+_resting_until = 0.0
+
+
+def _note_quota(exc: Exception) -> None:
+    global _resting_until
+    if "quota" in str(exc).lower():
+        _resting_until = time.time() + QUOTA_COOLDOWN
 
 
 def style_for(advisor: str | None) -> tuple[float, float]:
@@ -99,6 +113,8 @@ async def _to_ogg(wav: str, semitones: float) -> bytes:
 async def speak(text: str, advisor: str | None) -> bytes:
     if not available():
         raise CloneUnavailable(f"no reference voice at {settings.clone_ref_file}")
+    if time.time() < _resting_until:
+        raise CloneUnavailable("OmniVoice GPU quota is resting")
     speed, semitones = style_for(advisor)
     try:
         wav = await asyncio.wait_for(asyncio.to_thread(_predict, text, speed),
@@ -109,5 +125,32 @@ async def speak(text: str, advisor: str | None) -> bytes:
         raise
     except Exception as exc:  # noqa: BLE001 - any Space failure means: fall back
         _client.cache_clear()
+        _note_quota(exc)
         raise CloneUnavailable(f"OmniVoice failed: {exc}") from exc
     return await _to_ogg(wav, semitones)
+
+
+async def to_owner(mp3: bytes) -> bytes:
+    """Second rung: any Azerbaijani speech (the Microsoft voice) re-timbred into the
+    owner's voice by the local converter (`divan-vc`, OpenVoice v2 on CPU, ~5 s per
+    6 s clip). Used when OmniVoice is out of free GPU quota - measured 2026-09-25:
+    the free Hugging Face tier ran dry after about seven clips."""
+    import httpx
+
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-loglevel", "error", "-i", "pipe:0", "-ac", "1", "-ar", "22050", "-f", "wav", "pipe:1",
+        stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    wav, err = await proc.communicate(mp3)
+    if proc.returncode != 0 or not wav:
+        raise CloneUnavailable(f"ffmpeg mp3->wav failed: {err.decode('utf-8', 'replace')[:200]}")
+    try:
+        async with httpx.AsyncClient(timeout=settings.VC_TIMEOUT) as client:
+            r = await client.post(f"{settings.VC_URL}/convert", content=wav)
+        r.raise_for_status()
+    except Exception as exc:  # noqa: BLE001 - converter down means: plain voice
+        raise CloneUnavailable(f"timbre converter failed: {exc}") from exc
+    with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
+        tmp.write(r.content)
+        tmp.flush()
+        return await _to_ogg(tmp.name, 0.0)

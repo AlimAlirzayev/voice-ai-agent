@@ -14,12 +14,26 @@ def test_falls_back_to_edge_without_reference(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "TTS_PROVIDER", "clone")
     monkeypatch.setattr(settings, "CLONE_REF_PATH", str(tmp_path / "missing.wav"))
 
-    async def fake_edge(text, advisor):
+    async def fake_edge(text, advisor, owner=False):
+        if owner:
+            raise clone_voice.CloneUnavailable("converter down")
         return b"edge-audio"
 
     monkeypatch.setattr(voice, "_edge_tts", fake_edge)
     audio, mime, engine = asyncio.run(voice.synthesize("Salam", "koroglu"))
     assert (audio, engine) == (b"edge-audio", "edge")
+
+
+def test_converter_rung_when_omnivoice_fails(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "TTS_PROVIDER", "clone")
+    monkeypatch.setattr(settings, "CLONE_REF_PATH", str(tmp_path / "missing.wav"))
+
+    async def fake_edge(text, advisor, owner=False):
+        return b"owner-timbre" if owner else b"edge-audio"
+
+    monkeypatch.setattr(voice, "_edge_tts", fake_edge)
+    audio, mime, engine = asyncio.run(voice.synthesize("Salam", None))
+    assert (audio, engine) == (b"owner-timbre", "owner-vc")
 
 
 def test_clone_speaks_when_available(monkeypatch):
@@ -37,3 +51,21 @@ def test_members_differ():
     styles = {clone_voice.style_for(a) for a in
               ["nesreddin", "koroglu", "simurg", "nesimi", "dedeqorqud", "nizami"]}
     assert len(styles) == 6
+
+
+def test_quota_error_rests_the_space(monkeypatch):
+    monkeypatch.setattr(clone_voice, "_resting_until", 0.0)
+    monkeypatch.setattr(clone_voice, "available", lambda: True)
+
+    def boom(text, speed):
+        raise RuntimeError("You have exceeded your free ZeroGPU quota")
+
+    monkeypatch.setattr(clone_voice, "_predict", boom)
+    import pytest
+    with pytest.raises(clone_voice.CloneUnavailable):
+        asyncio.run(clone_voice.speak("Salam", None))
+    calls = []
+    monkeypatch.setattr(clone_voice, "_predict", lambda t, s: calls.append(1))
+    with pytest.raises(clone_voice.CloneUnavailable, match="resting"):
+        asyncio.run(clone_voice.speak("Salam", None))
+    assert calls == []

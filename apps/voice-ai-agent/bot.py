@@ -25,6 +25,8 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
     MessageHandler,
+    PersistenceInput,
+    PicklePersistence,
     filters,
 )
 
@@ -387,6 +389,11 @@ def main() -> None:
     application = (
         Application.builder()
         .token(settings.TELEGRAM_BOT_TOKEN)
+        # Voice Lab mode (/ses) lives in chat_data; without persistence a bot
+        # restart silently dropped the trainer out of it and his next voice
+        # notes went to the council instead of the lab (seen 2026-09-25).
+        .persistence(PicklePersistence(str(settings.sqlite_file.parent / "bot_state.pickle"),
+                                       store_data=PersistenceInput(bot_data=False, user_data=False)))
         .post_init(_open_http)
         .post_shutdown(_close_http)
         .build()
