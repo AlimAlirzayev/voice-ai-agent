@@ -52,12 +52,13 @@ from langgraph.types import Command, interrupt
 from app.core.config import settings
 from app.graph.guardrails import crisis_response, is_self_harm_risk
 from app.prompts.divan import (
+    CLOSING_PROMPT,
+    GREETING_PROMPT,
     NARRATION_HITL,
     NARRATION_OPENING,
     NARRATION_ROUTING,
     NARRATION_SYNTHESIS,
     ROSTER,
-    SYNTHESIS_PROMPT,
     advisor_prompt,
     supervisor_prompt,
 )
@@ -105,6 +106,27 @@ class TurnResult:
     turn_id: str = ""
     narration: list[str] | None = None
     citations: list[dict] | None = None
+
+
+CLOSING_MARK = "Divanbəyi: "
+
+
+def compose_reply(opinions: list[dict], closing: str) -> str:
+    """The spoken/text reply: every member in their own words under their own
+    name, then the Divanbəyi's closing line (when there is one). One member
+    speaks alone without a closing - the voice is already theirs."""
+    parts = [f"{o['name']}: {o['text'].strip()}" for o in opinions if o.get("text", "").strip()]
+    closing = (closing or "").strip()
+    if closing:
+        parts.append(f"{CLOSING_MARK}{closing}")
+    return "\n\n".join(parts)
+
+
+def closing_of(reply: str) -> str:
+    """The Divanbəyi's own line out of a composed reply ('' if there is none),
+    so the voice layer speaks it once instead of re-reading every member."""
+    idx = reply.rfind(CLOSING_MARK)
+    return reply[idx + len(CLOSING_MARK):].strip() if idx >= 0 else ""
 
 
 def build_graph(checkpointer, llm: BaseChatModel | None = None):
@@ -207,27 +229,34 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
         narration = state.get("narration", [])
 
         if not opinions:
+            # Nobody was called (greeting, small talk, out of scope): the
+            # Divanbəyi answers as the host, in his own voice.
             reply = await ainvoke_with_retry(
                 get_model(),
-                [SystemMessage(content=SYNTHESIS_PROMPT), *state["messages"]],
+                [SystemMessage(content=GREETING_PROMPT), *state["messages"]],
                 label="llm-synthesis",
             )
             text = reply.content
         elif len(opinions) == 1:
-            text = opinions[0]["text"]
+            text = compose_reply(opinions, "")
         else:
+            # Audit v1 (2026-09-25): merging two members into one nameless
+            # paragraph erased both voices - the judge scored character 1.95/5
+            # and wrote "iki səs bir ümumi səsdə əriyib" on 17 of 18 answers.
+            # The members now keep their own words; the Divanbəyi adds ONE
+            # closing sentence that says where to start, nothing more.
             narration = [*narration, NARRATION_SYNTHESIS]
             merged = "\n".join(f"{o['name']}: {o['text']}" for o in opinions)
             reply = await ainvoke_with_retry(
                 get_model(),
                 [
-                    SystemMessage(content=SYNTHESIS_PROMPT),
+                    SystemMessage(content=CLOSING_PROMPT),
                     *state["messages"],
                     HumanMessage(content=merged),
                 ],
                 label="llm-synthesis",
             )
-            text = reply.content
+            text = compose_reply(opinions, reply.content)
 
         needs_approval = APPROVAL_ADVISOR in state.get("consulted", [])
         if needs_approval:

@@ -56,11 +56,34 @@ class Retriever:
         ]
 
 
+def _bm25_retriever():
+    """BM25 over the corpus files themselves - no index file, no key."""
+    from app.rag.bm25 import BM25Retriever
+    from app.rag.ingest import collect_chunks
+
+    try:
+        chunks = collect_chunks()
+    except Exception as exc:  # noqa: BLE001 - retrieval must never sink a turn
+        log.warning("corpus unreadable, retrieval disabled: %s", exc)
+        return None
+    return BM25Retriever(chunks) if chunks else None
+
+
 @lru_cache(maxsize=1)
-def get_retriever() -> Retriever | None:
-    """Load the index once per process; None disables retrieval entirely."""
+def get_retriever():
+    """Load the index once per process; None disables retrieval entirely.
+
+    RAG_BACKEND: "embeddings" needs OPENAI_API_KEY + the ingested index;
+    "bm25" needs only the corpus files; "auto" takes embeddings when they are
+    possible and BM25 otherwise, so the council keeps quoting its sources
+    whatever the key situation is.
+    """
+    backend = settings.RAG_BACKEND.lower().strip()
     index_file = settings.rag_index_file
-    if not settings.OPENAI_API_KEY or not index_file.exists():
+    embeddings_possible = bool(settings.OPENAI_API_KEY) and index_file.exists()
+    if backend == "bm25" or (backend == "auto" and not embeddings_possible):
+        return _bm25_retriever()
+    if not embeddings_possible:
         return None
     try:
         data = json.loads(index_file.read_text(encoding="utf-8"))

@@ -27,7 +27,14 @@ async def ainvoke_with_retry(model: Any, messages: list, *, label: str = "llm-ca
 
 
 @lru_cache(maxsize=1)
-def build_llm() -> ChatOpenAI | ChatGroq:
+def build_llm() -> Any:
+    if settings.chat_provider == "claude":
+        # Operator's subscription through the CLI - no key to check, the
+        # binary itself is the capability (see app/services/claude_cli.py).
+        from app.services.claude_cli import ClaudeCLIChat
+
+        return ClaudeCLIChat(model=settings.CLAUDE_MODEL, effort=settings.CLAUDE_EFFORT)
+
     if settings.chat_provider == "groq":
         if not settings.GROQ_API_KEY:
             raise LLMError("GROQ_API_KEY is not set - add it to .env")

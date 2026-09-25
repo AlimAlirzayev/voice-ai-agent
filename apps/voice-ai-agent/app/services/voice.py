@@ -7,6 +7,7 @@ Both TTS paths return OGG/Opus, which is exactly what Telegram wants for a voice
 note, so the caller never has to care which engine spoke.
 """
 
+import asyncio
 import logging
 from functools import lru_cache
 
@@ -34,6 +35,14 @@ def _openai() -> AsyncOpenAI:
 
 
 @lru_cache(maxsize=1)
+def _stt_client() -> AsyncOpenAI:
+    """Whisper through any OpenAI-compatible endpoint (Groq's free tier, or OpenAI)."""
+    if settings.STT_BASE_URL and settings.STT_API_KEY:
+        return AsyncOpenAI(api_key=settings.STT_API_KEY, base_url=settings.STT_BASE_URL)
+    return _openai()
+
+
+@lru_cache(maxsize=1)
 def _elevenlabs() -> AsyncElevenLabs:
     return AsyncElevenLabs(api_key=settings.ELEVENLABS_API_KEY)
 
@@ -55,8 +64,8 @@ async def transcribe(audio: bytes, filename: str = "audio.ogg") -> str:
         raise VoiceError("The uploaded audio file is empty")
 
     response = await call_with_retry(
-        lambda: _openai().audio.transcriptions.create(
-            model=settings.OPENAI_STT_MODEL,
+        lambda: _stt_client().audio.transcriptions.create(
+            model=settings.stt_model,
             file=(filename, audio),
             language="az",
         ),
@@ -74,13 +83,52 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
     with its own per-advisor voice so a live session never ends in silence.
     """
     text = pronounce.apply(text)
-    if settings.ELEVENLABS_API_KEY:
+    provider = settings.tts_provider
+    if provider == "elevenlabs":
         try:
             return await _elevenlabs_tts(text, advisor), OGG, "elevenlabs"
         except Exception as exc:  # noqa: BLE001 - stage safety net
-            log.warning("ElevenLabs TTS failed, falling back to OpenAI: %s", exc)
+            log.warning("ElevenLabs TTS failed, falling back: %s", exc)
+            provider = "openai" if settings.OPENAI_API_KEY else "edge"
+
+    if provider == "edge":
+        return await _edge_tts(text, advisor), OGG, "edge"
 
     return await _openai_tts(text, advisor), OGG, "openai"
+
+
+async def _edge_tts(text: str, advisor: str | None) -> bytes:
+    """Free Microsoft neural Azerbaijani voices (edge-tts), re-encoded to OGG/Opus.
+
+    edge-tts only emits MP3; ffmpeg turns it into the same OGG/Opus the other
+    engines return, so Telegram voice notes and the web player see one format.
+    """
+    import edge_tts
+
+    voice, rate, pitch = settings.edge_voice_for(advisor)
+
+    async def _once() -> bytes:
+        communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
+        mp3 = b"".join(
+            [chunk["data"] async for chunk in communicate.stream() if chunk["type"] == "audio"]
+        )
+        if not mp3:
+            raise VoiceError("edge-tts returned no audio")
+        return await _mp3_to_ogg(mp3)
+
+    return await call_with_retry(_once, label="edge-tts")
+
+
+async def _mp3_to_ogg(mp3: bytes) -> bytes:
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-loglevel", "error", "-i", "pipe:0", "-c:a", "libopus", "-b:a", "48k",
+        "-f", "ogg", "pipe:1",
+        stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    out, err = await proc.communicate(mp3)
+    if proc.returncode != 0 or not out:
+        raise VoiceError(f"ffmpeg mp3→ogg failed: {err.decode('utf-8', 'replace')[:200]}")
+    return out
 
 
 async def _elevenlabs_tts(text: str, advisor: str | None) -> bytes:

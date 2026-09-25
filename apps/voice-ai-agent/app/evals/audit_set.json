@@ -1,0 +1,48 @@
+[
+  {"id": "nesreddin-qonsu", "expect": "nesreddin", "lang": "az",
+   "q": "Qonşum hər gün maşınını mənim yerimə qoyur, deyəndə də üzümə gülür. Mübahisə etmək istəmirəm. Nə edim?"},
+  {"id": "nesreddin-reis", "expect": "nesreddin", "lang": "az",
+   "q": "Rəisim hər iclasda məni hamının qabağında kiçildir. Cavab versəm, işdən çıxararlar."},
+  {"id": "nesreddin-qerar", "expect": "nesreddin", "lang": "az",
+   "q": "Həyat yoldaşım deyir ki, mən hər şeyi çox düşünürəm və heç bir qərar verə bilmirəm. Düz deyir."},
+
+  {"id": "koroglu-biznes", "expect": "koroglu", "lang": "az",
+   "q": "İşimdən çıxıb öz biznesimi qurmaq istəyirəm, amma iki uşağım var və qorxuram."},
+  {"id": "koroglu-haqq", "expect": "koroglu", "lang": "az",
+   "q": "Dostumun haqqını yeyiblər, mən şahidəm. Desəm, başım ağrıyacaq; deməsəm, vicdanım rahat olmayacaq."},
+  {"id": "koroglu-ses", "expect": "koroglu", "lang": "az",
+   "q": "Yığıncaqda bir dəfə cəsarət edib fikrimi demək istəyirəm, amma hər dəfə səsim titrəyir və susuram."},
+
+  {"id": "simurg-mena", "expect": "simurg", "lang": "az",
+   "q": "Qırx yaşım var, hələ də bilmirəm həyatımın mənası nədir."},
+  {"id": "simurg-bosluq", "expect": "simurg", "lang": "az",
+   "q": "İstədiyim hər şeyə çatmışam — ev, maşın, vəzifə. Amma içimdə bir boşluq var."},
+  {"id": "simurg-telesmek", "expect": "simurg", "lang": "az",
+   "q": "Uşaqlıqdan bəri tələsirəm, heç vaxt heç yerə çatmıram. Yorulmuşam."},
+
+  {"id": "nesimi-deyer", "expect": "nesimi", "lang": "az",
+   "q": "Hamı deyir ki, mən heç nəyə yaramıram. Artıq özüm də buna inanmağa başlamışam."},
+  {"id": "nesimi-fikir", "expect": "nesimi", "lang": "az",
+   "q": "Öz fikrimi deyəndə məni ələ salırlar, ona görə susuram. Amma susanda özümə xəyanət edirəm kimi hiss edirəm."},
+  {"id": "nesimi-senet", "expect": "nesimi", "lang": "az",
+   "q": "Sənətlə məşğul olmaq istəyirəm, ailəm deyir ki, çörək pulu gətirmir, ağlını başına yığ."},
+
+  {"id": "dedeqorqud-miras", "expect": "dedeqorqud", "lang": "az",
+   "q": "Qardaşımla ata mirası üstündə küsülüyük, altı aydır danışmırıq."},
+  {"id": "dedeqorqud-toy", "expect": "dedeqorqud", "lang": "az",
+   "q": "Oğlum evlənir. Toyda ata kimi ona nə deyim ki, ömrü boyu yadında qalsın?"},
+  {"id": "dedeqorqud-ana", "expect": "dedeqorqud", "lang": "az",
+   "q": "Anam qocalıb, kənddə tək yaşayır. Şəhərə, yanıma gətirmək istəyirəm, o isə evindən çıxmır."},
+
+  {"id": "nizami-sevgi", "expect": "nizami", "lang": "az",
+   "q": "Sevdiyim qızın ailəsi məni bəyənmir, o isə ailəsinə qarşı çıxmaq istəmir. Nə edim?"},
+  {"id": "nizami-edalet", "expect": "nizami", "lang": "az",
+   "q": "Kiçik şirkətim var. İşçilərdən biri oğurluq edib, amma ailəsi ehtiyac içindədir. Qovum, yoxsa bağışlayım?"},
+  {"id": "nizami-evlilik", "expect": "nizami", "lang": "az",
+   "q": "Həyat yoldaşımla on ildir evliyik, sevgi soyuyub, bir evdə iki yad adam kimiyik."},
+
+  {"id": "edge-turkish-input", "expect": null, "lang": "az", "max_sentences": 4,
+   "q": "Çok yorgunum, ne yapmalıyım bilmiyorum. Her şey üst üste geldi."},
+  {"id": "edge-salam", "expect": null, "lang": "az", "max_sentences": 4,
+   "q": "Salam, sabahınız xeyir. Bu gün heç nə soruşmuram, sadəcə salamlaşmaq istədim."}
+]

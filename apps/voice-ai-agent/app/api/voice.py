@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Uplo
 
 from app.core.rate_limit import enforce_turn_rate_limit
 from app.graph import TurnResult, get_pending, resume_turn, run_turn
+from app.graph.builder import closing_of
 from app.graph.guardrails import is_self_harm_risk
 from app.models.schemas import VoiceResponse, VoiceSegment
 from app.services.llm import LLMError
@@ -107,9 +108,11 @@ async def _speak_segments(result: TurnResult) -> list[VoiceSegment]:
             await _speak(opinion["text"], advisor=opinion["advisor"], name=opinion["name"])
         )
     if len(opinions) > 1:
-        # `result.reply` is the merged synthesis, distinct from any one
-        # advisor's opinion - the Divan's own closing word.
-        segments.append(await _speak(result.reply))
+        # The composed reply already holds every member's words (spoken above,
+        # each in their own voice); only the Divanbəyi's closing line is new.
+        closing = closing_of(result.reply)
+        if closing:
+            segments.append(await _speak(closing, name="Divanbəyi"))
     return segments
 
 

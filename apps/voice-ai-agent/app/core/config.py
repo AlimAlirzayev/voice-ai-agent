@@ -6,6 +6,7 @@ report which capabilities are unavailable on `GET /`.
 """
 
 import os
+import shutil
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -23,10 +24,41 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4.1-mini"
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "llama-3.1-8b-instant"
+    # "claude" = the operator's Claude subscription through the Claude Code CLI
+    # (`app/services/claude_cli.py`): no API key, one stateless child per call.
+    # Chosen because it is the best measured writer of literary Azerbaijani.
+    CLAUDE_MODEL: str = "claude-fable-5-1"
+    CLAUDE_EFFORT: str = "medium"
 
     # --- Speech to text: Whisper (Lesson 26) ---
     # Hosted Whisper, so the demo needs no torch/ffmpeg install on macOS.
     OPENAI_STT_MODEL: str = "whisper-1"
+    # Any OpenAI-compatible transcription endpoint (e.g. Groq's whisper-large-v3,
+    # free tier). Empty = OpenAI itself with OPENAI_API_KEY / OPENAI_STT_MODEL.
+    STT_BASE_URL: str = ""
+    STT_API_KEY: str = ""
+    STT_MODEL: str = ""
+
+    # --- Text to speech provider order ---
+    # "auto": ElevenLabs when its key is set, else the free Microsoft neural
+    # Azerbaijani voices (edge-tts), else OpenAI. "edge" forces the free path.
+    TTS_PROVIDER: str = "auto"
+    EDGE_TTS_VOICE_MALE: str = "az-AZ-BabekNeural"
+    EDGE_TTS_VOICE_FEMALE: str = "az-AZ-BanuNeural"
+
+    # --- Retrieval backend: "auto" = embeddings when OPENAI_API_KEY and the
+    # index exist, else BM25 over the same corpus (app/rag/bm25.py). ---
+    RAG_BACKEND: str = "auto"
+
+    # --- Divanbəyi narration: "product" speaks to a person (no framework
+    # names); "course" keeps the original lines that name the LangGraph
+    # mechanism in play - the "architecture speaks" feature for the lesson. ---
+    NARRATION_STYLE: str = "product"
+
+    # --- Reply language: "az" = the council always answers in Azerbaijani
+    # (audit v1: a Turkish question was answered in Turkish, judge 'dil' 1/5);
+    # "user" = mirror the user's language, the original behaviour. ---
+    REPLY_LANGUAGE: str = "az"
 
     # --- Text to speech: ElevenLabs, with OpenAI as fallback (Lesson 26) ---
     ELEVENLABS_API_KEY: str = ""
@@ -136,7 +168,41 @@ class Settings(BaseSettings):
 
     @property
     def tts_provider(self) -> str:
-        return "elevenlabs" if self.ELEVENLABS_API_KEY else "openai"
+        wanted = self.TTS_PROVIDER.lower().strip()
+        if wanted == "edge":
+            return "edge"
+        if self.ELEVENLABS_API_KEY:
+            return "elevenlabs"
+        if wanted == "openai" and self.OPENAI_API_KEY:
+            return "openai"
+        return "edge"
+
+    def edge_voice_for(self, advisor: str | None) -> tuple[str, str, str]:
+        """(voice, rate, pitch) for the free Microsoft neural voices.
+
+        Two Azerbaijani timbres exist (Babek, Banu), so the members are told
+        apart by pace and pitch: the elder slow and low, the warrior full and
+        deep, the wry storyteller quick and bright, the bird on the female
+        voice. Measured on the VPS 2026-09-25; distinct timbres per member
+        need ElevenLabs (see ELEVENLABS_VOICE_ID_*).
+        """
+        male, female = self.EDGE_TTS_VOICE_MALE, self.EDGE_TTS_VOICE_FEMALE
+        return {
+            "nesreddin": (male, "+8%", "+6Hz"),
+            "koroglu": (male, "+2%", "-10Hz"),
+            "simurg": (female, "-8%", "+4Hz"),
+            "nesimi": (male, "-4%", "+0Hz"),
+            "dedeqorqud": (male, "-12%", "-12Hz"),
+            "nizami": (male, "-3%", "-4Hz"),
+        }.get(advisor or "", (female, "-2%", "+0Hz"))
+
+    @property
+    def stt_model(self) -> str:
+        return self.STT_MODEL or self.OPENAI_STT_MODEL
+
+    @property
+    def stt_ready(self) -> bool:
+        return bool(self.STT_API_KEY and self.STT_BASE_URL) or bool(self.OPENAI_API_KEY)
 
     def elevenlabs_voice_for(self, advisor: str | None) -> str:
         return {
@@ -162,19 +228,28 @@ class Settings(BaseSettings):
     def chat_provider(self) -> str:
         provider = self.LLM_PROVIDER.lower().strip()
         if provider == "auto":
-            return "groq" if self.GROQ_API_KEY else "openai"
-        if provider not in {"openai", "groq"}:
+            if self.GROQ_API_KEY:
+                return "groq"
+            if self.OPENAI_API_KEY:
+                return "openai"
+            # No key at all: the subscription CLI, if this machine has it.
+            return "claude" if shutil.which("claude") else "openai"
+        if provider not in {"openai", "groq", "claude"}:
             return "openai"
         return provider
 
     @property
     def chat_model(self) -> str:
-        return self.GROQ_MODEL if self.chat_provider == "groq" else self.OPENAI_MODEL
+        return {"groq": self.GROQ_MODEL, "claude": self.CLAUDE_MODEL}.get(
+            self.chat_provider, self.OPENAI_MODEL
+        )
 
     @property
     def llm_ready(self) -> bool:
         if self.chat_provider == "groq":
             return bool(self.GROQ_API_KEY)
+        if self.chat_provider == "claude":
+            return shutil.which("claude") is not None
         return bool(self.OPENAI_API_KEY)
 
 

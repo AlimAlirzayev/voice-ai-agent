@@ -59,7 +59,7 @@ async def root() -> dict:
         "status": "ok",
         "llm": settings.chat_model if settings.llm_ready else "MISSING LLM API KEY",
         "llm_provider": settings.chat_provider,
-        "stt": settings.OPENAI_STT_MODEL,
+        "stt": settings.stt_model,
         "tts": settings.tts_provider,
         "langsmith_tracing": settings.tracing_enabled,
         "langsmith_project": settings.LANGSMITH_PROJECT if settings.tracing_enabled else None,

@@ -3,7 +3,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
 from app.graph import build_graph, get_pending, resume_turn, run_turn
-from app.prompts.divan import NARRATION_OPENING
+from app.prompts.divan import NARRATION_HITL, NARRATION_OPENING, NARRATION_ROUTING
 from app.services import retry as retry_module
 
 
@@ -13,7 +13,7 @@ class EchoModel:
 
     async def ainvoke(self, messages):
         system = messages[0].content if messages and isinstance(messages[0], SystemMessage) else ""
-        if "Divanbəyi" in system:
+        if "Yalnız bir söz ilə cavab ver" in system:  # the routing prompt, not the host/closing ones
             return AIMessage(content="YEKUN")
         human_messages = [message for message in messages if isinstance(message, HumanMessage)]
         return AIMessage(content=f"echo: {human_messages[-1].content}")
@@ -28,7 +28,7 @@ class RoutingModel:
 
     async def ainvoke(self, messages):
         system = messages[0].content if messages and isinstance(messages[0], SystemMessage) else ""
-        if "Divanbəyi" in system:
+        if "Yalnız bir söz ilə cavab ver" in system:  # the routing prompt, not the host/closing ones
             self.supervisor_calls += 1
             return AIMessage(content="KOROGLU" if self.supervisor_calls == 1 else "YEKUN")
         if "Koroğlu" in system:
@@ -61,7 +61,7 @@ class FlakyThenOkModel:
         if self.calls <= self.fail_times:
             raise RateLimitError("temporary rate limit")
         system = messages[0].content if messages and isinstance(messages[0], SystemMessage) else ""
-        if "Divanbəyi" in system:
+        if "Yalnız bir söz ilə cavab ver" in system:  # the routing prompt, not the host/closing ones
             return AIMessage(content="YEKUN")
         human_messages = [message for message in messages if isinstance(message, HumanMessage)]
         return AIMessage(content=f"echo: {human_messages[-1].content}")
@@ -177,9 +177,11 @@ async def test_narration_explains_routing_and_hitl_in_order():
 
     assert paused.narration is not None
     assert len(paused.narration) == 3
-    assert "marşrutlaşdırma" in paused.narration[0]
-    assert "Koroğluya verirəm" in paused.narration[1]
-    assert "Human-in-the-Loop" in paused.narration[2]
+    # Order is the contract, not the wording: the register (course/product)
+    # is a setting since 2026-09-25, so compare against the module's own lines.
+    assert paused.narration[0] == NARRATION_OPENING
+    assert paused.narration[1] == NARRATION_ROUTING["koroglu"]
+    assert paused.narration[2] == NARRATION_HITL
 
 
 @pytest.mark.asyncio

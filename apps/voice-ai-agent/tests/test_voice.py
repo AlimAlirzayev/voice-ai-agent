@@ -167,6 +167,9 @@ async def test_synthesize_still_falls_back_to_openai_once_elevenlabs_is_exhauste
     must survive the new retry logic unchanged: ElevenLabs gets its retries,
     and only once *those* are exhausted does OpenAI TTS take over."""
     monkeypatch.setattr(settings, "ELEVENLABS_API_KEY", "fake-elevenlabs-key")
+    # Since the free edge-tts path exists (2026-09-25), OpenAI is the fallback
+    # only when its key is present; without one the council speaks via edge.
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", "sk-test")
     tts = FakeTextToSpeech(fail_times=99)
     speech = FakeSpeech(fail_times=0, content=b"openai-fallback-audio")
     monkeypatch.setattr(voice_module, "_elevenlabs", lambda: FakeElevenLabsClient(tts))

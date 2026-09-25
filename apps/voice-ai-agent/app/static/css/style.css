@@ -348,7 +348,7 @@ body {
 .modes button {
   border: none;
   background: transparent;
-  color: var(--ink3);
+  color: var(--ink2); /* was --ink3: 4.38:1 measured, below AA 4.5 */
   font-size: 13px;
   font-weight: 600;
   padding: 7px 16px;
@@ -361,7 +361,7 @@ body {
 }
 .modes button svg { width: 14px; height: 14px; }
 .modes button.on { background: var(--surface3); color: var(--ink1); }
-.modes button:hover:not(.on) { color: var(--ink2); }
+.modes button:hover:not(.on) { color: var(--ink1); }
 
 .mode-panel { display: none; }
 .mode-panel.on { display: block; }
@@ -752,3 +752,13 @@ footer.credit {
 .citation { font-size: 0.85rem; line-height: 1.45; }
 .citation-quote { color: var(--ink2); font-style: italic; }
 .citation-ref { color: var(--ink3); margin-left: 6px; white-space: nowrap; }
+
+/* -- phone width (2026-09-25): measured with Playwright at 390px — #fbstats
+   overflowed the body by 9px and the chamber SVG kept a 480px floor. The
+   stats wrap and share the row; the chamber scales to the card. */
+@media (max-width: 520px) {
+  /* the stats box had flex:none and grew to its content (399px at 390px) */
+  .fbstats { flex: 1 1 100%; max-width: 100%; flex-wrap: wrap; gap: 6px; }
+  .fbstat { min-width: 0; flex: 1 1 calc(50% - 6px); }
+  .chamber { min-width: 0; }
+}
