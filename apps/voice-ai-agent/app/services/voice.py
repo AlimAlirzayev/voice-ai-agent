@@ -84,6 +84,15 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
     """
     text = pronounce.apply(text)
     provider = settings.tts_provider
+    if provider == "clone":
+        from app.services import clone_voice
+
+        try:
+            return await clone_voice.speak(text, advisor), OGG, "clone"
+        except clone_voice.CloneUnavailable as exc:
+            log.warning("cloned voice unavailable, Microsoft voice speaks: %s", exc)
+            provider = "edge"
+
     if provider == "elevenlabs":
         try:
             return await _elevenlabs_tts(text, advisor), OGG, "elevenlabs"

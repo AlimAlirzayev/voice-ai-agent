@@ -71,6 +71,14 @@ class Settings(BaseSettings):
     # Shared secret for mutating Voice Lab endpoints (dictionary/retrain);
     # empty disables the check (local dev). Set it on any public deployment.
     VOICELAB_TOKEN: str = ""
+    # --- The owner's cloned voice (TTS_PROVIDER=clone): OmniVoice on a free HF
+    # Space, from his own reference recording + its transcript (sidecar .txt
+    # next to the wav, or CLONE_REF_TEXT). Missing clip = Microsoft voices.
+    CLONE_REF_PATH: str = "data/voices/owner_ref.wav"
+    CLONE_REF_TEXT: str = ""
+    CLONE_SPACE: str = "k2-fsa/OmniVoice"
+    CLONE_TIMEOUT: float = 45.0
+    HF_TOKEN: str = ""
     OPENAI_TTS_MODEL: str = "gpt-4o-mini-tts"
     OPENAI_TTS_VOICE: str = "alloy"
 
@@ -174,6 +182,8 @@ class Settings(BaseSettings):
     @property
     def tts_provider(self) -> str:
         wanted = self.TTS_PROVIDER.lower().strip()
+        if wanted == "clone":
+            return "clone"
         if wanted == "edge":
             return "edge"
         if self.ELEVENLABS_API_KEY:
@@ -181,6 +191,11 @@ class Settings(BaseSettings):
         if wanted == "openai" and self.OPENAI_API_KEY:
             return "openai"
         return "edge"
+
+    @property
+    def clone_ref_file(self) -> Path:
+        path = Path(self.CLONE_REF_PATH)
+        return path if path.is_absolute() else BASE_DIR / path
 
     def edge_voice_for(self, advisor: str | None) -> tuple[str, str, str]:
         """(voice, rate, pitch) for the free Microsoft neural voices.
