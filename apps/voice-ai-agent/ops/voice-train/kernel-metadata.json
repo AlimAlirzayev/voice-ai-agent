@@ -1,4 +1,5 @@
 {"id": "alimalirzayev/divan-owner-voice-train", "title": "divan-owner-voice-train",
  "code_file": "train_owner_voice.py", "language": "python", "kernel_type": "script",
- "is_private": true, "enable_gpu": true, "enable_internet": true,
- "dataset_sources": ["alimalirzayev/divan-owner-voice"], "competition_sources": [], "kernel_sources": []}
+ "is_private": true, "enable_gpu": true, "enable_internet": false,
+ "dataset_sources": ["alimalirzayev/divan-owner-voice", "alimalirzayev/divan-voice-deps"],
+ "competition_sources": [], "kernel_sources": []}

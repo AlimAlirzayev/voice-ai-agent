@@ -1,32 +1,32 @@
-"""Fine-tune a Piper (VITS) voice on the owner's recordings. Runs on a Kaggle T4.
+"""Fine-tune a Piper (VITS) voice on the owner's recordings. Runs on a Kaggle T4,
+fully OFFLINE (the account has no kernel internet), from two private datasets:
 
-Input:  Kaggle dataset alimalirzayev/divan-owner-voice (wavs/ + metadata.csv).
-Base:   rhasspy/piper-checkpoints tr_TR dfki medium (closest Turkic phonology).
+  alimalirzayev/divan-owner-voice   wavs/ + metadata.csv  (build_voice_dataset.py)
+  alimalirzayev/divan-voice-deps    wheels/ (piper-tts[train] minus torch), base/
+                                    (rhasspy tr_TR dfki medium ckpt), src/core.pyx
+
+piper-tts bundles espeak-ng and its `az` voice, so no apt is needed.
 Output: /kaggle/working/az_AZ-owner-medium.onnx (+ .onnx.json), last.ckpt.
-EXTRA_EPOCHS is set by the launcher (small for a smoke run, ~1000+ for the real one).
+EXTRA_EPOCHS: small for a smoke run, ~1000+ for the real one.
 """
-import glob, json, os, shutil, subprocess, sys
+import glob, os, shutil, subprocess, sys
 
 EXTRA_EPOCHS = int(os.environ.get("EXTRA_EPOCHS", "__EXTRA__"))
 BASE_EPOCH = 5679
 sh = lambda c: subprocess.run(c, shell=True, check=True)
+find = lambda pat: glob.glob(f"/kaggle/input/**/{pat}", recursive=True)
 
-sh("apt-get -qq update && apt-get -qq install -y espeak-ng > /dev/null")
-sh("espeak-ng --voices=az | head -3")
-if not os.path.isdir("piper1-gpl"):
-    sh("git clone -q https://github.com/OHF-voice/piper1-gpl.git")
-os.chdir("piper1-gpl")
-sh(f"{sys.executable} -m pip install -q -e '.[train]'")
-sh("./build_monotonic_align.sh")
-sh(f"{sys.executable} setup.py build_ext --inplace > /dev/null")
+wheels = os.path.dirname(find("wheels/piper_tts-*.whl")[0])
+sh(f"{sys.executable} -m pip install -q --no-index --find-links {wheels} 'piper-tts[train]'")
+import piper  # noqa: E402
+ma = os.path.join(os.path.dirname(piper.__file__), "train/vits/monotonic_align")
+shutil.copy(find("src/core.pyx")[0], ma)
+sh(f"cd {ma} && mkdir -p monotonic_align && cythonize -q -i core.pyx && mv core*.so monotonic_align/")
 
-from huggingface_hub import hf_hub_download
-base = hf_hub_download("rhasspy/piper-checkpoints", "tr/tr_TR/dfki/medium/epoch=5679-step=1489110.ckpt",
-                       repo_type="dataset")
-data = glob.glob("/kaggle/input/**/metadata.csv", recursive=True)[0]
+base = find("base/**/*.ckpt")[0]
+data = find("metadata.csv")[0]
 root = os.path.dirname(data)
 print("clips:", sum(1 for _ in open(data)), "base:", base, flush=True)
-
 sh(f"""{sys.executable} -m piper.train fit \
   --data.voice_name az_AZ-owner-medium \
   --data.csv_path {data} \
