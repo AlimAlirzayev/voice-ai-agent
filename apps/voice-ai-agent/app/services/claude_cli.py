@@ -27,8 +27,23 @@ from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, System
 from langchain_core.outputs import ChatGeneration, ChatResult
 
 
-class ClaudeCLIError(RuntimeError):
-    """The CLI child failed, timed out or answered with something that is not JSON."""
+from app.services.llm import LLMError
+
+# Shown to the person when the subscription window is exhausted (measured
+# 2026-09-25 05:50: exit 1 with 0 input/output tokens). The API maps any
+# LLMError to 503 and the demo page prints its text, so this sentence is
+# what a user reads instead of "Internal Server Error".
+CAPPED_TEXT = (
+    "Divan hazırda dincəlir — şuranın bu saatlıq söz payı tükənib. "
+    "Bir az sonra yenidən soruşun, məclis yenə sizi dinləyəcək."
+)
+
+
+class ClaudeCLIError(LLMError):
+    """The CLI child failed, timed out or answered with something that is not JSON.
+
+    An LLMError on purpose: the chat/voice endpoints already turn that into a
+    clean 503 with a readable detail instead of a 500 traceback."""
 
 
 # At most this many CLI children at once per process: the subscription is one
@@ -101,7 +116,7 @@ class ClaudeCLIChat(BaseChatModel):
 
     def _parse(self, out: bytes, err: bytes, returncode: int) -> tuple[str, dict]:
         if returncode != 0:
-            raise ClaudeCLIError(f"claude -p exit {returncode}: {(err or out).decode('utf-8', 'replace')[:400]}")
+            raise ClaudeCLIError(self._failure_text(out, err, returncode))
         try:
             data = json.loads(out.decode("utf-8", "replace"))
         except json.JSONDecodeError as exc:
@@ -114,6 +129,23 @@ class ClaudeCLIChat(BaseChatModel):
         usage = data.get("usage") or {}
         return text.strip(), {"usage": usage, "model": self.model,
                               "duration_ms": data.get("duration_ms"), "cost_usd": data.get("total_cost_usd")}
+
+    @staticmethod
+    def _failure_text(out: bytes, err: bytes, returncode: int) -> str:
+        """A readable reason: the CLI's own `result` text when it sent JSON,
+        the capped-window sentence when it spent zero tokens."""
+        try:
+            data = json.loads(out.decode("utf-8", "replace"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            data = None
+        if isinstance(data, dict):
+            usage = data.get("usage") or {}
+            if not usage.get("input_tokens") and not usage.get("output_tokens"):
+                return CAPPED_TEXT
+            reason = str(data.get("result") or "")[:300]
+            if reason:
+                return f"claude -p exit {returncode}: {reason}"
+        return f"claude -p exit {returncode}: {(err or out).decode('utf-8', 'replace')[:300]}"
 
     def _result(self, text: str, meta: dict) -> ChatResult:
         message = AIMessage(content=text, response_metadata=meta)

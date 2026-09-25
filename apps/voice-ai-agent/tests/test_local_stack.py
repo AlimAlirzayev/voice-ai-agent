@@ -224,3 +224,18 @@ async def test_bm25_finds_the_known_passage_and_labels_it():
     assert all(h["advisor"] == "nesimi" for h in hits)
     assert await r.retrieve("nizami", "cahana sığmazam") == []
     assert await r.retrieve("nesimi", "xx") == []
+
+
+def test_a_capped_subscription_becomes_a_polite_503_not_a_500():
+    """2026-09-25 05:50: the CLI exited 1 with zero tokens (window exhausted)
+    and the council answered 500. It is now an LLMError with a readable text."""
+    from app.services.claude_cli import CAPPED_TEXT
+    from app.services.llm import LLMError
+
+    capped = json.dumps({"is_error": True, "usage": {"input_tokens": 0, "output_tokens": 0}}).encode()
+    with pytest.raises(LLMError) as info:
+        ClaudeCLIChat()._parse(capped, b"", 1)
+    assert str(info.value) == CAPPED_TEXT
+    other = json.dumps({"result": "bad flag", "usage": {"input_tokens": 5}}).encode()
+    with pytest.raises(ClaudeCLIError, match="bad flag"):
+        ClaudeCLIChat()._parse(other, b"", 1)

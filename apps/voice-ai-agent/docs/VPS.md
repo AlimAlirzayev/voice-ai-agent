@@ -58,3 +58,34 @@ grade its own output by hand.
 - The demo page has one (dark) theme by design.
 - The Vikimənbə corpus carries OCR/apparatus debris in some chunks (page marks, digits) — the
   audit counts it per citation; cleaning the corpus is a separate pass.
+
+## Audit results (same 20 questions, same judge, 2026-09-25)
+
+| | v1 (as found) | v2 | v4 (delivered) |
+|---|---|---|---|
+| Deterministic pass | 18/20 | 8/20 | **19/20** |
+| Judge: character | 1.95 | 3.11 | **3.53** |
+| Judge: mentality/values | 2.84 | 3.84 | **4.00** |
+| Judge: language | 3.26 | 3.37 | **3.58** |
+| Judge: literary style | 2.47 | 3.26 | **3.47** |
+| Judge: usefulness | 2.58 | 3.84 | **3.42** |
+| Nəsrəddin as 2nd voice | 16 | 17 | **1** |
+| Turkish question answered in | Turkish | Azerbaijani | Azerbaijani |
+
+What moved the numbers, in order of effect:
+1. **Routing defect in the original graph** (not a model habit): on the second hop the
+   router never saw who had spoken, repeated its first pick, and the fallback
+   `remaining[0]` then summoned the first roster key — Molla Nəsrəddin — on 17 of 18
+   questions. The router now sees the speakers; an unusable answer ends the council.
+2. **Voices kept, not merged**: the old synthesis step blended two members into one
+   nameless paragraph. Members now speak under their own names; no summary on top
+   (v2 showed a closing line only repeated them).
+3. **Council rules + authentic anchors** per member (values, calque list, no invented
+   folklore, per-member address). The Dədə Qorqud blessing was checked word by word
+   against the corpus; two lines the builder first wrote were not in it and were removed.
+4. **Operational**: the CLI self-update window (FileNotFoundError) is waited out; an
+   exhausted subscription window returns a polite Azerbaijani 503 instead of a 500.
+
+Open, measured, not fixed here: 12 of 56 citations still carry Vikimənbə OCR/apparatus
+debris (page marks, digits) — cleaning the corpus is its own pass. The judge is one
+Claude call per answer; it is a graded opinion, not a native-speaker panel.
