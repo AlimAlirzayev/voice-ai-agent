@@ -300,7 +300,24 @@ function updateTurnUserText(turn, text) {
 function appendBotBubble(turn, text, cls) {
   const bubble = document.createElement("div");
   bubble.className = "msg " + cls;
-  bubble.textContent = text;
+  // Since 2026-09-25 a council reply is "Name: words" paragraphs plus the
+  // Divanbəyi's closing line; the speaker's name gets its seat colour. Text
+  // nodes only - nothing from the model is ever parsed as HTML.
+  const paragraphs = String(text).split(/\n\n+/);
+  paragraphs.forEach((para, i) => {
+    const m = para.match(/^([^\n:]{2,40}):\s([\s\S]*)$/);
+    const seatKey = m ? Object.keys(ROSTER).find((k) => ROSTER[k].name === m[1]) : null;
+    if (m && (seatKey || m[1] === "Divanbəyi")) {
+      const who = document.createElement("strong");
+      who.className = "who " + (seatKey || "divanbeyi");
+      who.textContent = m[1] + ": ";
+      bubble.appendChild(who);
+      bubble.appendChild(document.createTextNode(m[2]));
+    } else {
+      bubble.appendChild(document.createTextNode(para));
+    }
+    if (i < paragraphs.length - 1) bubble.appendChild(document.createTextNode("\n\n"));
+  });
   turn.appendChild(bubble);
   $log.scrollTop = $log.scrollHeight;
   return bubble;

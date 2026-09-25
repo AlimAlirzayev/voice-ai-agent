@@ -89,6 +89,80 @@ def test_advisor_prompt_carries_the_council_rules_and_the_language_rule(monkeypa
     assert "İstifadəçinin dilində" in advisor_prompt("nizami")
 
 
+class _RepeatsFirstPickModel:
+    """The real router's behaviour before the fix: blind to who has spoken, it
+    names the same member again on the second hop."""
+
+    def __init__(self):
+        self.routing_systems: list[str] = []
+
+    async def ainvoke(self, messages):
+        from langchain_core.messages import AIMessage, SystemMessage
+
+        system = messages[0].content if messages and isinstance(messages[0], SystemMessage) else ""
+        if "Yalnız bir söz ilə cavab ver" in system:
+            self.routing_systems.append(system)
+            return AIMessage(content="DEDEQORQUD")
+        return AIMessage(content="Oğul, qardaş qapısını bağlama.")
+
+
+@pytest.mark.asyncio
+async def test_a_repeated_pick_ends_the_council_instead_of_summoning_the_first_roster_key():
+    """Measured 2026-09-25: the old fallback `remaining[0]` turned every
+    repeated pick into Molla Nəsrəddin (the first key) on 17 of 18 questions."""
+    from langgraph.checkpoint.memory import InMemorySaver
+
+    from app.graph.builder import build_graph, run_turn
+
+    model = _RepeatsFirstPickModel()
+    graph = build_graph(InMemorySaver(), llm=model)
+    result = await run_turn(graph, "Qardaşımla küsülüyük.", "second-voice-1")
+    assert result.consulted == ["dedeqorqud"]
+    assert result.reply == "Dədə Qorqud: Oğul, qardaş qapısını bağlama."
+    # and the second routing call was told who had already spoken
+    assert "artıq danışıb: Dədə Qorqud" in model.routing_systems[1]
+    assert "DEDEQORQUD" not in model.routing_systems[1].split("cavab ver:")[-1]
+
+
+@pytest.mark.asyncio
+async def test_cli_waits_out_a_self_update(monkeypatch):
+    import asyncio as aio
+
+    from langchain_core.messages import HumanMessage
+
+    from app.services import claude_cli
+
+    calls = {"n": 0}
+
+    class _Proc:
+        returncode = 0
+
+        async def communicate(self, _payload):
+            return json.dumps({"result": "Salam"}).encode(), b""
+
+    async def fake_exec(*_a, **_k):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise FileNotFoundError("claude")
+        return _Proc()
+
+    async def no_sleep(_s):
+        return None
+
+    monkeypatch.setattr(claude_cli.asyncio, "create_subprocess_exec", fake_exec)
+    monkeypatch.setattr(claude_cli.asyncio, "sleep", no_sleep)
+    out = await ClaudeCLIChat().ainvoke([HumanMessage(content="Salam")])
+    assert out.content == "Salam" and calls["n"] == 3
+
+
+def test_second_member_sees_what_was_already_said():
+    from app.prompts.divan import prior_words_note
+
+    note = prior_words_note([{"name": "Dədə Qorqud", "text": "Qardaş qapısını bağlama."}])
+    assert "Dədə Qorqud: Qardaş qapısını bağlama." in note and "təkrar etmə" in note
+    assert prior_words_note([]) == ""
+
+
 # ------------------------------------------------------------------ claude cli
 def test_transcript_keeps_system_apart_and_labels_turns():
     system, transcript = render_transcript([

@@ -130,11 +130,21 @@ class ClaudeCLIChat(BaseChatModel):
         system, transcript = render_transcript(messages)
         t0 = time.time()
         async with _SEMAPHORE:
-            proc = await asyncio.create_subprocess_exec(
-                *self._command(system), stdin=asyncio.subprocess.PIPE,
-                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
-                cwd=self.cwd, env=self._env(),
-            )
+            # The CLI auto-updates in place; for a few seconds the binary is
+            # absent. Measured 2026-09-25 05:34 during audit v3: eight turns in
+            # a row died on FileNotFoundError (500). Wait it out, don't fail.
+            for attempt in range(4):
+                try:
+                    proc = await asyncio.create_subprocess_exec(
+                        *self._command(system), stdin=asyncio.subprocess.PIPE,
+                        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+                        cwd=self.cwd, env=self._env(),
+                    )
+                    break
+                except FileNotFoundError:
+                    if attempt == 3:
+                        raise ClaudeCLIError(f"`{self.binary}` not found (CLI update in progress?)")
+                    await asyncio.sleep(10 * (attempt + 1))
             try:
                 out, err = await asyncio.wait_for(proc.communicate(transcript.encode("utf-8")), timeout=self.timeout)
             except asyncio.TimeoutError:

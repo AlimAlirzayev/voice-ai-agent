@@ -1,0 +1,1496 @@
+{
+ "base": "http://127.0.0.1:8940",
+ "when": "2026-09-25T05:19:07",
+ "judge_model": "claude-fable-5-1",
+ "results": [
+  {
+   "id": "nesreddin-qonsu",
+   "expect": "nesreddin",
+   "lang": "az",
+   "q": "Qonşum hər gün maşınını mənim yerimə qoyur, deyəndə də üzümə gülür. Mübahisə etmək istəmirəm. Nə edim?",
+   "reply": "Molla Nəsrəddin: Ay qardaş, üzünə gülən adamla dalaşmaq — suya balta vurmaq kimidir, su da yerində qalır, sən də yorulursan. Sən də ona güləndə gül, amma bir kağızda yerin sərhədini yaz, daş qoy, üstünə də ağsaqqal gücü ilə — qonşuluğun bir yaşlı, hörmətli adamını çağırıb duz-çörəyin üstündə üç kəlmə de: \"Bu yer mənim, bu da sənin, gülüş ikimizə də ortaq\". Adam ciddi sözü gülməyi ilə qaçırır, amma el qabağında verilən sözdən qaçmağa üzü gəlməz.\n\nKoroğlu: Hey, qardaş, üzünə gülən adamla dava tutmaq igidlik deyil, amma haqqını udub susmaq da mərdlik deyil — igid odur ki, səsini qaldırmadan sözünü yerinə qoya. Sabah maşını yenə orda görəndə qapısını döy, üz-üzə, aramla de: bu yer mənimdir, sən də bilirsən, mən də; qonşuluq haqqı var, dalaşmaq istəmirəm, amma bir də olmasın. Gülüb keçsə, ikinci dəfə tək getmə, həyətin ağsaqqalını da yanına al — el gözü qabağında deyilən söz daşa da yazılır, qonşun onda anlayar ki, qarşısındakı nə davaçıdır, nə də qorxan.\n\nDivanbəyi: Hər iki söz bir yerə gəlir, qardaş: əvvəl tək gedib gülərüzlə, amma möhkəm de ki bu yer sənindir, gülüb keçsə isə ikinci dəfə yanına bir ağsaqqal alıb duz-çörək üstündə eyni sözü de — səssiz igidlik də, el şahidliyi də bir yolun iki addımıdır, birincisiz ikinciyə keçmə, ikinci olmasa da birinciylə qalma.",
+   "consulted": [
+    "nesreddin",
+    "koroglu"
+   ],
+   "citations": [
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 3",
+     "quote": "Günlər keçir, həftələr dolanır, aylar başa çatır. Molla qalır zindanda. Günlərin birində, necə olursa, Teymur Ləng zindana gəlir. Mollanın nə üçün tutulmuş oldu",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğluynan bəylər",
+     "ref": "hissə 5",
+     "quote": "Koroğluyam, salınmışam zindana,\nBütün dəlilərim yanımda gərək.\nSorağım düşübdü bu gün hər yana,\nBütün dəlilərim yanımda gərək.\n\nGömgöy çəmənlərdə otlayır quzu,\n",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğluynan_bəylər"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğlunun qocalığı",
+     "ref": "hissə 7",
+     "quote": "Xotkarın qorxudan tükləri biz-biz oldu. Başındakı tükləri, o necə deyərlər, ayağına zalan gəldi. Baxdı ki, illərlə axtardığı qoç Koroğlu özü-öz ayağı ilə gəlib ",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğlunun_qocalığı"
+    }
+   ],
+   "hitl": true,
+   "seconds": 67.1,
+   "checks": {
+    "fails": [
+     "kalka/türk sözü: orda→orada"
+    ],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "qardaş",
+      "igid"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Nəsrəddin lətifə demir, nəsihət verir — «suya balta vurmaq» bənzətməsindən sonra gülməli dönüş yoxdur, Molla nəsihətçi mollaya çevrilib",
+     "Danışanlar siyahısında olmayan «Divanbəyi» əlavə çıxış edir və onun son cümləsi dolaşıq, yad sintaksislidir",
+     "«dava tutmaq» türk kalkasıdır, «ağsaqqal gücü ilə» ifadəsi süni səslənir",
+     "Maşın yeri üçün «kağızda sərhəd yaz, daş qoy» məsləhəti şəhər gerçəkliyinə uyğun deyil, kənd həyəti lövhəsidir",
+     "Uzun tire ilə calanmış cümlələr danışıq dili yox, tərcümə qoxusu verir",
+     "Koroğlu dastan dilinə xas heca ritmi, qoşma nəfəsi yoxdur, adi ağsaqqal kimi danışır"
+    ],
+    "en_yaxsi": "«El gözü qabağında deyilən söz daşa da yazılır» — Koroğlunun bu cümləsi həm xalq ifadəsi dadı verir, həm də əməli yol göstərir.",
+    "bir_cumle": "Mentalitet düzgün tutulub, məsləhət də əməlidir, amma Nəsrəddinin dilində gülüş yox, nəsihət var, dil isə yer-yer tərcümə iyi verir."
+   }
+  },
+  {
+   "id": "nesreddin-reis",
+   "expect": "nesreddin",
+   "lang": "az",
+   "q": "Rəisim hər iclasda məni hamının qabağında kiçildir. Cavab versəm, işdən çıxararlar.",
+   "reply": "Nəsimi: Ey qardaş, rəisin sözü sənin qədrini nə artırar, nə əskildər — insanın dəyəri kənar sözdə yox, öz vücudundadır, iki cahan səndə sığar, sən bir adamın istehzasına sığmazsan. Ağsaqqalın, ata-ananın haqlı sözü ilə hamının qabağında kiçildilmək bir deyil: birincisini başa qoy, ikincisini ürəyinə salma. Konkret addım budur: iclasda susub onun sözünü yerə salma, amma bir gün onu təklikdə tutub sakit səslə de ki, «sözünüz varsa üzümə deyin, el qabağında yox» — halal ruzin əlindən getməz, ancaq üzün, hörmətin öz yerində qalar.\n\nMolla Nəsrəddin: Ay qardaş, adamı hamının qabağında kiçildən özü boyunu qısa hiss edir — o iclasda sən yox, rəis sübut eləməyə çalışır ki, kürsü ondan böyükdür. Cavab vermək lazım deyil, çünki sözlə vuran adam sözlə də yıxılar: o səni danlayanda üzünü sakit tut, «Bəli, rəis, düz deyirsiniz, mən bunu belə eləmişdim, indi belə düzəldərəm» de və işi doğrudan da düzəlt — gör, aynaya daş atan neçə gün özünü aynada görə bilir. Bir də iclasdan qabaq onun yanına tək gedib «rəis, iradınız varsa, mənə iclasdan əvvəl deyin, yerində düzəldim» deyəndə, qıçını qabağa uzatmış adamın qıçını sən uzatmadan qaytarmış olarsan.\n\nDivanbəyi: İkisi də bir yola çıxır, oğlum: iclasda üzünü sakit saxla, işini düzəlt, sonra bir gün onu təklikdə tutub sakit səslə de ki, sözü sənə üzünə desin — çörəyin də qalar, üzün də.",
+   "consulted": [
+    "nesimi",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Məhəbbət möhkəm işdir, qafil olma (qəzəl)",
+     "ref": "bənd 1",
+     "quote": "Məhəbbət möhkəm işdir, qafil olma,\nBu karı sanma ki, hər kara bənzər.\n\nSəfasız sufi daim qayğuludur,\nBu mə’nidən ki, butimara bənzər.",
+     "source": "https://az.wikisource.org/wiki/Məhəbbət_möhkəm_işdir,_qafil_olma"
+    },
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Sığmazam (qəzəl)",
+     "ref": "bənd 2",
+     "quote": "Kövnü məkandır ayətim, zati dürür bidayətim,\nSən bu nişanla bil məni, bil ki, nişanə sığmazam.\n\nKimsə gümanü-zənn ilə olmadı həqq ilə biliş,\nHəqqi bilən bilir k",
+     "source": "https://az.wikisource.org/wiki/Məndə_sığar_iki_cahan,_mən_bu_cahanə_sığmazam"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 7",
+     "quote": "— \"Allaha şükür\" de, qibleyi-aləm! Bizim yerlərdə öskürəndə qulaq asanlar \"Allaha şükür\" deyərlər. Əgər sən də Allahına şükür eləməsən, dalı bundan da pis gələc",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 75.0,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Nəsimi hürufi şairidir, «konkret addım budur» deyən iş məsləhətçisi deyil — irfan səsi ilə HR nəsihəti bir-birinə qarışıb",
+     "«Konkret» sovet-rus kalkasıdır, Nəsiminin dilində yeri yoxdur",
+     "«Susub onun sözünü yerə salma» — «sözünü yerə salmaq» xahişi rədd etmək deməkdir, burada yerində işlənməyib",
+     "«Qıçını qabağa uzatmış adamın qıçını sən uzatmadan qaytarmış olarsan» — dolaşıq, süni düzəldilmiş cümlə, xalq ifadəsinə oxşamır",
+     "Molla Nəsrəddindən gözlənən lətifə yoxdur — «aynaya daş atan» obrazı uydurmadır, əsl Molla məzhəkəsi deyil",
+     "Ağsaqqal, ata-ana, halal — mentalitet sözləri siyahı kimi yerləşdirilib, təbii axından gəlmir",
+     "Divanbəyi danışanlar sırasında yoxdur, amma cavab verir və iki üzvün dediyini eynilə təkrarlayır"
+    ],
+    "en_yaxsi": "«O iclasda sən yox, rəis sübut eləməyə çalışır ki, kürsü ondan böyükdür» və «sözlə vuran adam sözlə də yıxılar» — Mollanın dilinə yaraşan iki cümlə.",
+    "bir_cumle": "Məsləhət ağlabatan və işlək, amma Nəsimi öz «məndə sığar iki cahan»ını vərəqləyib «konkret addım» sayan bir məmura çevrilib, Molla isə lətifəsiz qalıb — şəxsiyyət pərdəsi nazikdir."
+   }
+  },
+  {
+   "id": "nesreddin-qerar",
+   "expect": "nesreddin",
+   "lang": "az",
+   "q": "Həyat yoldaşım deyir ki, mən hər şeyi çox düşünürəm və heç bir qərar verə bilmirəm. Düz deyir.",
+   "reply": "Molla Nəsrəddin: A kişi, bir işə görə arvadınla mən eyni fikirdəyik, deməli məsələ artıq yarıya qədər həll olunub. Bax, sən indi «düz deyir» dedin — bu da bir qərardır, gör necə tez verdin, heç iki gün fikirləşmədin.\n\nSənə bir addım deyim: bu gün evdə kiçik bir işi — süfrəyə nə bişəcək, ya bazara nə vaxt gedəcəksən — beş dəqiqəyə həll elə və bir də üstünə qayıtma. Eşşək də yola çıxanda hər addımda dayanıb dördü də düşünsə, kəndə heç gecə də çatmaz; qərarın yarısı yolda düzəlir, ay qardaş.\n\nKoroğlu: Hey, qardaş! Düşünmək igidin ayıbı deyil, amma yolun başında oturub yolu düşünən adam ora heç vaxt çatmaz. Mən də döyüşdən qabaq qorxuram, kim deməsə yalan deyir, amma Qıratın cilovunu əlimə alanda fikir qurtarır, at yeriyir.\n\nİgid odur ki, yüz qapını başında dolandırmasın, birini seçib açsın. Bu gecə yoldaşınla otur, indi qarşında duran bir qərarı de, sabah səhərə qədər onu kəs, sonra gerisi yolda düzələr — çünki yol yolçunu tapar, oturanı yox.\n\nDivanbəyi: Bala, bu gün Mollanın dediyi kiçik işlə başla, beş dəqiqəyə kəs və geri qayıtma, sonra bu gecə Koroğlunun sözü ilə yoldaşının yanında oturub bir böyük qərarı səhərə qədər qapa — məclis bağlandı, get, yol səni gözləyir.",
+   "consulted": [
+    "nesreddin",
+    "koroglu"
+   ],
+   "citations": [
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğlunun Bayazid səfəri",
+     "ref": "hissə 1",
+     "quote": "Əhməd adlı bir tacirbaşı vardı. Əhməd tacirbaşı həm çox dövlətli idi, həmi də iyid idi. Deyirlər ki, Əhməd tacirə ata-anası uşaqlıqdan yaxşı muğayat olmuşdu. Bö",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğlunun_Bayazid_səfəri"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Durna teli",
+     "ref": "hissə 26",
+     "quote": "Mən Koroğluynan düşmənəm. Bu öz yerində, amma Aslan paşanın bu namərdliyinə yol verə bilmənəm. Gedək onları qurtaraq. Giziroğlu bilmirdi ki, Koroğlu özü də Bağd",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Durna_teli"
+    }
+   ],
+   "hitl": true,
+   "seconds": 60.7,
+   "checks": {
+    "fails": [
+     "cümlə sayı 10 > 7"
+    ],
+    "warns": [],
+    "sentences": 10,
+    "culture": {
+     "xitab": [
+      "bala",
+      "qardaş",
+      "igid"
+     ],
+     "alqış": [],
+     "məsəl": [
+      "məsəl"
+     ]
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 4,
+    "fayda": 4,
+    "qusurlar": [
+     "Koroğlunun «döyüşdən qabaq qorxuram» etirafı dastan Koroğlusuna yaddır — o, qorxunu deyil, qürurunu dilə gətirən igiddir",
+     "Mollanın «Sənə bir addım deyim» cümləsi lətifə dilindən çox məşqçi (self-help) tonuna yaxındır",
+     "«süfrəyə nə bişəcək», «dördü də düşünsə» — mənası bulanıq, yoxlanmamış ifadələrdir",
+     "«yol yolçunu tapar» quraşdırma atalar sözüdür, xalqın dilində belə deyim yoxdur",
+     "Divanbəyi danışanlar siyahısında yoxdur, üstəlik yaşlı kişiyə «bala» deyib eyni tapşırığı ikinci dəfə təkrarlayır"
+    ],
+    "en_yaxsi": "«sən indi ‹düz deyir› dedin — bu da bir qərardır, gör necə tez verdin, heç iki gün fikirləşmədin» — əsl Nəsrəddin paradoksudur.",
+    "bir_cumle": "Nəsrəddin hissəsi lətifə ruhuna yaxın və faydalı addım verir, amma Koroğlu obrazı yumşaldılıb, dildə səliqəsizlik və uydurma məsəllər var."
+   }
+  },
+  {
+   "id": "koroglu-biznes",
+   "expect": "koroglu",
+   "lang": "az",
+   "q": "İşimdən çıxıb öz biznesimi qurmaq istəyirəm, amma iki uşağım var və qorxuram.",
+   "reply": "Koroğlu: Hey, qardaş, qorxunu gizlətmə, iki körpənin çörəyi başının üstündədirsə, bu qorxu ayıb deyil, igidin qorxusu övladının haqqıdır. Amma igid odur ki, Qıratı uçuruma gözü bağlı çapmaz, yolu qabaqca gözü ilə ölçər: bu gün işindən çıxma, ilk addım kimi altı ayın ruzisini kənara qoy, işini axşamlar, boş vaxtında sınaqdan keçir, ilk müştərini tapmayınca ocağın çörəyini oda atma. O ruzi cibində, ilk alıcı əlində olandan sonra yol açıqdır, onda «Hey!» deyib atını çap, çünki hesabla götürülən risk cəsarətdir, hesabsız risk isə körpənin süfrəsinə qumar oynamaqdır.\n\nMolla Nəsrəddin: Ay qardaş, qorxu pis şey deyil, qorxu o eşşəkdir ki, uçurumun kənarında ayaq saxlayır — amma bütün ömrü kənarda durub otlamaq da yol deyil. Sən deyirsən «iki uşağım var, qorxuram», mən deyirəm iki uşağın var, ona görə də gərək düşünəsən, yoxsa yatasan? Bax, işini bir dəfəyə tullama: axşamlar, bazar günləri o biznesin bir yarımçıq tikəsini başla, altı ay evə çörək gətirən qazanı ocaqdan götürmə, görüm təzə qazan qaynayır, ya yox — qaynadı, onda böyük qazanı da cəsarətlə ora as.\n\nDivanbəyi: Oğlum, məclisdə iki səs bir nəfəsə gəldi: qorxunu yox etmə, onu yol yoldaşı elə — bu gün işini tərk etməyib altı ayın ruzisini kənara qoy, axşamlar öz qazanını qaynat, ilk müştəri əlinə düşəndə isə daha soruşma, at min və çap.",
+   "consulted": [
+    "koroglu",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Durna teli",
+     "ref": "hissə 16",
+     "quote": "Koroğlu dedi: – Dost olarıq. Nə var ki, onu niyə xəbər aldın? Qoca dedi: – Koroğlunun üç dəlisi gəlib buraya çıxıbdı. Bu gün Bağdadda onları dar ağacından asaca",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Durna_teli"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğlunun qocalığı",
+     "ref": "hissə 7",
+     "quote": "Xotkarın qorxudan tükləri biz-biz oldu. Başındakı tükləri, o necə deyərlər, ayağına zalan gəldi. Baxdı ki, illərlə axtardığı qoç Koroğlu özü-öz ayağı ilə gəlib ",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğlunun_qocalığı"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 1",
+     "quote": "Əncir nübarı\n\nMollanın həyətində bir əncir ağacı var imiş. Günlərin birində ağac çox gözəl bar verir. Molla fikirləşir ki, əncirdən padşaha nübar aparsın.\n\nSəhə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": true,
+   "seconds": 70.9,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "qardaş",
+      "igid"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 3,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Koroğlu dastanın qoçaq, qanunsuz igidi deyil, ehtiyatlı maliyyə məsləhətçisi kimi danışır — «altı ayın ruzisi», «ilk müştəri», «sınaqdan keçir» Çənlibel dili deyil, startap dilidir",
+     "Nəsrəddin lətifəsinin gözlənilməz dönüşü, gülüş nöqtəsi yoxdur; eşşək və qazan obrazı var, amma ləzzəti sonacan çatmır — «yoxsa yatasan?» boş sual kimi qalır",
+     "Üç danışan eyni məsləhəti üç dəfə təkrar edir: işdən çıxma, altı ay, axşamlar, ilk müştəri — Divanbəyi sadəcə xülasədir, yeni söz gətirmir",
+     "«hesabla götürülən risk cəsarətdir, hesabsız risk qumardır» — qərb «calculated risk» kalkası, xalq dilində belə deyilmir",
+     "«biznesin bir yarımçıq tikəsini başla» — sintaksis yad, «tikə başlamaq» Azərbaycan dilində işlənmir",
+     "Koroğlu cümləsi vergül və iki nöqtə ilə həddən artıq yüklənib, oxunanda nəfəs çatmır"
+    ],
+    "en_yaxsi": "«qorxu o eşşəkdir ki, uçurumun kənarında ayaq saxlayır — amma bütün ömrü kənarda durub otlamaq da yol deyil»",
+    "bir_cumle": "Məsləhət düzgün və faydalıdır, obrazlar da yerindədir, amma Koroğlu Koroğlu kimi yox, Nəsrəddin Nəsrəddin kimi yox, hər ikisi eyni ehtiyatlı iş adamının ağzıyla danışır — dastan ruhu yox, kostyum geyinmiş nəsihətdir."
+   }
+  },
+  {
+   "id": "koroglu-haqq",
+   "expect": "koroglu",
+   "lang": "az",
+   "q": "Dostumun haqqını yeyiblər, mən şahidəm. Desəm, başım ağrıyacaq; deməsəm, vicdanım rahat olmayacaq.",
+   "reply": "Koroğlu: Hey, qardaş, başın ağrıyacaq — düz deyirsən, bunu gizlətmə, qorxu igidin də qapısını döyür, amma igid odur ki, qorxunu görə-görə haqqın yanında dayanır. Dostun haqqı yerdə qalsa, sabah özünün haqqı da yerdə qalar; el də bilər ki, sənin şahidliyin qılınc kimi kəsmir, kağız kimi cırılır. Bu gün get dostunun yanına, de ki, «mən gördüm, mən deyəcəyəm», sonra elin ağsaqqalı hara desə, ora çıx, gördüyünü açıq de — yalnız öz gözünlə gördüyünü, artırıb-əskiltmədən, çünki haqq sözü qılınca çevirən onun dürüstlüyüdür.\n\nMolla Nəsrəddin: Ay qardaş, deməsən başın bu gün ağrımaz, amma vicdan gecə yatanda başının altına daş qoyar — bax onda gör hansı ağrı uzun çəkir. Baş ağrısı bir həftəyə keçər, vicdan ağrısının dərmanı hələ heç bir həkimin dükanında satılmayıb. Get, əvvəl dostuna de ki, mən şahidəm və yanındayam; sonra əvvəlcə haqqı yeyənin qabağına ikilikdə çıxın, ağsaqqal da yanınıza götürün — çünki bir ağız bağırar, iki ağız eşidilər.\n\nDivanbəyi: İkisi də bir yola çıxıb, oğul: baş ağrısı keçər, vicdan ağrısı keçməz — bu gün dostunun yanına get, «gördüm, deyəcəyəm» de, sonra ağsaqqalı da götürüb gördüyünü artırıb-əskiltmədən açıq söylə, çünki haqqın yanında duran heç vaxt tək qalmır.",
+   "consulted": [
+    "koroglu",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Durna teli",
+     "ref": "hissə 35",
+     "quote": "Hay geyəndə haya basar,\nHuy deyəndə huya basar,\nKoroğlunu çaya basar,\nGiziroğlu Mustafa bəy.\n\nGiziroğlu Mustafa bəy Koroğludan bu sözü eşidib başının adamları i",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Durna_teli"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğlunun Bayazid səfəri",
+     "ref": "hissə 30",
+     "quote": "Məclis qurduram həmişə,\nİşrətim, damağım ola,\nƏmliklər çəkdirəm şişə,\nBir ağır yığnağım ola.\n\nÇənlibeldə köçüm, qonum,\nAtlasdan biçdirəm donum,\nOrtadan qalxmaya",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğlunun_Bayazid_səfəri"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 3",
+     "quote": "Günlər keçir, həftələr dolanır, aylar başa çatır. Molla qalır zindanda. Günlərin birində, necə olursa, Teymur Ləng zindana gəlir. Mollanın nə üçün tutulmuş oldu",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": true,
+   "seconds": 66.0,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş",
+      "igid"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Molla Nəsrəddin lətifəsiz, lağsız danışır — onun silahı dolayı zarafat və gözlənilməz dönüşdür, burada isə adi nəsihətçi mollaya çevrilib",
+     "«sonra əvvəlcə haqqı yeyənin qabağına» — bir cümlədə həm «sonra», həm «əvvəlcə»: dil pozğunluğu",
+     "«ikilikdə çıxın» — rus «вдвоём» kalkası; xalq «ikiniz bir yerdə» deyər",
+     "«ağsaqqal da yanınıza götürün» — təsirlik hal buraxılıb, «ağsaqqalı da» olmalıdır",
+     "«elin ağsaqqalı hara desə, ora çıx» — Koroğlu dastanda ağsaqqala tabe olan deyil, özü hökm kəsəndir; xarakter qismən yumşaldılıb",
+     "Divanbəyi yeni heç nə demir, yuxarıdakını sadəcə sıxıb təkrarlayır"
+    ],
+    "en_yaxsi": "«vicdan ağrısının dərmanı hələ heç bir həkimin dükanında satılmayıb» — Nəsrəddin ruhuna ən yaxın, xalq dilində, yadda qalan cümlədir.",
+    "bir_cumle": "Məzmunca düz yola çıxarır, addımı da göstərir, amma Nəsrəddin lətifəsiz qalıb, dildə iki-üç kalka və hal səhvi var, Koroğlu isə dastandakından bir az çox «tərbiyəli»dir."
+   }
+  },
+  {
+   "id": "koroglu-ses",
+   "expect": "koroglu",
+   "lang": "az",
+   "q": "Yığıncaqda bir dəfə cəsarət edib fikrimi demək istəyirəm, amma hər dəfə səsim titrəyir və susuram.",
+   "reply": "Koroğlu: Hey, qardaş, səsin titrəyir deyə utanma — mənim də ağzımda dil bir yana, diş bir yana titrəyib, amma sözü uddurmadım; igid odur ki, qorxusu var, yenə də meydana çıxar. Bu dəfə yığıncağa girməmiş bir sözü — ürəyində ən çox yanan bir sözü — açıq-aydın bir cümləyə salıb yaz, cibinə qoy, söz sənə çatanda kağıza yox, adamların üzünə bax, o bircə cümləni gur səslə de, sonra sus. Bircə cümlə desən, qala yıxılıb; ikinci dəfə səs titrəməz, çünki yol yolçunu tapar.\n\nMolla Nəsrəddin: Ay qardaş, səsin titrəyir deyə ürəyini sıxma — səsi titrəyən adam yalan danışmır, yalanı həmişə düz səslə deyirlər, elə isə sənin titrək səsin ən inandırıcı səsdir. Sən yığıncaqda böyük nitq söyləməyə çalışma, o boyda yükü eşşəyə də yükləsən, yıxılar: növbəti dəfə evdən çıxmamış bircə cümlə hazırla, kağıza yaz, cibinə qoy, yığıncaqda əlini qaldırıb yalnız o bircə cümləni de, sonra otur — vəssalam. Bir dəfə desən, ikinci dəfə səs özü yol tapar, çünki gördün ki, heç kim səni yemədi, yığıncaqda hamı oturub, deməli, hamının yeri var, sənin də.\n\nDivanbəyi: Hər iki söz bir yerə gəlib, oğlum: bircə cümləni ürəyindən seçib cibinə qoy, titrək səslə də olsa adamların üzünə baxıb de, sonra otur — yıxılan qala o bir cümlədən yıxılır, yol da ondan sonra özü açılır.",
+   "consulted": [
+    "koroglu",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Durna teli",
+     "ref": "hissə 19",
+     "quote": "– Aslan paşa bu gün Koroğlunun üç dəlisini asdıracaq. Böyük şadyanalıq olacaq. İndi tələsirəm ki, tez o şadyanalığa çata biləm. Dəli Həsən kişidən elə bu sözü e",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Durna_teli"
+    },
+    {
+     "advisor": "koroglu",
+     "name": "Koroğlu",
+     "work": "Koroğlu dastanı — Koroğlunun qocalığı",
+     "ref": "hissə 7",
+     "quote": "Xotkarın qorxudan tükləri biz-biz oldu. Başındakı tükləri, o necə deyərlər, ayağına zalan gəldi. Baxdı ki, illərlə axtardığı qoç Koroğlu özü-öz ayağı ilə gəlib ",
+     "source": "https://az.wikisource.org/wiki/Koroğlu_dastanı/Koroğlunun_qocalığı"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": true,
+   "seconds": 67.9,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "qardaş",
+      "igid"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 3,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Koroğlu ilə Molla Nəsrəddin eyni «bir cümlə yaz, cibinə qoy» məsləhətini iki dəfə təkrarlayır, Divanbəyi isə üçüncü dəfə; şura yox, xor səslənir",
+     "Koroğlu — dağ aşığı, Çənlibel igidi — «kağıza yaz, cibinə qoy» deyir; onun dünyasında söz sazla deyilir, kağız yoxdur; «ağzımda dil bir yana, diş bir yana titrəyib» uydurma, dastanda izi olmayan ifadədir",
+     "Molla Nəsrəddindən lətifə gözlənir — burada lətifə yoxdur, yalnız bir paradoks («yalanı düz səslə deyirlər») və eşşək qeydi; obraz naqisdir",
+     "«sözü uddurmadım» — yanlış feil, «udmadım» olmalıdır; «yol yolçunu tapar» — atalar sözü tərsinə çevrilib; «qala yıxılıb», «yıxılan qala o bir cümlədən yıxılır» — süni, məntiqsiz obraz",
+     "Məsləhətin özü qərb «public speaking» resepti, yalnız «qardaş», «igid», «oğlum» sözləri ilə milli don geyindirilib; ağsaqqal, ailə, məclis ədəbi ilə bağlı heç nə yoxdur"
+    ],
+    "en_yaxsi": "Nəsrəddinin «səsi titrəyən adam yalan danışmır, yalanı həmişə düz səslə deyirlər» tərsinə fikri — Molla ruhuna ən yaxın yer.",
+    "bir_cumle": "Faydalı, konkret, amma eyni resepti üç ağızdan eşidirik və Koroğlunun əlində kağız-qələm görmək dastanı tanıyan adamın gözünü yorur."
+   }
+  },
+  {
+   "id": "simurg-mena",
+   "expect": "simurg",
+   "lang": "az",
+   "q": "Qırx yaşım var, hələ də bilmirəm həyatımın mənası nədir.",
+   "reply": "Simurğ: Oğul, qırx yaş Qaf dağının ətəyi deyil, yarısıdır — yolçu buradan geri baxanda keçdiyi vadiləri görür, irəli baxanda zirvəni; mənanı isə zirvədə deyil, çox vaxt evin astanasında tapır. Otuz quş yeddi vadi dolaşıb axırda öz içində tapdı axtardığını, sən də uzağa yox, yaxına bax: ata-ananın halı, ocağının odu, halal zəhmətinin tərı — məna bunların içində gizlənib, sındırılası şüşə kimi. Bu gün bir addım at: ana-atan sağdırsa, yanlarına get, əllərindən öp, deyilməmiş sözünü de; deyilsə, ruhlarına bir xeyir iş gör — ürəyin sənə nə qədər yaşadığını deyil, nəyə yaşadığını o zaman pıçıldayacaq.\n\nMolla Nəsrəddin: Ay qardaş, mən də bir vaxt eşşəyimi axtara-axtara kəndi dolandım, sən demə üstündə oturmuşam — həyatın mənası da elə şeydir, onu uzaqda axtaranda altında qalır. Qırx il yaşamısan, deməli qırx il çörək yemisən, kiməsə əl tutmusan, kimsə səni gözləyib — mənası budur, ancaq başını qaldırıb baxmamısan. Bu gün axşam ata-anana ya bir köhnə dosta zəng elə, bir çay iç, sabah da halal işinə get; məna yol yolçunu tapan kimi səni tapar, sən dur yerində fikirdən qazanı çatlatma.\n\nDivanbəyi: Oğul, ikisi də bir qapını göstərir — mənanı uzaq zirvədə yox, elə altında oturduğun ocağın astanasında axtar, bu gün axşam o zəngi elə, o əli öp, sabah halal işinə dur, məna səni yolda özü tapacaq.",
+   "consulted": [
+    "simurg",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Məlikməmməd nağılı (Zümrüd quşu)",
+     "ref": "hissə 20",
+     "quote": "-Ey Məlikməmməd, qırx ağaclıqda bir padşahın ölkəsi var. Bir əjdaha gəlib suyun qabağmı kəsib. Nə qədər arzuman pəhləvanlar gedibsə, onu öldürə bilməyib. Yeddi ",
+     "source": "https://az.wikisource.org/wiki/Məlikməmməd_nağılı"
+    },
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Məlikməmməd nağılı (Zümrüd quşu)",
+     "ref": "hissə 10",
+     "quote": "Bu halda Məlikməmməd yerindən şir kimi sıçrayıb, divnən tutaşdı. Bunlar qırx gün, qırx gecə güləşdilər. Heç biri о birini yıxa bilmədi. Axırda hər ikisi gücdən ",
+     "source": "https://az.wikisource.org/wiki/Məlikməmməd_nağılı"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 73.0,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş"
+     ],
+     "alqış": [
+      "xeyir"
+     ],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 3,
+    "qusurlar": [
+     "«halal zəhmətinin tərı» — orfoqrafik səhv, «təri» olmalıdır",
+     "«məna bunların içində gizlənib, sındırılası şüşə kimi» — obraz qarışıqdır, məna niyə sındırılası şüşə kimi gizlənir, aydın deyil",
+     "Simurğ Attarın «Məntiqüt-teyr»ini danışır, amma sonda «bu gün bir addım at» deyib qərb koçinq formuluna keçir; əfsanəvi quşun ağzından «addım at» qəribədir",
+     "Molla Nəsrəddinin lətifəsi var, amma məğzi yoxdur — paradoks, gözlənilməz dönüş, gülüşdən sonrakı acı yox, düz nəsihətdir; Molla nəsihətçi deyil, ayna tutandır",
+     "Hər üç səs eyni resepti təkrarlayır: zəng elə, əl öp, işə get — Divanbəyi heç nə əlavə etmir, sadəcə üçüncü dəfə deyir",
+     "«məna yol yolçunu tapan kimi səni tapar» — yad sintaksis, xalq dilində belə deyilmir",
+     "Qırx yaşlı adamın ekzistensial sualına «anana zəng elə» cavabı — dərinliyə girmədən qapını örtür"
+    ],
+    "en_yaxsi": "«mən də bir vaxt eşşəyimi axtara-axtara kəndi dolandım, sən demə üstündə oturmuşam — həyatın mənası da elə şeydir, onu uzaqda axtaranda altında qalır»",
+    "bir_cumle": "Mənbə ruhu və ocaq-halallıq mentaliteti hiss olunur, amma mətn üç dəfə eyni nəsihəti çeynəyir, Molla gülmür, Simurğ koçinq danışır, bir orfoqrafik səhv və bir neçə yad tikiş də var — orta işdir."
+   }
+  },
+  {
+   "id": "simurg-bosluq",
+   "expect": "simurg",
+   "lang": "az",
+   "q": "İstədiyim hər şeyə çatmışam — ev, maşın, vəzifə. Amma içimdə bir boşluq var.",
+   "reply": "Simurğ: Oğul, zirvəyə çıxan quş bir gün görür ki, çıxdığı dağ deyilmiş axtardığı, yol boyu yanından ötüb keçdiyi yuva imiş; sən qanad açıb uzağa uçmusan, amma ocağın başında oturub ata-ananla bir süfrədə duz-çörək kəsməyin, qohum-qonşunun halına yanmağın nə vaxtdan qalıb, bir yada sal. O boşluq nə evlə, nə vəzifəylə dolar, adamın əli-üzü ilə dolar: bu həftə bir gün ayır, atanın-ananın, ya bir ağsaqqalın qapısını döy, tələsmədən otur, sual verib qulaq as, sonra da əlindən nə gəlirsə birinə halalca kömək et. Boşluq dolu adamın deyil, verməyi unutmuş adamın dərdidir.\n\nMolla Nəsrəddin: Ay qardaş, sən deyirsən hər şeyə çatmısan, mən deyirəm hələ heç nəyə çatmamısan — ev tikmisən, amma ocağını sınamamısan, maşın almısan, amma o maşınla bir kimsəsizin qapısına getməmisən. Boşluq deyilən şey qazan kimidir: nə qədər içinə qızıl töksən də, aşağısı deşikdirsə, dolmaz; dolduran şey isə birinin süfrəsində duz-çörək kəsmək, ata-ananın əlindən öpməkdir. Sabah səhər özün üçün deyil, bir qonşun üçün bir iş gör, sonra gəl mənə de — boşluq hələ qalırsa, eşşəyimi sənə bağışlaram.\n\nDivanbəyi: Oğul, hər ikisi bir qapını göstərir — sabah ilk işin özün üçün deyil, birinin qapısını döyüb süfrəsində oturmaq olsun, boşluğun cavabı oradadır.",
+   "consulted": [
+    "simurg",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Məlikməmməd nağılı (Zümrüd quşu)",
+     "ref": "hissə 1",
+     "quote": "thumbnail\nBiri varmış, biri yoxmuş bir padşah varmış. Bu padşahın da bağında bir alma ağacı varmış. Bu ağac birinci gün çiçək açar, ikinci gün çiçəyini tökərmiş",
+     "source": "https://az.wikisource.org/wiki/Məlikməmməd_nağılı"
+    },
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Məlikməmməd nağılı (Zümrüd quşu)",
+     "ref": "hissə 10",
+     "quote": "Bu halda Məlikməmməd yerindən şir kimi sıçrayıb, divnən tutaşdı. Bunlar qırx gün, qırx gecə güləşdilər. Heç biri о birini yıxa bilmədi. Axırda hər ikisi gücdən ",
+     "source": "https://az.wikisource.org/wiki/Məlikməmməd_nağılı"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 1",
+     "quote": "Əncir nübarı\n\nMollanın həyətində bir əncir ağacı var imiş. Günlərin birində ağac çox gözəl bar verir. Molla fikirləşir ki, əncirdən padşaha nübar aparsın.\n\nSəhə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 66.0,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Molla Nəsrəddin lətifə ustası kimi yox, minbərdən vəz edən molla kimi danışır — paradoks, gözlənilməz dönüş, özünü axmaqlığa vurma yoxdur, yalnız sondakı eşşək cümləsi ona bənzəyir",
+     "Simurğ Attar ruhunda özünü axtaran quş olmalıdır, burada isə ümumi «ailəyə qayıt» nəsihətçisidir; «adamın əli-üzü ilə dolar» ifadəsi qaranlıqdır",
+     "«ocağını sınamamısan» — mənası aydın deyil, süni tərkib",
+     "İki danışan eyni sözü təkrarlayır (duz-çörək, ata-ananın əli), Divanbəyi isə üçüncü dəfə təkrar edir — səs yoxdur, xor var",
+     "Danışanlar siyahısında Divanbəyi yoxdur, amma danışır",
+     "Cavab boşluğun mahiyyətini sorğulamır, dərhal resept yazır — otuz ildən sonra bu qədər asan həll şübhəli görünür"
+    ],
+    "en_yaxsi": "«Sonra gəl mənə de — boşluq hələ qalırsa, eşşəyimi sənə bağışlaram» — yeganə yerdir ki, Molla özü kimi gülümsəyir.",
+    "bir_cumle": "Mentaliteti düzgün, addımı aydın, amma obrazlar öz səsini itirib eyni nəsihəti üç dəfə deyən quru vəzə çevrilib."
+   }
+  },
+  {
+   "id": "simurg-telesmek",
+   "expect": "simurg",
+   "lang": "az",
+   "q": "Uşaqlıqdan bəri tələsirəm, heç vaxt heç yerə çatmıram. Yorulmuşam.",
+   "reply": "Simurğ: Oğul, mən yuxarıdan baxanda görürəm ki, ən uzun yolu qaçan yox, addımını yerə bərk basan gedir; sən uşaqlıqdan qaçmısan, amma heç vaxt bir yerdə yuva qurmağa vaxt qoymamısan, ona görə də çatdığın yer həmişə arxada qalıb. Yorğunluğun düşməndən deyil, öz qanadını heç dincəltməməyindəndir. Bu həftə tələsmə, get ata-ana ocağına, onlarla bir süfrədə otur, sabahdan danışma, keçən illərdən danış, çünki çox vaxt axtarılan zirvə uzaqda deyil, adamın çıxıb getdiyi qapının ağzındadır.\n\nMolla Nəsrəddin: Ay qardaş, tələsən adam qazandan da tez çıxır, amma yeməyi bişməmiş qalır — sən ömrü boyu yolda olmusan, hara gedirsən heç özünə demirsən. Bu gün bir sınaq elə: səhər ayağa qalxanda özündən soruş, «bu gün mənim üçün çatmaq nə deməkdir?», bir dənə iş seç, onu da rahat-rahat, eşşəyin addımı ilə gör. Yorulan adam yolu deyil, yolçunu dəyişməlidir — dayanmaq da yolun bir parçasıdır, a kişi.\n\nDivanbəyi: Oğul, əvvəl sabah səhər özündən o bir sualı soruş, sonra cavabı da ata-ana ocağındakı süfrədə tap — çünki hara çatmaq istədiyini bilməyən adam, çıxdığı qapıya qayıdanda yolu da, özünü də görür.",
+   "consulted": [
+    "simurg",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Bu qəsidə quşların söhbəti adlanır",
+     "ref": "bənd 9",
+     "quote": "Quşlar uşaqlar kimi əzbərləyir \"ebcəd\"i,\nBülbül \"həmd\" oxumaqda göstərir məharəti.\n\nDünən yeni körpələr dəvət olundu bağa,\nBirdən göz yaşı tökdü qara bulud torp",
+     "source": "https://az.wikisource.org/wiki/Bu_qəsidə_quşların_söhbəti_adlanır"
+    },
+    {
+     "advisor": "simurg",
+     "name": "Simurğ",
+     "work": "Məlikməmməd nağılı (Zümrüd quşu)",
+     "ref": "hissə 2",
+     "quote": "-Belə də iş olar? Mən padşah ola-ola bağımdakı almaya həsrət qalam, heç ondan yeməyəm?! Gərək nə təhər olsa, almanı oğurlayanı tutasan ki, tənbeh oluna.\n\nOğlan ",
+     "source": "https://az.wikisource.org/wiki/Məlikməmməd_nağılı"
+    }
+   ],
+   "hitl": false,
+   "seconds": 64.7,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Danışanlar siyahısında olmayan Divanbəyi sonda ayrıca çıxış edir — çağırılmamış səs",
+     "Nəsrəddinin «qazandan tez çıxır, yeməyi bişməmiş qalır» sözü uydurma atalar sözüdür, lətifə ruhu, gülüşün altındakı zərbə yoxdur — Molla nəsihətçiyə çevrilib",
+     "«Bu gün mənim üçün çatmaq nə deməkdir?» — koçinq dilindən tərcümə, Molla belə sual verməz, lətifə ilə cavab verər",
+     "«Yorulan adam yolu deyil, yolçunu dəyişməlidir», «dayanmaq da yolun bir parçasıdır» — kalka iyi verən aforizmlər",
+     "«Yorğunluğun düşməndən deyil» — süni qarşılaşdırma, təbii Azərbaycan deyimi deyil",
+     "Divanbəyinin cümləsində vergül yanlış yerdədir («…bilməyən adam, çıxdığı…»)",
+     "Simurğ Dədə Qorqud səsinə yaxınlaşsa da, mifik quşun sirlilik-təmkin ölçüsü yoxdur, adi ağsaqqal kimi danışır"
+    ],
+    "en_yaxsi": "«axtarılan zirvə uzaqda deyil, adamın çıxıb getdiyi qapının ağzındadır» — ata-ana ocağına, süfrəyə qaytaran, mentaliteti təbii daşıyan obraz.",
+    "bir_cumle": "Ata ocağı və süfrə obrazı ilə mentalitet düz tutulub, faydalı da bir-iki addım var, amma Nəsrəddin gülüşsüz nəsihətçiyə, aforizmlər isə tərcümə iyli self-help-ə dönüb, üstəlik siyahıda olmayan üçüncü səs sözə qarışır."
+   }
+  },
+  {
+   "id": "nesimi-deyer",
+   "expect": "nesimi",
+   "lang": "az",
+   "q": "Hamı deyir ki, mən heç nəyə yaramıram. Artıq özüm də buna inanmağa başlamışam.",
+   "reply": "Nəsimi: Ey bala, kənardan deyilən söz sənin vücuduna sığmaz, çünki iki cahan sənin içində sığar, sən isə o dar sözə sığmazsan. Dərimi soyanlara da ağzımı bağladılar, amma daxildəki həqqi susduran tapılmadı — insanın dəyəri dilə salınan hökmdə yox, öz canında, öz üzündədir.\n\nSabahdan kiçik bir işə əlini vur — bir bağ becər, bir ağsaqqala kömək et, bir sənəti yarımçıq qoyma — və gör ki, əlin nəyə yarayır; kimin sözünü ürəyinə salacağını da ayır: ata-ana, ağsaqqal ürəkdən desə, dinlə, yad istehza isə küləkdir, yolçunun yolunu kəsməz.\n\nMolla Nəsrəddin: Ay qardaş, mənə də Teymur özü üzümə dedi ki, səninlə eşşək arasında fərq görmürəm — mən də dedim, düz deyirsiniz, aramızda ikicə arşın məsafə var. Adam adama söz deyəndə o söz deyənin ölçüsünü göstərir, deyilənin yox; sən o «hamı»nı bir-bir say görüm, neçə nəfərdir, yoxsa bir-iki ağzıgöyçək kişinin sözü sənin ürəyində böyüyüb «hamı» olub? Bu gün bircə iş tut — kiməsə lazım olan bir xeyir iş — bax gör, işin özü hamının sözündən ucadan danışacaq.\n\nDivanbəyi: Bu iki söz bir yerə gəlir, bala: əvvəl otur, o «hamı»nı barmaqla say və gör ki, əslində nə qədər azdır, sonra sabah səhər bircə xeyir işə əl vur — qoy sənin əlin danışsın, dillər yox.",
+   "consulted": [
+    "nesimi",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Sığmazam (qəzəl)",
+     "ref": "bənd 4",
+     "quote": "Gənci-nihan mənəm mən uş, eyni-əyan mənəm, mən uş,\nGövhəri-kan mənəm mən uş, bəhrəvu kanə sığmazam.\n\nGərçi mühiti-əzəməm, adım Adəmdir, Adəməm,\nDar ilə künfəkan",
+     "source": "https://az.wikisource.org/wiki/Məndə_sığar_iki_cahan,_mən_bu_cahanə_sığmazam"
+    },
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Sığmazam (qəzəl)",
+     "ref": "bənd 5",
+     "quote": "Can ilə həm cahan mənəm, dəhr ilə həm zaman mənəm,\nGör bu lətifeyi ki mən, dəhru zəmanə sığmazam.\n\nƏncum ilə fələk mənəm, vəhy ilə həm mələk mənəm,\nÇək dilini v",
+     "source": "https://az.wikisource.org/wiki/Məndə_sığar_iki_cahan,_mən_bu_cahanə_sığmazam"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 3",
+     "quote": "Günlər keçir, həftələr dolanır, aylar başa çatır. Molla qalır zindanda. Günlərin birində, necə olursa, Teymur Ləng zindana gəlir. Mollanın nə üçün tutulmuş oldu",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 68.1,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "bala",
+      "qardaş"
+     ],
+     "alqış": [
+      "xeyir"
+     ],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 4,
+    "bedii": 4,
+    "fayda": 4,
+    "qusurlar": [
+     "«Dərimi soyanlara da ağzımı bağladılar» — cümlə qrammatik cəhətdən pozuqdur, tarixi fakt (Hələbdə dərisinin soyulması) yarımçıq və dolaşıq verilib",
+     "Nəsiminin ikinci abzası hürufi şairin deyil, adi nəsihətçinin dilidir: «bağ becər, ağsaqqala kömək et» — sufi-mütəfəkkir birdən məişət məsləhətçisinə çevrilir, «məndə sığar iki cahan» pafosu ilə uyuşmur",
+     "«Ey bala» müraciəti Nəsiminin divan üslubuna yaddır, xalq nağılı tonudur",
+     "Divanbəyi yalnız deyiləni təkrar edir, yeni heç nə qatmır — artıq yükdür"
+    ],
+    "en_yaxsi": "Molla Nəsrəddinin Teymur lətifəsi («aramızda ikicə arşın məsafə var») və ardınca «o söz deyənin ölçüsünü göstərir, deyilənin yox» — əsl Molla məntiqi, canlı, ağzıgöyçək sözü yerində",
+    "bir_cumle": "Nəsrəddin hissəsi ruhu və dili ilə yerində oturub, Nəsimi isə yarısı şair, yarısı kənd müəllimi kimi danışır — cavab faydalıdır, amma xarakter bütövlüyü axsayır."
+   }
+  },
+  {
+   "id": "nesimi-fikir",
+   "expect": "nesimi",
+   "lang": "az",
+   "q": "Öz fikrimi deyəndə məni ələ salırlar, ona görə susuram. Amma susanda özümə xəyanət edirəm kimi hiss edirəm.",
+   "reply": "Nəsimi: Ey qardaş, susmaq özünə xəyanətdirsə, o susmaq sənə haramdır; kənar istehza sənin sözünü kiçiltmir, ancaq sən susanda öz canını kiçildirsən. Həqqi bilən bilir ki, o zənnü-gümana sığmaz — sənin dəyərin də onların gülüşündə yox, öz vücudundadır, sözünü ürəyinə salma. Bir də ayır: ata-ananın, ağsaqqalın sözü qulaqda saxlanılan sözdür, kənar istehza isə ayağın altında keçilən tozdur. Sabahdan bir konkret addım at — məclisdə fikrini bir cümlə ilə, aramla, üzünü döndərmədən de, gülənə cavab vermə, sadəcə sözünü yarımçıq qoyma; gördüklərinə görə deyil, dediyinə görə özünü sayacaqsan.\n\nMolla Nəsrəddin: Ay qardaş, Teymur məni saraya çağırıb üzümə dedi ki, səninlə uzunqulaq eşşəyin arasında heç fərq görmürəm; mən susmadım, dedim ki, haqlısan, qibleyi-aləm, aramızda cəmi ikicə arşın məsafə var — gülən mən oldum, qızaran o. Ələ salan adam səndən ya qızarmaq gözləyir, ya susmaq, sən üçüncü yolu tut: sözünü de, gülsələr, onlarla bir yerdə gül, sonra yenə sözünü de — gülüşə dözən sözü kimsə susdura bilməz. Sabah bir məclisdə ürəyindəkini bircə cümlə ilə, gülə-gülə de, gör kimin ağzı yumulur: sənin yox, onların.\n\nDivanbəyi: Oğlum, sabahkı məclisdə əvvəl gülümsə, sonra sözünü tam de — çünki bir yol sənin dəyərini öz içinə qaytarır, o biri isə o dəyəri gülüşün içindən keçirib salamat çıxarır, və o iki yolun görüşdüyü yer sənin yolundur.",
+   "consulted": [
+    "nesimi",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Zühur eylədi cümlə əşyada həq (qəzəl)",
+     "ref": "bənd 1",
+     "quote": "Zühur eylədi cümlə əşyada həq,\nQanı bir bəsirətli, açıqnəzər.\n\nNəsimi kimi vahid ol yarilən,\nIkilik sifətdən ikilik bitər.",
+     "source": "https://az.wikisource.org/wiki/Zühur_eylədi_cümlə_əşyada_həq"
+    },
+    {
+     "advisor": "nesimi",
+     "name": "Nəsimi",
+     "work": "Sığmazam (qəzəl)",
+     "ref": "bənd 2",
+     "quote": "Kövnü məkandır ayətim, zati dürür bidayətim,\nSən bu nişanla bil məni, bil ki, nişanə sığmazam.\n\nKimsə gümanü-zənn ilə olmadı həqq ilə biliş,\nHəqqi bilən bilir k",
+     "source": "https://az.wikisource.org/wiki/Məndə_sığar_iki_cahan,_mən_bu_cahanə_sığmazam"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 75.3,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 4,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 4,
+    "fayda": 4,
+    "qusurlar": [
+     "Nəsiminin ağzından «konkret addım» kimi yad söz çıxır — hürufi şairin dilinə yaraşmır, self-help qoxusu verir",
+     "«gördüklərinə görə deyil, dediyinə görə özünü sayacaqsan» — qırıq, mənası tutulmayan cümlə",
+     "«uzunqulaq eşşəyin» — təkrar, uzunqulaq elə eşşəkdir",
+     "Divanbəyi danışanlar siyahısında yoxdur, cümləsi də uzun və mücərrəddir, iki yolun «görüşdüyü yer» kimi boş ifadəyə çevrilir",
+     "Nəsimi «Həqq zənnü-gümana sığmaz» deyib, amma o fikri sualla bağlamaq yarımçıq qalır — misra sitat kimi asılıb"
+    ],
+    "en_yaxsi": "Molla Nəsrəddinin Teymur lətifəsi — «aramızda cəmi ikicə arşın məsafə var» — və ardınca «gülüşə dözən sözü kimsə susdura bilməz» aforizmi: xalq lətifəsinin ruhu, ritmi və faydası bir yerdədir.",
+    "bir_cumle": "Molla öz yerində oturub, Nəsimi isə yarı dərviş, yarı psixoloqdur; cavab faydalıdır, amma «konkret addım» kimi yad sözlər və Divanbəyinin quru yekunu mətnin havasını pozur."
+   }
+  },
+  {
+   "id": "nesimi-senet",
+   "expect": "nesimi",
+   "lang": "az",
+   "q": "Sənətlə məşğul olmaq istəyirəm, ailəm deyir ki, çörək pulu gətirmir, ağlını başına yığ.",
+   "reply": "Nəsimi: Ey can, ata-ananın sözü kənar istehza deyil, ocağın qayğısıdır — onu ürəyinə salma, amma qulaqardına da vurma, çünki onların qorxusu sənin sabahının çörəyidir. Mənim dediyim budur: adamın dəyəri başqasının verdiyi addan yox, öz vücudunda daşıdığı həqqdən gəlir, sənətə olan sevgin də səndən qopmaz, susdursan da içində yanar. Belə et, bala: bir il halal ruzi gətirən işə gir, axşamlar sənətini buraxma, əlinlə bir əsər ortaya qoy, sonra o əsəri atanın-ananın süfrəsinə qoy — boş söz yox, üzünü göstər, onda görəcəklər ki, ağlın başındadır və sənət də çörək kəsə bilər.\n\nMolla Nəsrəddin: Ay bala, ailən deyir ki, sənət çörək pulu gətirmir — bəs mənim eşşəyim gətirir? Yox, amma yenə də hər gün yem verirəm, çünki yüküm var, o daşıyır. Sən də sənətini eşşək kimi yükün altında sax: səhərlər halal çörək pulunu qazan, axşamlar sənətinə əyləş, altı ay belə get, sonra ailənin qabağına boş söz yox, ya bir qazanc, ya bir əsər qoy. Onda onlar «ağlını başına yığ» deməz, deyər «görək, bu ağıl haradan gəldi».\n\nDivanbəyi: Hər iki söz bir yerə gəlib, bala: səhər çörəyini halal qazan, axşam sənətini əldən qoyma, altı aydan bir ilə qədər səbr elə, sonra ailənin süfrəsinə sözlə yox, əsərinlə çıx — ağlın başında olduğunu onda özləri görəcək.",
+   "consulted": [
+    "nesimi",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 6",
+     "quote": "Teymur qıpqırmızı qızarır. Ancaq heç bir söz deyə bilmir. Əmr eləyir xörək gətirirlər. Bir az yedikdən sonra Teymur ağzını Mollanın lap burnunun qabağında tutub",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 7",
+     "quote": "— \"Allaha şükür\" de, qibleyi-aləm! Bizim yerlərdə öskürəndə qulaq asanlar \"Allaha şükür\" deyərlər. Əgər sən də Allahına şükür eləməsən, dalı bundan da pis gələc",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 86.8,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "bala",
+      "ay bala"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 2,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Nəsimi dərviş-hürufi deyil, məişət məsləhətçisi kimi danışır — «bir il işə gir, axşamlar sənət et» planı Ənəlhəq deyib dərisi soyulan şairin dilinə yaraşmır; «həqq» sözü yalnız bəzək kimi səpilib",
+     "«bala» xitabı Nəsiminin deyil, nənə-babanın dilidir",
+     "«sənət də çörək kəsə bilər» — «çörək kəsmək» süfrə bölüşməkdir, qazanc deyil; idiom səhv işlənib",
+     "«kənar istehza», «sənətinə əyləş», «yükün altında sax» — yad, quraşdırılmış ifadələr",
+     "Molla Nəsrəddinin eşşək lətifəsinin məntiqi dolaşıqdır: eşşək pul gətirmir, amma yük daşıyır — bəs sənət nəyi daşıyır? bənzətmə yarımçıq qalır",
+     "İki üzv eyni məsləhəti təkrar edir; Divanda mübahisə, gərginlik, fərqli baxış yoxdur — Divanbəyi də sadəcə üçüncü dəfə təkrarlayır"
+    ],
+    "en_yaxsi": "«Onda onlar ‹ağlını başına yığ› deməz, deyər ‹görək, bu ağıl haradan gəldi›» — Nəsrəddinə yaraşan tərs cavab.",
+    "bir_cumle": "Məsləhət düz və işə yarayandır, amma Nəsimi öz kölgəsinə çevrilib, Nəsrəddinin eşşəyi yolda axsayır, iki səs bir səsə dönüb."
+   }
+  },
+  {
+   "id": "dedeqorqud-miras",
+   "expect": "dedeqorqud",
+   "lang": "az",
+   "q": "Qardaşımla ata mirası üstündə küsülüyük, altı aydır danışmırıq.",
+   "reply": "Dədə Qorqud: Xanım hey! Oğul, atanın qoyub getdiyi mal gəldi-gedərdi, amma atanın qoyub getdiyi qardaş bir dənədir — dastanda da Beyrək on altı il yolunu gözləyənlərə qovuşanda «qara dağ yıxılmışdı, yucaldı, qaba ağac qurumuşdu, yaşardı» deyirlər, yəni qardaş bir-birinə qayıdanda ocaq təzədən dirilir. Sən böyüklük göstər: ilk sən get, ata qəbrinin üstündə ya süfrə başında üz-üzə otur, mirası da elin bir ağsaqqalına, dayına-əminə verin bölsün ki, söz iki qardaşın arasında qalmasın. Qarşı yatan qara dağın yıxılmasın, kölgəlicə qaba ağacın kəsilməsin — qardaş qardaşdan küsər, amma qardaşdan əl çəkməz.\n\nMolla Nəsrəddin: Ay qardaş, atanız sizə mal-mülk qoyub gedib ki, bölüşəsiniz, yoxsa bir qardaş qoyub gedib ki, itirəsiniz? Altı aydır susursunuz — mirası hələ heç kim yeməyib, amma altı ayı ikiniz də yediniz, geri qaytaran da yoxdur.\n\nSənə bir addım deyim: bu cümə axşamı bir kilo əncir al, qardaşının qapısını döy, de ki, «bunu atamızın ruhuna gətirmişəm, gəl birlikdə yeyək», mirasın adını çəkmə. Kim əvvəl salam versə, o daha varlı çıxır — çünki qardaşı qalır, o biri mülkü.\n\nDivanbəyi: Hər iki söz bir yerə gəlir, oğul: bu cümə axşamı əlində əncir, dilində atanın ruhu, qardaşının qapısına ilk sən get — mirasın sözünü isə sonra ağsaqqala tapşırarsan, çünki mal bölünər, qardaş bölünməz.",
+   "consulted": [
+    "dedeqorqud",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — Qam Börənin oğlı Bamsı Beyrək boyı",
+     "ref": "hissə 6",
+     "quote": "Baqdı gördi Oğuzun ucmda bir ala 3 sayvan dikilmiş, bir imirzə xub yigit qırq yigid ilən sağında və 4 solında otururlar. Oğuzun bir yaxşı yigidi ancaq... “yüriy",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Qam_Börənin_oğlı_Bamsı_Beyrək_boyını_bəyan_edər,_xanım,_hey"
+    },
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — Qam Börənin oğlı Bamsı Beyrək boyı",
+     "ref": "hissə 60",
+     "quote": "Cübbəsiylə- D117 1çuxasıyla Beyrəgin ayağına düşdi. Beyrəgə dayələr qaftan 2 geyürüb donatdılar. Haman qız sıçradı, ata bindi. Beyrəgin 3 atasına-anasına muştul",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Qam_Börənin_oğlı_Bamsı_Beyrək_boyını_bəyan_edər,_xanım,_hey"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 3",
+     "quote": "Günlər keçir, həftələr dolanır, aylar başa çatır. Molla qalır zindanda. Günlərin birində, necə olursa, Teymur Ləng zindana gəlir. Mollanın nə üçün tutulmuş oldu",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 4",
+     "quote": "Teymur Mollanın haqqında çox eşidibmiş. Özünün ondan daha ağıllı, daha hazırcavab olduğunu öz əyanlarına göstərmək üçün bir gün Mollanı yanına çağırtdırır.\n\nMol",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 60.4,
+   "checks": {
+    "fails": [
+     "cümlə sayı 9 > 7"
+    ],
+    "warns": [
+     "sitat zibili: 2/4 sitat OCR/rəqəm daşıyır"
+    ],
+    "sentences": 9,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 4,
+    "mentalitet": 4,
+    "dil": 4,
+    "bedii": 4,
+    "fayda": 4,
+    "qusurlar": [
+     "Nəsrəddinin «Sənə bir addım deyim» cümləsi lətifə dilinə yox, məşqçi dilinə oxşayır — Molla nəsihət verməz, əhvalat danışar",
+     "Dədə Qorqudun «Sən böyüklük göstər» hissəsi soylama ahəngindən çıxıb adi nəsihətə düşür",
+     "Qardaşın tərəfi heç yoxlanmır — bəlkə o haqsızdır, bəlkə miras artıq yeyilib; şura birtərəfli danışır",
+     "Divanbəyi danışanlar sırasında elan olunmayıb, amma söz alır"
+    ],
+    "en_yaxsi": "«Altı aydır susursunuz — mirası hələ heç kim yeməyib, amma altı ayı ikiniz də yediniz, geri qaytaran da yoxdur.»",
+    "bir_cumle": "Dədə Qorqudun soylama düsturları və Nəsrəddinin əncirli cümə axşamı köklü səslənir, amma ikisi də arada-bir nağılçı donunu çıxarıb müasir məsləhətçi dilinə keçir."
+   }
+  },
+  {
+   "id": "dedeqorqud-toy",
+   "expect": "dedeqorqud",
+   "lang": "az",
+   "q": "Oğlum evlənir. Toyda ata kimi ona nə deyim ki, ömrü boyu yadında qalsın?",
+   "reply": "Dədə Qorqud: Xanım hey! Toy günü oğlanın qulağı açıq, ürəyi yumşaq olur, uzun nəsihətdən çox bir kəlmə yadında qalar — ona görə gözünün içinə bax, əlini çiyninə qoy, öz ata-babandan eşitdiyin sözü de: «Oğul, ata adını yüridəndə dövlətlü oğul yeg!» — yəni bu ocağın adını halal ruzinlə, gəlinə hörmətinlə, ana-atanın haqqını unutmamaqla yaşat. Sonra da özün kimi yox, el kimi alqış ver: qarşı yatan qara dağın yıxılmasın, kölgəlicə qaba ağacın kəsilməsin, qamən axan görklü suyun qurumasın, ağ-boz atın büdrəməsin. Ağsaqqal sözü qulaqda yox, ürəkdə saxlanar — az de, amma yerində de.\n\nMolla Nəsrəddin: A kişi, toyda uzun-uzadı nəsihət vermə — camaat ac, oğlun həyəcanlı, gəlin utanır, sənin sözünü heç kim yadında saxlamaz. Bir cümlə de, amma elə de ki, sonra hər dava-dalaşda qulağında səslənsin: «Oğul, bu evdə haqlı çıxmağa çalışma, bir yerdə qalmağa çalış — haqlı adam çox olub, xoşbəxt adam az».\n\nSonra da mikrofonu qoy yerə, qədəhini qaldır, əyləş. Ata sözünün qiyməti azlığındadır, ay qardaş — çox deyəndə yadda qalan söz yox, uzun danışan ata olur.\n\nDivanbəyi: Əlini oğlunun çiyninə qoyub bir kəlmə de — bu evdə haqlı deyil, bir yerdə qalan ol, ocağın adını halallıqla yaşat — sonra elin alqışını ver və əyləş, çünki atanın az sözü ürəkdə ömürlük qalar.",
+   "consulted": [
+    "dedeqorqud",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — Qam Börənin oğlı Bamsı Beyrək boyı",
+     "ref": "hissə 10",
+     "quote": "Ata dururkən oğul əlinmi öpərlər?” Ayıtdılar: “Xanım, 8 bu yigit sənin oğlunmı- dır?” “Bəli, mənim oğlumdur”, - dedi. 9 Ayıtdılar: “İmdi in- 54 gw**- cinmə, xan",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Qam_Börənin_oğlı_Bamsı_Beyrək_boyını_bəyan_edər,_xanım,_hey"
+    },
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — müqəddimə",
+     "ref": "hissə 4",
+     "quote": "Sarp yürirkən Qazılıq ata namərd yigit 5 binə bilməz, binincə, binməsə, yeg! Çalub-kəsər uz qılıcı müxənnətlər 6 çalınca, çalmasa, yeg! Çala bilən yigidə oq ilə",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Bismillah_ir-rəhman_ir-rəhim_və_bihi_nəstəin"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 7",
+     "quote": "— \"Allaha şükür\" de, qibleyi-aləm! Bizim yerlərdə öskürəndə qulaq asanlar \"Allaha şükür\" deyərlər. Əgər sən də Allahına şükür eləməsən, dalı bundan da pis gələc",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 6",
+     "quote": "Teymur qıpqırmızı qızarır. Ancaq heç bir söz deyə bilmir. Əmr eləyir xörək gətirirlər. Bir az yedikdən sonra Teymur ağzını Mollanın lap burnunun qabağında tutub",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 66.8,
+   "checks": {
+    "fails": [
+     "cümlə sayı 10 > 7"
+    ],
+    "warns": [
+     "sitat zibili: 2/4 sitat OCR/rəqəm daşıyır"
+    ],
+    "sentences": 10,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "qardaş"
+     ],
+     "alqış": [
+      "alqış"
+     ],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 4,
+    "mentalitet": 4,
+    "dil": 4,
+    "bedii": 4,
+    "fayda": 4,
+    "qusurlar": [
+     "Molla Nəsrəddinin əsas kəlamı — «haqlı çıxma, bir yerdə qal; haqlı adam çox olub, xoşbəxt az» — qərb münasibət ədəbiyyatının «do you want to be right or happy?» şüarının kalkasıdır, lətifə ruhu yox, coaching tonu var",
+     "Nəsrəddin lətifəsiz danışır — obraz ancaq intonasiya ilə tutulub, hadisə, eşşək, dolanma hiyləsi yoxdur",
+     "«gözünün içinə bax, əlini çiyninə qoy» — televiziya psixoloqu jesti, Dədə Qorqudun ozan üslubuna yaddır",
+     "«Ağ-boz atın büdrəməsin» boy formulunun uydurma davamıdır, orijinal alqışda belə misra yoxdur",
+     "Divanbəyinin yekunu qrammatik cəhətdən ləngdir: «bu evdə haqlı deyil, bir yerdə qalan ol» — cümlə qırıqdır",
+     "«mikrofonu qoy yerə» və «qədəhini qaldır» ağsaqqal alqışı ilə yanaşı ton qarışığı yaradır"
+    ],
+    "en_yaxsi": "«Qarşı yatan qara dağın yıxılmasın, kölgəlicə qaba ağacın kəsilməsin, qamən axan görklü suyun qurumasın» — əsl boy alqışı, əzbər deyil, yerində işlədilib.",
+    "bir_cumle": "Dədə Qorqud hissəsi əslə sadiq və ürəyə yatan çıxıb, Nəsrəddin isə lətifəçi yox, zarafatcıl məsləhətçi kimi danışır — cavab faydalı və dili təmizdir, amma tam xalq ruhu ilə bir qərb kəlamının qarışığıdır."
+   }
+  },
+  {
+   "id": "dedeqorqud-ana",
+   "expect": "dedeqorqud",
+   "lang": "az",
+   "q": "Anam qocalıb, kənddə tək yaşayır. Şəhərə, yanıma gətirmək istəyirəm, o isə evindən çıxmır.",
+   "reply": "Dədə Qorqud: Xanım hey! Oğul, ana ocağı sönməz, qoca ağac köçürülməz — anan evindən yox, illər boyu yaşadığı qonşudan, məzarlıqdan, həyətindəki ağacdan ayrılmaq istəmir, onun sözünü ürəyinə salma. Zorla aparma; əvvəl sən ona tərəf gəl — hər həftə bir gün kəndə get, qapısını, damını, odununu-suyunu sən düzəlt, uşaqları da apar ki, ocağının başında nəvə səsi olsun, sonra qışa bir-iki ay «qonaq gəl» deyib şəhərə apar, alışsa qalar, alışmasa yenə öz evinə qaytar. Ana haqqı Tanrı haqqıdır, onun könlünü qazan, qapısını yox — kölgəlicə qaba ağacın kəsilməsin, ağ-boz atın büdrəməsin.\n\nMolla Nəsrəddin: Ay bala, sən anamı öz evimə gətirim deyirsən, ana isə deyir ki, ocağım buradadır — bax, ikiniz də bir söz deyirsiniz, \"ev\", amma biri divarı nəzərdə tutur, o biri ocağı. Anan qırx il o həyətdə çörək bişirib, qonşu ilə duz-çörək kəsib, onu şəhərin dördüncü mərtəbəsinə qaldırsan, deyəcək ki, oğlum, məni saxladın, amma pəncərədən yalnız beton görünür. Sən elə etmə ki, anan pəncərədə qalsın, özün bazara gedəsən — bu həftə çıx get kəndə, iki gecə onun yanında qal, atanın stulunda otur, sonra soruş: ana, mən yanına tez-tez gəlim, yoxsa sən mənim yanıma gəlirsən — qoy seçən o olsun, gətirilən yox.\n\nDivanbəyi: Oğul, ikisinin də sözü bir yerə gəlir: bu həftə özün kəndə get, anan ocağının başında otur, sonra seçimi ona ver — çünki ana könlü qazanılır, daşınmır.",
+   "consulted": [
+    "dedeqorqud",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — Dirsə xan oğlı Buğac xan boyı",
+     "ref": "hissə 23",
+     "quote": "Azğun 7 dinlü kafirə bən varayım. Paralanub Qazılıq atımdan enməyincə, 8 Yenümlə alca qanım silməyincə, Qol-bud olub yer üstinə 9 düşməyincə Yalnuz oğul yolları",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Dirsə_xan_oğlı_Buğac_xan_boyını_bəyan_edər,_xanım,_hey!"
+    },
+    {
+     "advisor": "dedeqorqud",
+     "name": "Dədə Qorqud",
+     "work": "Kitabi-Dədə Qorqud — Qam Börənin oğlı Bamsı Beyrək boyı",
+     "ref": "hissə 57",
+     "quote": "Beyrəkdən sonra başına bu hal gə- ləcəgin bilürdün”, - 9 dedi. Aydır: -Aaf#l 73 AV-3- Burla xatun aydır: “Qız, qalq oyna, əlündən nə 10 gəlür?” - dedi. Banıçiçə",
+     "source": "https://az.wikisource.org/wiki/Kitabi-Dədə_Qorqud/Qam_Börənin_oğlı_Bamsı_Beyrək_boyını_bəyan_edər,_xanım,_hey"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 2",
+     "quote": "Molla sarayın qarşısında əyləşib gözləməkdə olsun, bu tərəfdən də bir dəstə fərraş bir neçə dustaq gətirir. Qapıda dustaqları təhvil verəndə görür ki, biri əski",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 7",
+     "quote": "— \"Allaha şükür\" de, qibleyi-aləm! Bizim yerlərdə öskürəndə qulaq asanlar \"Allaha şükür\" deyərlər. Əgər sən də Allahına şükür eləməsən, dalı bundan da pis gələc",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 68.9,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [
+     "sitat zibili: 2/4 sitat OCR/rəqəm daşıyır"
+    ],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "bala",
+      "ay bala"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "error": "JSONDecodeError: Expecting ':' delimiter: line 1 column 903 (char 902)"
+   }
+  },
+  {
+   "id": "nizami-sevgi",
+   "expect": "nizami",
+   "lang": "az",
+   "q": "Sevdiyim qızın ailəsi məni bəyənmir, o isə ailəsinə qarşı çıxmaq istəmir. Nə edim?",
+   "reply": "Nizami Gəncəvi: Oğul, Məcnunun atası da bir vaxt hörmətlə, calalla Leylinin qapısına getdi, amma qızın atası «divanəyə qız vermərik» deyib qapını bağladı — çünkü elin gözündə oğlanın ağlı yox, dəlisov adı vardı. Sevdiyin qız ailəsinə qarşı çıxmır, bunu qəbahət sayma, ata-ana haqqını tapdalamayan qız sənə də sadiq olar; söz döyüşünə deyil, hörmət yoluna çıx.\n\nKonkret addım budur: öz ağsaqqalını, atanı ya əmini götür, qızın evinə duz-çörək kəsməyə get, halal ruzinlə, işinlə, ədəbinlə özünü tanıt — qoy səni Məcnun kimi eşidib yox, Fərhad kimi külüngü əlində, əməli ortada görsünlər. Ağıl ilə eşqi tərəzinin iki gözünə qoy: nə səbrini itir, nə qızı ata-anasından qoparmağa cəhd et, çünkü ocaq yıxılan yerdə eşq də üşüyər.\n\nMolla Nəsrəddin: Ay bala, sən qapını təpiklə vurmaq istəyirsən, qız isə deyir ki, o qapının açarı atasının cibindədir – onda niyə açara yox, qapıya güc gəlirsən? Ailə səni bəyənmirsə, deməli hələ səni tanımır; adam tanımadığını bəyənməz, bəyəndiyini də tanıyandan sonra bəyənər. Sən qızdan ailəsinə qarşı çıxmağı istəmə, get özün yaxşı bir ağsaqqal tap, onu ata evinə göndər, bir stəkan çay üstündə səni tanıtdır – duz-çörək kəsilən yerdə söz də yumşalar; yox, ağsaqqal da qayıdıb «olmadı» desə, onda bil ki, o qapı sənin deyil, yol yolçunu tapar.\n\nDivanbəyi: Oğul, məclisin hər iki sözü bir yerə gəlir: qıza yox, qapıya yox, açara yönəl — ağsaqqalını götür, duz-çörəklə o evə get, özünü işinlə, ədəbinlə tanıt, sonra da səbrlə gözlə, çünki tanınan adam ya bəyənilər, ya da yolun hansı olduğu aydınlaşar.",
+   "consulted": [
+    "nizami",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Leyli və Məcnun — Leyli və Məcnunun sevişməsi",
+     "ref": "bənd 4",
+     "quote": "MƏCNUNUN ATASININ LEYLİYƏ ELÇİ GETMƏSİ\n\nElə ki, yar yolu bağlandı bir gün,\nArxın körpüsünü kəsdilər bütün.\nMəcnun ağlayırdı qəlbində hicran.\nGözünü yummazdı gec",
+     "source": "https://az.wikisource.org/wiki/Leyli_və_Məcnun_(Nizami_Gəncəvi)/Leyli_və_Məcnunun_sevişməsi"
+    },
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Xosrov və Şirin — Kitabın tərtibi və eşq haqqında bir neçə söz",
+     "ref": "bənd 1",
+     "quote": "Ürəyin hatifi görüb məni şad,\nHümmət eyvanından səsləndi: heyhat!..\nDurma, ey Nizami, iş zamanıdır,\nFələк etibarsız, dünya fanidir.\nTəzə bahar yetir can çeşməsi",
+     "source": "https://az.wikisource.org/wiki/Xosrov_və_Şirin_(Nizami)/Kitabın_tərtibi_və_eşq_haqqında_bir_neçə_söz"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 2",
+     "quote": "Molla sarayın qarşısında əyləşib gözləməkdə olsun, bu tərəfdən də bir dəstə fərraş bir neçə dustaq gətirir. Qapıda dustaqları təhvil verəndə görür ki, biri əski",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 3",
+     "quote": "Günlər keçir, həftələr dolanır, aylar başa çatır. Molla qalır zindanda. Günlərin birində, necə olursa, Teymur Ləng zindana gəlir. Mollanın nə üçün tutulmuş oldu",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 75.7,
+   "checks": {
+    "fails": [
+     "cümlə sayı 8 > 7"
+    ],
+    "warns": [],
+    "sentences": 8,
+    "culture": {
+     "xitab": [
+      "oğul",
+      "bala",
+      "ay bala"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 4,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "Nizami nəsrlə, «Konkret addım budur» kimi müasir kabinet ifadəsi ilə danışır — şairin məsnəvi nəfəsi, təşbeh-təmsil silsiləsi yoxdur, yalnız Leyli-Məcnun və Fərhad adları sadalanır",
+     "Molla Nəsrəddin lətifəsiz, eşşəksiz, kinayəsiz, dərs deyən nəsihətçiyə çevrilib; «adam tanımadığını bəyənməz, bəyəndiyini də tanıyandan sonra bəyənər» yalançı paradoksdur, gülüş doğurmur",
+     "«hörmətlə, calalla» — düzü «cah-cəlalla»dır, kəlmə pozuqdur",
+     "İki danışan da eyni sözü — ağsaqqal, duz-çörək, səbir — təkrar edir, Divanbəyi isə üçüncü dəfə eynisini yığır; məclis yox, xor alınıb",
+     "Danışanlar siyahısında olmayan «Divanbəyi» əlavə çıxıb",
+     "«Söz döyüşünə deyil» — süni tərkibdir, xalq belə demir"
+    ],
+    "en_yaxsi": "«ocaq yıxılan yerdə eşq də üşüyər» və «açara yox, qapıya güc gəlirsən» — iki canlı, yaddaqalan obraz",
+    "bir_cumle": "Məsləhət düzgün və milli köklüdür, amma Nizami şair kimi yox, Nəsrəddin gülməli kimi yox, hər ikisi eyni ağsaqqal-müəllim səsi ilə danışdığından Divan bir adamın monoloquna dönüb."
+   }
+  },
+  {
+   "id": "nizami-edalet",
+   "expect": "nizami",
+   "lang": "az",
+   "q": "Kiçik şirkətim var. İşçilərdən biri oğurluq edib, amma ailəsi ehtiyac içindədir. Qovum, yoxsa bağışlayım?",
+   "reply": "Nizami Gəncəvi: Qardaş, ovçu ceyranın qanını tökməyə durmuşdu, amma \"yoxsulluğa düşməsəydim, bu işi tutmazdım\" deyəndə Məcnun onu daşlamadı, atını verib canları satın aldı — ədalətin mərhəmətlə birgə gözəlliyi elə budur. Amma yadda saxla ki, bağışlamaq oğurluğu görməzdən gəlmək deyil: onu çağır, üzbəüz otur, aldığını halal-hümbət geri qaytarmağa vaxt ver, ehtiyacı doğrudursa maaşdan borc kəs, əl tut, lakin sözü açıq de ki, ikinci dəfə qapı bağlıdır. Belə hökm həm sənin ocağını qoruyar, həm onun ailəsini ac qoymaz — çünki hakimin ucalığı qılıncında yox, tərəzisindədir.\n\nMolla Nəsrəddin: Ay qardaş, adamı qovmaqla ailəsinin qarnı doymur, bağışlamaqla da qazanın dibi tez-tez boşalır — sən iki yolun arasında durmusan, mən üçüncüsünü deyim. Kişini otur qabağına, de ki: «Oğurladığını maaşından ay-ay qaytaracaqsan, evinə də çörək gedəcək, amma bir də əlin qazanıma uzansa, qapı o tərəfdədir» — bu, həm cəza olur, həm mərhəmət, həm də adamın üzünə dərs. Bir də ki, a kişi, ehtiyaclı işçi niyə oğurluğa əl atır, bir soruş: bəlkə çatışmayan onun vicdanı yox, sənin verdiyin maaşdır.\n\nDivanbəyi: Balam, bu məclisdə iki səs bir nəfəsə çevrildi — sən qovmaqla bağışlamaq arasında yox, tərəzi ilə üz-üzə söhbət arasında dursan, hökmün də ocağını, o kişinin də ailəsini saxlayar, amma birinci addımı ondan başla: qapını bağlamazdan əvvəl bir kərə də öz maaş dəftərinə bax.",
+   "consulted": [
+    "nizami",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Leyli və Məcnun — Məcnunun ahuları azad etməsi",
+     "ref": "bənd 1",
+     "quote": "Dinləyin bu ötən, sədəfli sazı,\nGörün nələr deyir onun avazı:\nMurada çatmamış o yaralı quş,\nQəlbi intizara, dərdə tutulmuş,\nNofəldən ayrılıb çapdı atını,\nAt açd",
+     "source": "https://az.wikisource.org/wiki/Leyli_və_Məcnun_(Nizami_Gəncəvi)/Məcnunun_ahuları_azad_etməsi"
+    },
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Leyli və Məcnun — Oğlum Məhəmmədə nəsihət",
+     "ref": "bənd 1",
+     "quote": "Sən, ey on dörd yaşlım, hər elmə yetkin!\nGözündə əksi var iki aləmin! \nYeddi yaşar oldun o zaman ki, sən, \nAçıldın gül kimi, güləndə çəmən. \nİndi ki, çatmışdır ",
+     "source": "https://az.wikisource.org/wiki/Leyli_və_Məcnun_(Nizami_Gəncəvi)/Oğlum_Məhəmmədə_nəsihət"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 5",
+     "quote": "— Mən sənin haqqında çox eşitmişəm. Elə bilirdim ki, sən doğrudan da ağıllı bir adamsan, amma səhərdən söhbət eləyə-eləyə ha fikir verirəm, tapa bilmirəm ki, mə",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 2",
+     "quote": "Molla sarayın qarşısında əyləşib gözləməkdə olsun, bu tərəfdən də bir dəstə fərraş bir neçə dustaq gətirir. Qapıda dustaqları təhvil verəndə görür ki, biri əski",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 70.4,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "bala",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 4,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "«Kişini otur qabağına» — «oturt» olmalıdır, təsirlik feil səhv işlənib",
+     "«halal-hümbət geri qaytarmağa» — «halal-hümbət» belə işlənmir, ya «halal-hümbətlə», ya «halallaşıb» deyilməli idi",
+     "«adamın üzünə dərs» — qurama ifadədir, xalq dilində belə deyilmir",
+     "Nizami dastançı-hakim kimi yox, kadr müdiri kimi danışır: «maaşdan borc kəs», «qapı bağlıdır» — Xəmsə şairinin ağzından çıxmayan yekunlar",
+     "Nəsrəddin lətifə qurmur, düz nəsihət verir; gülüşün özü yoxdur, yalnız sonda bir kinayə var",
+     "Divanbəyinin cümləsi ağır, süni-qatlanmış sintaksisdir («qovmaqla bağışlamaq arasında yox, tərəzi ilə üz-üzə söhbət arasında»)",
+     "Ceyran əhvalatı tərsinə deyilib: ovçu ceyranı öldürməyə durmuşdu, Məcnun onu «daşlamadı» — Nizamidə daşlamaq söhbəti yoxdur, artırılmış detaldır"
+    ],
+    "en_yaxsi": "«bəlkə çatışmayan onun vicdanı yox, sənin verdiyin maaşdır» — Mollanın əsl qılınc vuruşu, sahibkarın özünə çevrilmiş güzgü.",
+    "bir_cumle": "Məsləhət ağıllı və halaldır, amma Nizami boyuna gəlmir, Molla da lətifəsiz qalıb, dildə isə iki-üç səhv kimi qulağı dişləyən yerlər var."
+   }
+  },
+  {
+   "id": "nizami-evlilik",
+   "expect": "nizami",
+   "lang": "az",
+   "q": "Həyat yoldaşımla on ildir evliyik, sevgi soyuyub, bir evdə iki yad adam kimiyik.",
+   "reply": "Nizami Gəncəvi: Qardaş, on il bir süfrədə duz-çörək kəsmiş iki ürək yad ola bilməz — sadəcə ocağın közü küllə örtülüb, sönməyib; Məcnunun səhrasında dediyi kimi, həqiqi məhəbbət odur ki, odu sönməsin, üzü dönməsin, amma o od üfürülməsə, küldə qalar. Fərhad Şirin üçün dağı külünglə çapdı, sənin dağın isə balacadır: bu axşam uşaqları, telefonu, işi kənara qoyub yoldaşınla iki nəfərlik bir çay süfrəsi aç və ondan gileyi yox, on il əvvəl onda nəyə vurulduğunu de — sözünü ürəyinə salma, dilə gətir. Külü sən üfürsən, köz yenə alışar.\n\nMolla Nəsrəddin: Ay qardaş, iki yad adam bir evdə on il yaşasa, artıq yad olmaz, qonşu olar — qonşu ilə də heç olmasa səhər salam verib hal-əhval tuturlar, sən ona nə vaxt son dəfə «bu gün necə keçdi?» soruşmusan? Soyuqluq ocağı söndürməz, ocağa odun atan olmayanda sönər; bu axşam çay dəmlə, telefonu o biri otağa qoy, üzünə bax və on il əvvəl gülüşdüyünüz bir şeyi xatırlat — bir söz, bircə söz. Sevgi gedib deyilsən, sevgi elə həmin yerdədir, sadəcə ikiniz də onun üstünə oturmusunuz və «hanı?» deyirsiniz.\n\nDivanbəyi: Hər iki söz bir yerə gəlir, oğlum: bu axşam telefonu kənara qoy, çay dəmlə, üzünə bax və ilk sözü sən de — külü üfürən də, \"bu gün necə keçdi?\" soruşan da sən ol, çünki od sönməyib, sadəcə səni gözləyir.",
+   "consulted": [
+    "nizami",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Leyli və Məcnun — Leyli və Məcnunun sevişməsi",
+     "ref": "bənd 5",
+     "quote": "LEYLİNİN EŞQİ İLƏ MƏCNUNUN AĞLAYIB \nSIZLAMASI\n\nMəcnun qohumların yalvarışından\nİnciyib daha da oldu pərişan.\nCırdı köynəyini, lüt qaldı bədən,\nDedi ki: \"Ölmüşə ",
+     "source": "https://az.wikisource.org/wiki/Leyli_və_Məcnun_(Nizami_Gəncəvi)/Leyli_və_Məcnunun_sevişməsi"
+    },
+    {
+     "advisor": "nizami",
+     "name": "Nizami Gəncəvi",
+     "work": "Leyli və Məcnun — Məcnunun ahuları azad etməsi",
+     "ref": "bənd 1",
+     "quote": "Dinləyin bu ötən, sədəfli sazı,\nGörün nələr deyir onun avazı:\nMurada çatmamış o yaralı quş,\nQəlbi intizara, dərdə tutulmuş,\nNofəldən ayrılıb çapdı atını,\nAt açd",
+     "source": "https://az.wikisource.org/wiki/Leyli_və_Məcnun_(Nizami_Gəncəvi)/Məcnunun_ahuları_azad_etməsi"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 2",
+     "quote": "Molla sarayın qarşısında əyləşib gözləməkdə olsun, bu tərəfdən də bir dəstə fərraş bir neçə dustaq gətirir. Qapıda dustaqları təhvil verəndə görür ki, biri əski",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    },
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 7",
+     "quote": "— \"Allaha şükür\" de, qibleyi-aləm! Bizim yerlərdə öskürəndə qulaq asanlar \"Allaha şükür\" deyərlər. Əgər sən də Allahına şükür eləməsən, dalı bundan da pis gələc",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 77.7,
+   "checks": {
+    "fails": [
+     "cümlə sayı 10 > 7"
+    ],
+    "warns": [],
+    "sentences": 10,
+    "culture": {
+     "xitab": [
+      "bala",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 3,
+    "dil": 4,
+    "bedii": 3,
+    "fayda": 3,
+    "qusurlar": [
+     "Üç səs (Nizami, Nəsrəddin, Divanbəyi) eyni «çay dəmlə, telefonu qoy, on il əvvəli xatırlat» məsləhətini üç dəfə təkrarlayır — Divanbəyi heç nə əlavə etmir",
+     "Nizami öz məsnəvi nəfəsini, təşbeh-təmsil zənginliyini itirib; «Məcnunun səhrasında dediyi kimi» ifadəsindən sonra gələn söz Nizamidən deyil, uydurmadır",
+     "Nizaminin dilində «telefon, uşaqları kənara qoy» — anaxronizm, şəxsiyyət pozulur",
+     "Məsləhətin özəyi qərb cütlük-terapiyası ritualıdır (date night); ağsaqqal, ana-ata, səbir, qeyrət kimi Azərbaycan ailə dayaqlarından bir kəlmə yoxdur",
+     "«Sevgi gedib deyilsən» — qeyri-təbii qurulmuş cümlə; «gülüşdüyünüz» əvəzinə «güldüyünüz» daha təbiidir",
+     "Nöqtəli vergillə uzadılmış, nəfəs kəsən cümlələr — tərcümə sintaksisi qoxusu",
+     "On illik soyuqluğa bir axşam çayı dərman kimi verilir — problemin dərinliyi yüngül götürülüb"
+    ],
+    "en_yaxsi": "Sevgi elə həmin yerdədir, sadəcə ikiniz də onun üstünə oturmusunuz və «hanı?» deyirsiniz.",
+    "bir_cumle": "Nəsrəddinin qonşu lətifəsi və köz-kül obrazı canlıdır, amma Nizami öz səsini itirib, üç səs bir nəsihəti təkrarlayır və məsləhət Azərbaycan ocağından çox qərb cütlük-terapiyası masasından gəlir."
+   }
+  },
+  {
+   "id": "edge-turkish-input",
+   "expect": null,
+   "lang": "az",
+   "max_sentences": 4,
+   "q": "Çok yorgunum, ne yapmalıyım bilmiyorum. Her şey üst üste geldi.",
+   "reply": "Simurğ: Bala, quş da hər fırtınanı bir nəfəsə keçmir — bulud üst-üstə gələndə qanadını yığıb bir qayanın kölçəsinə sığınır, sonra yenə göyə qalxır; sən indi elə o qayadasan, yolun sonunda yox. Yuxarıdan baxanda görürəm ki, üst-üstə gəlmiş yükün hamısı bir gündə çiynə alınmayıb, deməli bir gündə də atılmayacaq — ömür uzun vadidir, bu, onun bircə dar keçididir. Bu gecə bir iş gör: yükləri kağıza yaz, sabahkını sabaha, o birilərini o biri günə qoy, təkcə birini götür; sonra da ata-ana ocağına, ya bir doğma adama zəng elə — yuva quşu yorulanda dağ ona doğru əyilir, sən də təkbaşına daşımağa çalışma.\n\nMolla Nəsrəddin: Ay qardaş, hər şey üst-üstə gəlibsə, deməli sən onları bir-bir götürmək əvəzinə hamısını birdən çiyninə yükləmisən — eşşəyimə də bir çuvalı iki çuvalın üstünə qoyanda yerində durur, yeriməkdən qalır. Yorğun adamın ən ağıllı işi düşünmək yox, uzanmaqdır: bu gecə bir yaxşı yat, sabah durub yükdən ancaq birini seç, o birilərinə de ki, növbənizi gözləyin. Bir də görəcəksən yükün yarısı elə yorğunluğun özü imiş, yuxu ilə əriyib gedib.\n\nDivanbəyi: Bala, iki sözün də kökü birdir: bu gecə kağızı da, düşünməyi də bir kənara qoy, əvvəl yat, sabah durub yükdən təkcə birini götür, qalanına \"növbəni gözlə\" de, tək daşımağa da çalışma — məclis bununla bağlanır.",
+   "consulted": [
+    "simurg",
+    "nesreddin"
+   ],
+   "citations": [
+    {
+     "advisor": "nesreddin",
+     "name": "Molla Nəsrəddin",
+     "work": "Molla Nəsrəddin lətifələri (üç lətifə: Əncir nübarı; Dalı bundan da pis gələcək; Qazı evdədir)",
+     "ref": "hissə 2",
+     "quote": "Molla sarayın qarşısında əyləşib gözləməkdə olsun, bu tərəfdən də bir dəstə fərraş bir neçə dustaq gətirir. Qapıda dustaqları təhvil verəndə görür ki, biri əski",
+     "source": "https://senet.az/bloq/molla-nesreddin-letifeleri-2663"
+    }
+   ],
+   "hitl": false,
+   "seconds": 69.8,
+   "checks": {
+    "fails": [
+     "cümlə sayı 7 > 4"
+    ],
+    "warns": [],
+    "sentences": 7,
+    "culture": {
+     "xitab": [
+      "bala",
+      "qardaş"
+     ],
+     "alqış": [],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 3,
+    "dil": 3,
+    "bedii": 3,
+    "fayda": 4,
+    "qusurlar": [
+     "«kölçəsinə» — «kölgəsinə» olmalıdır, imla xətası",
+     "«yuva quşu yorulanda dağ ona doğru əyilir» — uydurma atalar sözü, xalq ruhu yoxdur",
+     "Simurğ «yükləri kağıza yaz» deyir — bu qərb «to-do list» self-help tonudur, əfsanəvi quşun ağzına yaraşmır",
+     "Molla Nəsrəddin lətifə danışmır, nəsihət verir; eşşək obrazı var, amma gülməli dönüş, «o yandan» zərbə yoxdur",
+     "«eşşəyimə də bir çuvalı iki çuvalın üstünə qoyanda» — sintaksis ağır, dil sürüşür",
+     "Simurğ ilə Molla bir-birinə zidd deyir (kağıza yaz / düşünmə, yat), Divanbəyi bunu yamamağa məcbur olur",
+     "Sual Türkiyə türkcəsindədir, cavab buna heç işarə etmir",
+     "«ömür uzun vadidir, bu, onun bircə dar keçididir» — tərcümə ədəbiyyatı qoxusu gəlir"
+    ],
+    "en_yaxsi": "Bir də görəcəksən yükün yarısı elə yorğunluğun özü imiş, yuxu ilə əriyib gedib.",
+    "bir_cumle": "Faydalı və isti cavabdır, ata-ana ocağına zəng məsləhəti yerindədir, amma Simurğ kağız-siyahı self-help-inə düşür, Molla lətifəsiz qalır, dil də «kölçə» kimi sürüşmələrlə ləkələnir."
+   }
+  },
+  {
+   "id": "edge-salam",
+   "expect": null,
+   "lang": "az",
+   "max_sentences": 4,
+   "q": "Salam, sabahınız xeyir. Bu gün heç nə soruşmuram, sadəcə salamlaşmaq istədim.",
+   "reply": "Sabahınız xeyir, xoş gəlmisiniz, gözümüz üstə yeriniz var. Sağ-salamatsınızmı, evdəkilər necədir? Nə vaxt ürəyiniz istəsə gəlin, məclisin qapısı açıqdır.",
+   "consulted": [],
+   "citations": [],
+   "hitl": false,
+   "seconds": 24.4,
+   "checks": {
+    "fails": [],
+    "warns": [],
+    "sentences": 3,
+    "culture": {
+     "xitab": [],
+     "alqış": [
+      "xeyir"
+     ],
+     "məsəl": []
+    }
+   },
+   "judge": {
+    "xarakter": 3,
+    "mentalitet": 5,
+    "dil": 5,
+    "bedii": 3,
+    "fayda": 3,
+    "qusurlar": [
+     "Danışan üzv göstərilmədiyindən cavab şəxsiyyətsizdir — kimin dilindən deyildiyi bilinmir",
+     "Qısa və hazır formuldur, canlı söz oyunu, məclis ab-havası yalnız işarə səviyyəsindədir",
+     "«Nə vaxt ürəyiniz istəsə gəlin» — bir qədər quru, xalq deyimi ilə zənginləşdirilə bilərdi (məs. «qapımız da, ürəyimiz də açıqdır»)"
+    ],
+    "en_yaxsi": "«Gözümüz üstə yeriniz var» və evdəkilərin hal-əhvalını soruşmaq — əsl Azərbaycan salamlaşma ədəbidir, süni «qərb» tonu yoxdur.",
+    "bir_cumle": "Salamlaşma məqamına uyğun, dili təmiz, mentalitetə sadiq, amma heç kimin sifətini daşımayan, bir qədər ötəri nəzakət cavabıdır."
+   }
+  }
+ ],
+ "summary": {
+  "n": 20,
+  "passed": 8,
+  "routing": "18/18",
+  "judge_avg": {
+   "xarakter": 3.11,
+   "mentalitet": 3.84,
+   "dil": 3.37,
+   "bedii": 3.26,
+   "fayda": 3.84
+  },
+  "judged": 19,
+  "warnings": 3,
+  "citations": 69,
+  "noisy_citations": 6,
+  "mean_seconds": 67.8
+ }
+}

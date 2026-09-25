@@ -762,3 +762,13 @@ footer.credit {
   .fbstat { min-width: 0; flex: 1 1 calc(50% - 6px); }
   .chamber { min-width: 0; }
 }
+
+/* speaker names inside a council reply (2026-09-25) */
+.msg .who { font-weight: 700; }
+.msg .who.divanbeyi { color: var(--seal); }
+.msg .who.nesreddin { color: var(--c-nesreddin); }
+.msg .who.koroglu { color: var(--c-koroglu); }
+.msg .who.simurg { color: var(--c-simurg); }
+.msg .who.nesimi { color: var(--c-nesimi); }
+.msg .who.dedeqorqud { color: var(--c-dedeqorqud); }
+.msg .who.nizami { color: var(--c-nizami); }

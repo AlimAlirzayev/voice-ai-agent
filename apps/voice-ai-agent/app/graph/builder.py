@@ -52,14 +52,13 @@ from langgraph.types import Command, interrupt
 from app.core.config import settings
 from app.graph.guardrails import crisis_response, is_self_harm_risk
 from app.prompts.divan import (
-    CLOSING_PROMPT,
     GREETING_PROMPT,
     NARRATION_HITL,
     NARRATION_OPENING,
     NARRATION_ROUTING,
-    NARRATION_SYNTHESIS,
     ROSTER,
     advisor_prompt,
+    prior_words_note,
     supervisor_prompt,
 )
 from app.rag.retriever import evidence_for
@@ -160,15 +159,21 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
 
         decision = await ainvoke_with_retry(
             get_model(),
-            [SystemMessage(content=supervisor_prompt()), *state["messages"]],
+            [SystemMessage(content=supervisor_prompt(consulted)), *state["messages"]],
             label="llm-supervisor",
         )
         raw = (decision.content or "").strip().lower()
         token = raw.split()[0].strip(".,!?") if raw else ""
 
+        # Measured 2026-09-25: on the second hop the router was never told who
+        # had already spoken, so it named the same member again; that token is
+        # not in `remaining`, and the old fallback `remaining[0]` then picked the
+        # first roster key - Molla Nəsrəddin - on 17 of 18 questions. The router
+        # now sees the speakers, and an unusable answer ends the council
+        # instead of summoning whoever happens to be first in the dict.
         if token in remaining:
             next_node = token
-        elif token.startswith("yek"):
+        elif token.startswith("yek") or consulted:
             next_node = "synthesize"
         else:
             next_node = remaining[0]
@@ -190,7 +195,7 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
             )
             evidence = await evidence_for(key, query) if query else []
 
-            system = advisor_prompt(key)
+            system = advisor_prompt(key) + prior_words_note(state.get("opinions", []))
             if evidence:
                 passages = "\n".join(
                     f"[{i + 1}] «{e['text']}» — {e['work']}, {e['ref']}"
@@ -237,26 +242,12 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
                 label="llm-synthesis",
             )
             text = reply.content
-        elif len(opinions) == 1:
-            text = compose_reply(opinions, "")
         else:
-            # Audit v1 (2026-09-25): merging two members into one nameless
-            # paragraph erased both voices - the judge scored character 1.95/5
-            # and wrote "iki səs bir ümumi səsdə əriyib" on 17 of 18 answers.
-            # The members now keep their own words; the Divanbəyi adds ONE
-            # closing sentence that says where to start, nothing more.
-            narration = [*narration, NARRATION_SYNTHESIS]
-            merged = "\n".join(f"{o['name']}: {o['text']}" for o in opinions)
-            reply = await ainvoke_with_retry(
-                get_model(),
-                [
-                    SystemMessage(content=CLOSING_PROMPT),
-                    *state["messages"],
-                    HumanMessage(content=merged),
-                ],
-                label="llm-synthesis",
-            )
-            text = compose_reply(opinions, reply.content)
+            # Audit v1: merging members into one nameless paragraph erased their
+            # voices (character 1.95/5). Audit v2: a Divanbəyi closing line on
+            # top only repeated them ("xor alınıb", on most answers). So the
+            # members speak in their own words and nobody summarises them.
+            text = compose_reply(opinions, "")
 
         needs_approval = APPROVAL_ADVISOR in state.get("consulted", [])
         if needs_approval:
