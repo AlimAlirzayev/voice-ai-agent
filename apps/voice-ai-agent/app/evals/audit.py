@@ -14,7 +14,7 @@ What it measures, per question:
 The deterministic checks decide pass/fail; the judge only adds a graded opinion.
 Nothing here edits prompts: the audit reports, the human decides.
 
-usage: .venv/bin/python -m app.evals.audit [--base http://127.0.0.1:8940] [--out report.html]
+usage: .venv/bin/python -m app.evals.audit [--base http://172.17.0.1:8940] [--out report.html]
        [--only nesreddin,koroglu] [--no-judge]
 """
 
@@ -31,6 +31,8 @@ from datetime import datetime
 from pathlib import Path
 
 import httpx
+
+from app.core.config import settings
 
 AUDIT_SET = Path(__file__).with_name("audit_set.json")
 
@@ -215,7 +217,7 @@ def run(base: str, only: set[str] | None, use_judge: bool, judge_model: str,
                                            "when": datetime.now().isoformat(timespec="seconds"),
                                            "results": results}, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    with httpx.Client() as client:
+    with httpx.Client(headers={"X-Divan-Key": settings.DIVAN_ACCESS_KEY}) as client:
         for i, item in enumerate(items, 1):
             t0 = time.time()
             thread_id = f"audit-{datetime.now():%Y%m%d%H%M%S}-{i}"
@@ -308,7 +310,7 @@ tr.pass td:first-child{{border-left:4px solid var(--pass)}} tr.fail td:first-chi
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="http://127.0.0.1:8940")
+    ap.add_argument("--base", default="http://172.17.0.1:8940")
     ap.add_argument("--out", default="")
     ap.add_argument("--json", default="")
     ap.add_argument("--only", default="")

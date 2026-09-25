@@ -8,8 +8,10 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import hmac
+
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api import chat, feedback, voice, voicelab
@@ -42,6 +44,30 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+KEY_COOKIE = "divan_k"
+
+
+@app.middleware("http")
+async def access_key_gate(request: Request, call_next):
+    """Refuse everything but the health check without DIVAN_ACCESS_KEY.
+
+    The key arrives once in the link (?k=...) and is remembered in an HttpOnly
+    cookie, so the page's own fetch() calls pass without carrying it. Server
+    clients (the Telegram bot, the audit) send it as the X-Divan-Key header."""
+    key = settings.DIVAN_ACCESS_KEY
+    if not key or request.url.path == "/":
+        return await call_next(request)
+    offered = (request.query_params.get("k") or request.headers.get("x-divan-key")
+               or request.cookies.get(KEY_COOKIE) or "")
+    if not hmac.compare_digest(offered.encode(), key.encode()):
+        return JSONResponse({"detail": "Bu keçid üçün giriş açarı lazımdır."}, status_code=401)
+    response = await call_next(request)
+    if request.query_params.get("k"):
+        response.set_cookie(KEY_COOKIE, key, httponly=True, secure=True, samesite="lax",
+                            max_age=60 * 60 * 24 * 30)
+    return response
+
 
 app.include_router(chat.router)
 app.include_router(voice.router)

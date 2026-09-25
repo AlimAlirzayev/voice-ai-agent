@@ -372,7 +372,8 @@ def _short(exc: Exception) -> str:
 
 
 async def _open_http(application: Application) -> None:
-    application.bot_data["http"] = httpx.AsyncClient(timeout=TIMEOUT)
+    application.bot_data["http"] = httpx.AsyncClient(
+        timeout=TIMEOUT, headers={"X-Divan-Key": settings.DIVAN_ACCESS_KEY})
 
 
 async def _close_http(application: Application) -> None:

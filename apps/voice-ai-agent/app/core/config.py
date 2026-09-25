@@ -99,6 +99,11 @@ class Settings(BaseSettings):
 
     # --- Entry point ---
     TELEGRAM_BOT_TOKEN: str = ""
+    # --- Public test link: when set, every route except the health check needs
+    # this key, once, as ?k=<key> (it is then kept in an HttpOnly cookie). The
+    # council runs on the operator's subscription, so a public URL without a
+    # key is an open tap on someone else's quota. Empty = no gate (local dev).
+    DIVAN_ACCESS_KEY: str = ""
     BACKEND_URL: str = "http://127.0.0.1:8000"
 
     # --- Memory (Lesson 31) ---

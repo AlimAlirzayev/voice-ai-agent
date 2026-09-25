@@ -24,13 +24,13 @@ cd /opt/divan/apps/voice-ai-agent
 uv sync --extra dev && uv pip install edge-tts      # once
 cp .env.example .env                                 # then set LLM_PROVIDER=claude, GROQ key for STT
 .venv/bin/python -m pytest -q                        # 88 tests, no network, no CLI
-systemctl enable --now divan                         # /etc/systemd/system/divan.service → 127.0.0.1:8940
+systemctl enable --now divan                         # /etc/systemd/system/divan.service → 172.17.0.1:8940 (behind stack-caddy)
 ```
 
-From a laptop: `ssh -f -N -L 8940:127.0.0.1:8940 hetzner-agents` → http://127.0.0.1:8940/demo
+Public test link: https://divan.<vps-ip-dashed>.sslip.io/demo?k=<DIVAN_ACCESS_KEY from .env> (vhost in /opt/stack/caddy/Caddyfile; the key is kept in a cookie after the first visit, server clients send it as X-Divan-Key). From the Mac: `divan-demo open`.
 (`kurs-demo`-style helper: `divan-demo` on the Mac).
 
-Health: `curl 127.0.0.1:8940/` → `llm: claude-fable-5-1`, `stt: whisper-large-v3`, `tts: edge`.
+Health: `curl https://divan.<vps-ip-dashed>.sslip.io/` → `llm: claude-fable-5-1`, `stt: whisper-large-v3`, `tts: edge`.
 
 ## Measured
 

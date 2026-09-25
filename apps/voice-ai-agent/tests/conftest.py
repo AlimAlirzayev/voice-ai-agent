@@ -44,3 +44,12 @@ def _isolate_from_live_env(monkeypatch):
     llm_module.build_llm.cache_clear()
     retriever_module.get_retriever.cache_clear()
     voice_module._stt_client.cache_clear()
+
+
+@pytest.fixture(autouse=True)
+def _no_access_key(monkeypatch):
+    """The live .env carries DIVAN_ACCESS_KEY for the public link; tests talk
+    to the app directly and must not need it (test_access_key sets its own)."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "DIVAN_ACCESS_KEY", "")
