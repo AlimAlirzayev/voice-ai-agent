@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import subprocess
 import time
@@ -28,6 +29,8 @@ from langchain_core.outputs import ChatGeneration, ChatResult
 
 
 from app.services.llm import LLMError
+
+log = logging.getLogger(__name__)
 
 # Shown to the person when the subscription window is exhausted (measured
 # 2026-09-25 05:50: exit 1 with 0 input/output tokens). The API maps any
@@ -43,7 +46,21 @@ class ClaudeCLIError(LLMError):
     """The CLI child failed, timed out or answered with something that is not JSON.
 
     An LLMError on purpose: the chat/voice endpoints already turn that into a
-    clean 503 with a readable detail instead of a 500 traceback."""
+    clean 503 with a readable detail instead of a 500 traceback.
+
+    `transient` marks a failure that never reached the model (exit 1 with zero
+    tokens and duration_api_ms 0, measured 2026-09-25 05:50 six turns in a row):
+    worth a short wait and another try before the person sees anything."""
+
+    def __init__(self, message: str, *, transient: bool = False) -> None:
+        super().__init__(message)
+        self.transient = transient
+
+
+# Waited before the 2nd and 3rd CLI attempts when the child spent zero tokens.
+# Long enough to ride out a CLI self-update or an auth refresh, short enough
+# that the person is still waiting for an answer rather than walking away.
+TRANSIENT_BACKOFF: tuple[float, ...] = (4.0, 12.0)
 
 
 # At most this many CLI children at once per process: the subscription is one
@@ -116,7 +133,8 @@ class ClaudeCLIChat(BaseChatModel):
 
     def _parse(self, out: bytes, err: bytes, returncode: int) -> tuple[str, dict]:
         if returncode != 0:
-            raise ClaudeCLIError(self._failure_text(out, err, returncode))
+            raise ClaudeCLIError(self._failure_text(out, err, returncode),
+                                 transient=self._spent_nothing(out))
         try:
             data = json.loads(out.decode("utf-8", "replace"))
         except json.JSONDecodeError as exc:
@@ -129,6 +147,18 @@ class ClaudeCLIChat(BaseChatModel):
         usage = data.get("usage") or {}
         return text.strip(), {"usage": usage, "model": self.model,
                               "duration_ms": data.get("duration_ms"), "cost_usd": data.get("total_cost_usd")}
+
+    @staticmethod
+    def _spent_nothing(out: bytes) -> bool:
+        """True when the CLI answered in JSON but never spent a token."""
+        try:
+            data = json.loads(out.decode("utf-8", "replace"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return False
+        if not isinstance(data, dict):
+            return False
+        usage = data.get("usage") or {}
+        return not usage.get("input_tokens") and not usage.get("output_tokens")
 
     @staticmethod
     def _failure_text(out: bytes, err: bytes, returncode: int) -> str:
@@ -161,6 +191,21 @@ class ClaudeCLIChat(BaseChatModel):
     ) -> ChatResult:
         system, transcript = render_transcript(messages)
         t0 = time.time()
+        for attempt in range(len(TRANSIENT_BACKOFF) + 1):
+            try:
+                text, meta = await self._run_once(system, transcript)
+                break
+            except ClaudeCLIError as exc:
+                if not exc.transient or attempt == len(TRANSIENT_BACKOFF):
+                    raise
+                log.warning("claude -p spent zero tokens (attempt %d), retrying: %s", attempt + 1, exc)
+                await asyncio.sleep(TRANSIENT_BACKOFF[attempt])
+        self.calls += 1
+        self.seconds += time.time() - t0
+        return self._result(text, meta)
+
+    async def _run_once(self, system: str, transcript: str) -> tuple[str, dict]:
+        """One CLI child: spawn (surviving a self-update), feed, parse."""
         async with _SEMAPHORE:
             # The CLI auto-updates in place; for a few seconds the binary is
             # absent. Measured 2026-09-25 05:34 during audit v3: eight turns in
@@ -182,10 +227,7 @@ class ClaudeCLIChat(BaseChatModel):
             except asyncio.TimeoutError:
                 proc.kill()
                 raise ClaudeCLIError(f"claude -p timed out after {self.timeout:.0f}s")
-        self.calls += 1
-        self.seconds += time.time() - t0
-        text, meta = self._parse(out, err, proc.returncode or 0)
-        return self._result(text, meta)
+        return self._parse(out, err, proc.returncode or 0)
 
     # ---------------------------------------------------------------- sync
     def _generate(
