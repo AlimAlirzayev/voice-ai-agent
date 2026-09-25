@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# divan-voice-train [--force] [--epochs N]
+# The owner's own voice model, end to end: Voice Lab recordings -> dataset -> Kaggle T4
+# (offline Piper fine-tune) -> ONNX -> voice benchmark gate -> live rung 0 only if it passes.
+# Reports to the owner through the Divan bot. Cron runs it daily; it starts only when the
+# recordings reach the goal (30 min) and grew since the last run. See ops/voice-train/README.md.
+set -uo pipefail
+APP=/opt/divan/apps/voice-ai-agent; VT=/opt/divan/voice-train; K=/tmp/kgv/bin/kaggle
+FORCE=0; EPOCHS=1000
+while [ $# -gt 0 ]; do case "$1" in --force) FORCE=1;; --epochs) EPOCHS="$2"; shift;; esac; shift; done
+[ -x "$K" ] || { python3 -m venv /tmp/kgv >/dev/null && /tmp/kgv/bin/pip install -q kaggle; }
+export KAGGLE_USERNAME=$(grep ^KAGGLE_USERNAME= /opt/marketing-hub-os/.env | cut -d= -f2-)
+export KAGGLE_API_TOKEN=$(grep ^KAGGLE_API_TOKEN= /opt/marketing-hub-os/.env | cut -d= -f2-)
+BOT=$(grep ^TELEGRAM_BOT_TOKEN= $APP/.env | cut -d= -f2-)
+CHAT=$(grep ^TELEGRAM_ALLOWED_USERS= $APP/.env | cut -d= -f2- | cut -d, -f1)
+say() { curl -s -m 20 "https://api.telegram.org/bot$BOT/sendMessage" --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$1" >/dev/null; echo "$1"; }
+cd $APP && set -a && . ./.env && set +a
+MIN=$(.venv/bin/python -c "from app.services import voicelab as v; print(v.progress()['recorded_minutes'])")
+GOAL=$(.venv/bin/python -c "from app.services import voicelab as v; print(v.GOAL_MINUTES)")
+LAST=$(cat $VT/.last_minutes 2>/dev/null || echo 0)
+if [ $FORCE -eq 0 ]; then
+  python3 -c "import sys; sys.exit(0 if float('$MIN') >= float('$GOAL') and float('$MIN') > float('$LAST') + 1 else 1)" || { echo "not yet: $MIN / $GOAL min (last run at $LAST)"; exit 0; }
+fi
+exec 9>$VT/.lock; flock -n 9 || { echo "already running"; exit 0; }
+say "🎙 Divan: səs modelini öyrətməyə başlayıram — $MIN dəq yazı, $EPOCHS epoxa (Kaggle T4). Bir neçə saat çəkəcək."
+.venv/bin/python scripts/build_voice_dataset.py --out /opt/divan/voice-dataset | tail -1
+$K datasets version -p /opt/divan/voice-dataset -r zip -m "$MIN min" >/dev/null 2>&1 || { say "❌ Divan: dataset Kaggle-a yüklənmədi."; exit 1; }
+sleep 240
+rm -rf $VT/push && mkdir $VT/push && sed "s/__EXTRA__/$EPOCHS/" $VT/train_owner_voice.py > $VT/push/run.py \
+  && sed 's/"code_file": "train_owner_voice.py"/"code_file": "run.py"/' $VT/kernel-metadata.json > $VT/push/kernel-metadata.json
+$K kernels push -p $VT/push >/dev/null 2>&1 || { say "❌ Divan: Kaggle öyrətməsi başlamadı."; exit 1; }
+sleep 120
+until s=$($K kernels status alimalirzayev/divan-owner-voice-train 2>&1 | tail -1); echo "$s" | grep -qiE "complete|error|cancel"; do sleep 300; done
+OUT=$VT/out-$(date +%Y%m%d-%H%M); mkdir -p $OUT
+$K kernels output alimalirzayev/divan-owner-voice-train -p $OUT --file-pattern '.*\.(onnx|json|log)$' >/dev/null 2>&1
+if [ ! -s $OUT/az_AZ-owner-medium.onnx ]; then say "❌ Divan: öyrətmə bitdi, amma model çıxmadı ($s). Log: $OUT"; exit 1; fi
+cp $OUT/az_AZ-owner-medium.onnx $OUT/owner.onnx && cp $OUT/az_AZ-owner-medium.onnx.json $OUT/owner.onnx.json
+OWNER_MODEL_PATH=$OUT/owner.onnx .venv/bin/python -m app.evals.voice_bench --engines edge,owner-model --out $OUT/bench >/dev/null 2>&1
+R=$(python3 -c "
+import json; r=json.load(open('$OUT/bench/report.json')); e,o=r['edge'],r['owner-model']
+print(('PASS' if r.get('gate_owner_model') else 'FAIL'), f\"səhv söz {o['wer']:.0%} (Microsoft {e['wer']:.0%}), sənə oxşarlıq {o['likeness']:.2f}, sürət {o['rtf']}x\")")
+echo "$MIN" > $VT/.last_minutes
+mkdir -p $APP/output/voice-bench && cp $OUT/bench/report.json $APP/output/voice-bench/owner-model-$(date +%Y%m%d).json
+if [ "${R%% *}" = PASS ]; then
+  cp $OUT/owner.onnx $OUT/owner.onnx.json $APP/data/voices/ && systemctl restart divan divan-bot
+  say "✅ Divan artıq SƏNİN öz modelinlə danışır. ${R#* }"
+else
+  say "🟡 Divan: öz model öyrədildi, amma qapıdan keçmədi, canlıya qoymadım. ${R#* }. Daha çox yazı (/ses) keyfiyyəti qaldıracaq."
+fi

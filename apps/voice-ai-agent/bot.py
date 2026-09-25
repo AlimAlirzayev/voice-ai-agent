@@ -23,8 +23,10 @@ from telegram.ext import (
     Application,
     CallbackQueryHandler,
     CommandHandler,
+    ApplicationHandlerStop,
     ContextTypes,
     MessageHandler,
+    TypeHandler,
     PersistenceInput,
     PicklePersistence,
     filters,
@@ -385,6 +387,23 @@ async def _close_http(application: Application) -> None:
     await application.bot_data["http"].aclose()
 
 
+def _allowed_ids() -> set[int]:
+    return {int(x) for x in settings.TELEGRAM_ALLOWED_USERS.replace(" ", "").split(",") if x}
+
+
+async def _gate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Runs before every handler: strangers get one polite line and nothing else."""
+    allowed = _allowed_ids()
+    user = update.effective_user
+    if not allowed or (user and user.id in allowed):
+        return
+    log.warning("refused Telegram user %s", user.id if user else "?")
+    if update.effective_message:
+        await update.effective_message.reply_text(
+            "Bu Divan hələlik bağlı sınaqdadır. Giriş üçün sahibinə yazın.")
+    raise ApplicationHandlerStop
+
+
 def main() -> None:
     if not settings.TELEGRAM_BOT_TOKEN:
         sys.exit("TELEGRAM_BOT_TOKEN is not set in .env - get one from @BotFather.")
@@ -402,6 +421,7 @@ def main() -> None:
         .build()
     )
 
+    application.add_handler(TypeHandler(Update, _gate), group=-1)
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("reset", reset))
     application.add_handler(CommandHandler("ses", on_lab_start))

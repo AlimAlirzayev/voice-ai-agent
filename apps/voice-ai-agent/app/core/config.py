@@ -116,6 +116,10 @@ class Settings(BaseSettings):
 
     # --- Entry point ---
     TELEGRAM_BOT_TOKEN: str = ""
+    # Telegram user ids allowed to talk to the Divan bot (comma separated). The
+    # council runs on the owner's subscription, so the bot is closed like the web
+    # link is keyed. Empty = open (local development only).
+    TELEGRAM_ALLOWED_USERS: str = ""
     # --- Public test link: when set, every route except the health check needs
     # this key, once, as ?k=<key> (it is then kept in an HttpOnly cookie). The
     # council runs on the operator's subscription, so a public URL without a
