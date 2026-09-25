@@ -175,17 +175,20 @@ async def _on_lab_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             f"«{d['expected']}» → «{d['heard'] or '(düşüb)'}»" for d in diffs
         )
 
-    await message.reply_text(
-        "📥 Yazı qəbul olundu, klon materialına əlavə edildi.\n\n"
+    text = (
+        f"📥 Qəbul olundu · {payload['recorded_minutes']} / {payload['goal_minutes']:.0f} dəq yığılıb\n\n"
         f"👤 Səndən eşidilən: {payload['trainer_transcript']}\n"
-        f"↳ {_fmt(payload['trainer_diffs'])}\n\n"
-        f"🤖 Klondan eşidilən: {payload['clone_transcript']}\n"
-        f"↳ {_fmt(payload['clone_diffs'])}"
+        f"↳ {_fmt(payload['trainer_diffs'])}"
     )
-    await message.reply_voice(
-        voice=base64.b64decode(payload["clone_audio_base64"]),
-        caption="🤖 Klon hazırda belə oxuyur"[:CAPTION_LIMIT],
-    )
+    if payload.get("clone_audio_base64"):
+        text += (f"\n\n🤖 Klondan eşidilən: {payload['clone_transcript']}\n"
+                 f"↳ {_fmt(payload['clone_diffs'])}")
+    await message.reply_text(text)
+    if payload.get("clone_audio_base64"):
+        await message.reply_voice(
+            voice=base64.b64decode(payload["clone_audio_base64"]),
+            caption="🤖 Klon hazırda belə oxuyur"[:CAPTION_LIMIT],
+        )
     await _send_lab_sentence(message, context)
 
 

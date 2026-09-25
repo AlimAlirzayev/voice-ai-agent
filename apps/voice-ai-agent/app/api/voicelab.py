@@ -61,23 +61,33 @@ async def sample(
     stored = voicelab.save_sample(audio, expected_text, extension)
 
     trainer_transcript = await transcribe(audio, file.filename or "sample.ogg")
-
-    clone_audio, mime, engine = await synthesize(expected_text, advisor=None)
-    clone_transcript = await transcribe(clone_audio, "clone.ogg")
-
+    trainer_diffs = voicelab.word_diffs(expected_text, trainer_transcript)
+    voicelab.record_meta(stored, trainer_transcript, trainer_diffs)
     if index is not None:
         voicelab.mark_done(index)
-
-    return {
+    result = {
         "stored": stored.name,
         "trainer_transcript": trainer_transcript,
-        "trainer_diffs": voicelab.word_diffs(expected_text, trainer_transcript),
-        "clone_transcript": clone_transcript,
-        "clone_diffs": voicelab.word_diffs(expected_text, clone_transcript),
-        "clone_audio_base64": base64.b64encode(clone_audio).decode(),
-        "clone_audio_mime": mime,
-        "tts_provider": engine,
+        "trainer_diffs": trainer_diffs,
+        "clone_transcript": None,
+        "clone_diffs": [],
+        "clone_audio_base64": None,
+        "clone_audio_mime": None,
+        "tts_provider": None,
+        **voicelab.progress(),
     }
+    # Each comparison costs a synthesis (GPU quota) and slows the reading loop.
+    if voicelab.should_compare():
+        clone_audio, mime, engine = await synthesize(expected_text, advisor=None)
+        clone_transcript = await transcribe(clone_audio, "clone.ogg")
+        result.update(
+            clone_transcript=clone_transcript,
+            clone_diffs=voicelab.word_diffs(expected_text, clone_transcript),
+            clone_audio_base64=base64.b64encode(clone_audio).decode(),
+            clone_audio_mime=mime,
+            tts_provider=engine,
+        )
+    return result
 
 
 @router.post("/voicelab/dictionary")
@@ -94,6 +104,7 @@ async def add_pronunciation(
 async def status() -> dict:
     return {
         "samples": len(voicelab.sample_files()),
+        **voicelab.progress(),
         "dictionary": pronounce.load(),
         "next": voicelab.next_sentence(),
         "narrator_voice_id": settings.ELEVENLABS_VOICE_ID,

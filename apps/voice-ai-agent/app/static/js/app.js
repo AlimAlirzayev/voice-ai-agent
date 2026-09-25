@@ -907,7 +907,8 @@ async function labLoad(skip) {
     lab = await api.voicelabNext(skip);
     $labSentence.textContent = "«" + lab.text + "»";
     $labFocus.textContent = "🎯 " + lab.focus;
-    $labRemaining.textContent = lab.remaining + " cümlə qalıb";
+    $labRemaining.textContent = lab.remaining + " cümlə qalıb · " +
+      lab.recorded_minutes + " / " + lab.goal_minutes + " dəq yığılıb";
   } catch (err) {
     $labSentence.textContent = "Cümləni yükləyə bilmədim.";
     $labError.textContent = err.message;
@@ -1004,11 +1005,13 @@ async function labSubmit(blob, filename) {
     title.textContent = "«" + lab.text + "»";
     box.appendChild(title);
     box.appendChild(labDiffLine("👤 Səndən eşidilən", data.trainer_transcript, data.trainer_diffs));
-    box.appendChild(labDiffLine("🤖 Klondan eşidilən", data.clone_transcript, data.clone_diffs));
-    const audio = document.createElement("audio");
-    audio.controls = true;
-    audio.src = b64ToBlobUrl(data.clone_audio_base64, data.clone_audio_mime || "audio/ogg");
-    box.appendChild(audio);
+    if (data.clone_audio_base64) {
+      box.appendChild(labDiffLine("🤖 Klondan eşidilən", data.clone_transcript, data.clone_diffs));
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = b64ToBlobUrl(data.clone_audio_base64, data.clone_audio_mime || "audio/ogg");
+      box.appendChild(audio);
+    }
 
     toast("Yazı qəbul olundu — klon materialına əlavə edildi.");
     labLoad();

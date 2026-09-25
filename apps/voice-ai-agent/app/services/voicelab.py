@@ -34,6 +34,22 @@ SENTENCES: list[tuple[str, str]] = [
     ("Kitabxanada sükut hökm sürür, hamı mütaliəyə dalıb.", "uzun sözlər"),
 ]
 
+# The fine-tune set (approved by the owner 2026-09-26): 288 more sentences so
+# the recordings reach ~30 minutes, enough to fine-tune a voice model of his
+# own. Picked from the council's own replies and users' questions (modern
+# literary Azerbaijani, the register Divan speaks in) plus Nizami, Simurğ and
+# Nəsrəddin prose, greedily for letter-pair coverage. Archaic Dədə Qorqud and
+# Nəsimi text and the dialect-heavy Koroğlu corpus are left out on purpose.
+_EXTRA = json.loads((Path(__file__).with_name("voicelab_sentences.json")).read_text(encoding="utf-8"))
+_SEEN = {t for t, _ in SENTENCES}
+SENTENCES += [(t, "təbii danışıq tonu — səs modeli üçün") for t in _EXTRA if t not in _SEEN]
+
+# Minutes of clean reading needed before the fine-tune run is worth starting.
+GOAL_MINUTES = 30.0
+# Compare against the current clone only every Nth sample: each comparison
+# costs a synthesis (GPU quota) and slows the reading loop.
+COMPARE_EVERY = 10
+
 
 def _lab_dir() -> Path:
     path = settings.sqlite_file.parent / "voicelab"
@@ -64,7 +80,7 @@ def next_sentence() -> dict:
         _progress_file().write_text(json.dumps({"done": []}), encoding="utf-8")
     text, focus = SENTENCES[index]
     return {"index": index, "text": text, "focus": focus,
-            "remaining": len(remaining) or len(SENTENCES)}
+            "remaining": len(remaining) or len(SENTENCES), **progress()}
 
 
 def mark_done(index: int) -> None:
@@ -82,8 +98,48 @@ def save_sample(audio: bytes, expected_text: str, extension: str = "ogg") -> Pat
     return path
 
 
+def record_meta(path: Path, heard: str, diffs: list[dict]) -> None:
+    """Keep what Whisper heard next to the sample: the dataset builder drops
+    readings that drifted from the sentence, so the model never learns a slip."""
+    meta = {"expected": path.with_suffix(".txt").read_text(encoding="utf-8"),
+            "heard": heard, "diffs": len(diffs), "seconds": audio_seconds(path)}
+    path.with_suffix(".json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+
+
+def audio_seconds(path: Path) -> float:
+    import subprocess
+
+    try:
+        out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                              "-of", "csv=p=0", str(path)], capture_output=True, text=True, timeout=20)
+        return round(float(out.stdout.strip() or 0), 2)
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return 0.0
+
+
+def progress() -> dict:
+    """Recorded minutes toward the fine-tune goal (cached per sample in .json)."""
+    total = 0.0
+    for path in sample_files():
+        meta = path.with_suffix(".json")
+        if meta.exists():
+            try:
+                total += float(json.loads(meta.read_text(encoding="utf-8")).get("seconds", 0))
+                continue
+            except (OSError, ValueError):
+                pass
+        total += audio_seconds(path)
+    return {"recorded_minutes": round(total / 60, 1), "goal_minutes": GOAL_MINUTES}
+
+
+def should_compare() -> bool:
+    return len(sample_files()) % COMPARE_EVERY == 1
+
+
 def sample_files() -> list[Path]:
-    return sorted((_lab_dir() / "samples").glob("*.[oma]*"))  # ogg / m4a / mp3 / wav-not
+    """Every stored recording (Telegram ogg, browser webm, uploads), not the sidecars."""
+    return sorted(p for p in (_lab_dir() / "samples").iterdir()
+                  if p.suffix.lower() in {".ogg", ".oga", ".webm", ".m4a", ".mp3", ".wav", ".opus"})
 
 
 def _norm_words(text: str) -> list[str]:
