@@ -25,6 +25,7 @@ def test_falls_back_to_edge_without_reference(monkeypatch, tmp_path):
 
 
 def test_converter_rung_when_omnivoice_fails(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "VC_ENABLED", True)
     monkeypatch.setattr(settings, "TTS_PROVIDER", "clone")
     monkeypatch.setattr(settings, "CLONE_REF_PATH", str(tmp_path / "missing.wav"))
 
@@ -69,3 +70,32 @@ def test_quota_error_rests_the_space(monkeypatch):
     with pytest.raises(clone_voice.CloneUnavailable, match="resting"):
         asyncio.run(clone_voice.speak("Salam", None))
     assert calls == []
+
+
+def test_owner_model_is_first_when_present(monkeypatch):
+    from app.services import owner_model
+    monkeypatch.setattr(settings, "TTS_PROVIDER", "clone")
+
+    async def fake(text, advisor):
+        return b"his-own-model"
+
+    monkeypatch.setattr(owner_model, "speak", fake)
+    audio, mime, engine = asyncio.run(voice.synthesize("Salam", "nizami"))
+    assert (audio, engine) == (b"his-own-model", "owner-model")
+
+
+def test_model_path_resolves_under_app(monkeypatch):
+    from app.services import owner_model
+    assert str(owner_model.model_file()).endswith("voice-ai-agent/data/voices/owner.onnx")
+
+
+def test_converter_off_by_default_falls_to_clear_voice(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "TTS_PROVIDER", "clone")
+    monkeypatch.setattr(settings, "CLONE_REF_PATH", str(tmp_path / "missing.wav"))
+
+    async def fake_edge(text, advisor, owner=False):
+        assert not owner, "converter must not run while disabled"
+        return b"edge-audio"
+
+    monkeypatch.setattr(voice, "_edge_tts", fake_edge)
+    assert asyncio.run(voice.synthesize("Salam", None))[2] == "edge"

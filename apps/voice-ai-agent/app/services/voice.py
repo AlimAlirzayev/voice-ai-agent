@@ -85,13 +85,20 @@ async def synthesize(text: str, advisor: str | None = None) -> tuple[bytes, str,
     text = pronounce.apply(text)
     provider = settings.tts_provider
     if provider == "clone":
-        from app.services import clone_voice
+        from app.services import clone_voice, owner_model
 
+        try:
+            return await owner_model.speak(text, advisor), OGG, "owner-model"
+        except clone_voice.CloneUnavailable as exc:
+            if owner_model.available():
+                log.warning("owner model failed, trying the clone: %s", exc)
         try:
             return await clone_voice.speak(text, advisor), OGG, "clone"
         except clone_voice.CloneUnavailable as exc:
             log.warning("OmniVoice clone unavailable, converting the Microsoft voice: %s", exc)
         try:
+            if not settings.VC_ENABLED:
+                raise clone_voice.CloneUnavailable("timbre converter disabled (benchmark WER 0.42)")
             return await _edge_tts(text, advisor, owner=True), OGG, "owner-vc"
         except clone_voice.CloneUnavailable as exc:
             log.warning("owner timbre converter unavailable, Microsoft voice speaks: %s", exc)

@@ -1,0 +1,300 @@
+{
+ "edge": {
+  "n": 20,
+  "failed": 0,
+  "wer": 0.121,
+  "likeness": 0.459,
+  "rtf": 0.146,
+  "rows": [
+   {
+    "i": 0,
+    "wer": 0.154,
+    "rtf": 0.25,
+    "heard": "Sən bu axşam evə dön, atağana ocağının başında otur, çörəyi rahat ye.",
+    "likeness": 0.429
+   },
+   {
+    "i": 1,
+    "wer": 0.222,
+    "rtf": 0.18,
+    "heard": "Qarşı yatan qara dağın yıxılmasın, köv gəlcə qaba ağacın kəsilməsin.",
+    "likeness": 0.488
+   },
+   {
+    "i": 2,
+    "wer": 0.143,
+    "rtf": 0.14,
+    "heard": "Səni ələ salan səni görmür, öz sənin gümanını görür, sən isə gümana sığan deyirsən.",
+    "likeness": 0.427
+   },
+   {
+    "i": 3,
+    "wer": 0.125,
+    "rtf": 0.13,
+    "heard": "Mən eşəyi bazara aparanda hansı yolla gedim deyə üç gün fikirləşsəm, bazar dağılar, eşək də qocalar.",
+    "likeness": 0.479
+   },
+   {
+    "i": 4,
+    "wer": 0.125,
+    "rtf": 0.11,
+    "heard": "Mənə səni axtarmağa gedəndə yox, yol gedəndə tapar.",
+    "likeness": 0.465
+   },
+   {
+    "i": 5,
+    "wer": 0.0,
+    "rtf": 0.17,
+    "heard": "Çünki ana könlü qazanılır, daşınmır.",
+    "likeness": 0.464
+   },
+   {
+    "i": 6,
+    "wer": 0.143,
+    "rtf": 0.17,
+    "heard": "Nəhaf heç pərdə arxasında qalmır, susan şahid də o xaraba kəndin daşlarından biri olur.",
+    "likeness": 0.471
+   },
+   {
+    "i": 7,
+    "wer": 0.0,
+    "rtf": 0.16,
+    "heard": "Sən iki yolun arasında durmusan, mən üçüncüsünü deyim.",
+    "likeness": 0.485
+   },
+   {
+    "i": 8,
+    "wer": 0.0,
+    "rtf": 0.16,
+    "heard": "Ürəyində ən çox yanan bir sözü",
+    "likeness": 0.423
+   },
+   {
+    "i": 9,
+    "wer": 0.0,
+    "rtf": 0.15,
+    "heard": "Mən olsam, bazarda ucuzunu alardım.",
+    "likeness": 0.441
+   },
+   {
+    "i": 10,
+    "wer": 0.091,
+    "rtf": 0.12,
+    "heard": "Yüki hamısını birdən dala almış, hər dağı bir gündə aşmaq istəmiş.",
+    "likeness": 0.438
+   },
+   {
+    "i": 11,
+    "wer": 0.0,
+    "rtf": 0.13,
+    "heard": "Sabah ilk işin özün üçün deyil, birinin qapısını döyüb süfrəsində oturmaq olsun, boşluğun cavabı oradadır.",
+    "likeness": 0.463
+   },
+   {
+    "i": 12,
+    "wer": 0.2,
+    "rtf": 0.11,
+    "heard": "Mən də dedim, düz deyirsiniz, aramızda ikizi aşın məsafə var.",
+    "likeness": 0.463
+   },
+   {
+    "i": 13,
+    "wer": 0.077,
+    "rtf": 0.11,
+    "heard": "Mənim də ağzımda dil bir yana, diş bir yana titrəyib, amma sözü uydurmadım.",
+    "likeness": 0.488
+   },
+   {
+    "i": 14,
+    "wer": 0.0,
+    "rtf": 0.18,
+    "heard": "Tələsirsən yoxsa səni qovan var.",
+    "likeness": 0.447
+   },
+   {
+    "i": 15,
+    "wer": 0.2,
+    "rtf": 0.12,
+    "heard": "Sənətinə inanırsan, ondan dönmən sadəcə onu yaşatmağın yolunu ağılla qur.",
+    "likeness": 0.443
+   },
+   {
+    "i": 16,
+    "wer": 0.125,
+    "rtf": 0.13,
+    "heard": "Mənə o zaman özü gəlib dizinin dibində oturar.",
+    "likeness": 0.474
+   },
+   {
+    "i": 17,
+    "wer": 0.714,
+    "rtf": 0.12,
+    "heard": "Sadəcə ocağın axsaq qalıq, ax bir çəyi aradan çəkilib deyəsən.",
+    "likeness": 0.455
+   },
+   {
+    "i": 18,
+    "wer": 0.091,
+    "rtf": 0.18,
+    "heard": "Mərd o kəstir ki, dostunun haqqı üçün öz başını ortaya qoyar.",
+    "likeness": 0.47
+   },
+   {
+    "i": 19,
+    "wer": 0.0,
+    "rtf": 0.1,
+    "heard": "Çünki hara çatmaq istədiyini bilməyən adam çıxdığı qapıya qayıdanda yolu da özünü də görür.",
+    "likeness": 0.468
+   }
+  ]
+ },
+ "owner-vc": {
+  "n": 20,
+  "failed": 0,
+  "wer": 0.422,
+  "likeness": 0.877,
+  "rtf": 1.527,
+  "rows": [
+   {
+    "i": 0,
+    "wer": 0.385,
+    "rtf": 1.66,
+    "heard": "Sən bu axşam elə dön, atanan olcağının başında otur, sərəyə rahat ye.",
+    "likeness": 0.872
+   },
+   {
+    "i": 1,
+    "wer": 0.667,
+    "rtf": 1.47,
+    "heard": "Qarşı yer təmqərə dağın exulmasın, göl gəlcə qabağaqcın kəsilməsin.",
+    "likeness": 0.889
+   },
+   {
+    "i": 2,
+    "wer": 0.143,
+    "rtf": 1.24,
+    "heard": "Səni ələ salan səni görmür, öz sənin gümanını görür, sən isə gümana sığan deyirsən.",
+    "likeness": 0.86
+   },
+   {
+    "i": 3,
+    "wer": 0.5,
+    "rtf": 1.31,
+    "heard": "Mən eşeği bazar aparanda hansı yolla gedin, deyəcəkdən fikirləşsən, bazar dağılar, eşek də qocalar.",
+    "likeness": 0.906
+   },
+   {
+    "i": 4,
+    "wer": 0.25,
+    "rtf": 1.12,
+    "heard": "Mənə səni axtarmağa gedəndə yox, yol gedəndə tabaq.",
+    "likeness": 0.877
+   },
+   {
+    "i": 5,
+    "wer": 0.8,
+    "rtf": 1.73,
+    "heard": "Çünki ana könlü qazan olar, daşın var.",
+    "likeness": 0.864
+   },
+   {
+    "i": 6,
+    "wer": 0.357,
+    "rtf": 1.32,
+    "heard": "Nəhaf heç pərda arxasında qalmır. Susan şahid də o xaraba kendini daşlayandan biri olur.",
+    "likeness": 0.861
+   },
+   {
+    "i": 7,
+    "wer": 0.625,
+    "rtf": 1.64,
+    "heard": "Sən ki, onun arasında durmursan, mən çünsün edəyim.",
+    "likeness": 0.882
+   },
+   {
+    "i": 8,
+    "wer": 0.167,
+    "rtf": 1.8,
+    "heard": "Üvəyində ən çox yanan bir sözü.",
+    "likeness": 0.86
+   },
+   {
+    "i": 9,
+    "wer": 1.0,
+    "rtf": 1.6,
+    "heard": "Nənulsən bazəri dilçizmələyətən.",
+    "likeness": 0.837
+   },
+   {
+    "i": 10,
+    "wer": 0.455,
+    "rtf": 1.52,
+    "heard": "Yükiqamısını birdən dava almış, hər dağı bir gün dağışmaq istəmiş.",
+    "likeness": 0.885
+   },
+   {
+    "i": 11,
+    "wer": 0.067,
+    "rtf": 1.39,
+    "heard": "Sabah ilk işin özün üçün deyil, birinin qapısını döyüb sifəsində oturmaq olsun, boşluğun cavabı oradadır.",
+    "likeness": 0.899
+   },
+   {
+    "i": 12,
+    "wer": 0.2,
+    "rtf": 1.44,
+    "heard": "Mən də dedim, düz deyirsiniz, aramızda iki cağışın məsafə var.",
+    "likeness": 0.868
+   },
+   {
+    "i": 13,
+    "wer": 0.154,
+    "rtf": 1.55,
+    "heard": "Mənim də ağzımda dil bir yana, diş bir yana titrəyim, amma sözü uxdurmadım.",
+    "likeness": 0.918
+   },
+   {
+    "i": 14,
+    "wer": 0.2,
+    "rtf": 2.1,
+    "heard": "Tələssürsən, yoxsa səni qovan var?",
+    "likeness": 0.867
+   },
+   {
+    "i": 15,
+    "wer": 0.7,
+    "rtf": 1.44,
+    "heard": "Sənət neynəməsən sən ondəndən mən sadəcəlini yaşatmağın yolunu axıla qur.",
+    "likeness": 0.895
+   },
+   {
+    "i": 16,
+    "wer": 0.125,
+    "rtf": 1.79,
+    "heard": "Mənə o zaman özü gəlib dizinin dibində oturar.",
+    "likeness": 0.874
+   },
+   {
+    "i": 17,
+    "wer": 1.0,
+    "rtf": 1.51,
+    "heard": "Sadəcə, ucaqın axsaq qalın, avgüçə yaradan çəkilət deyəsəm.",
+    "likeness": 0.865
+   },
+   {
+    "i": 18,
+    "wer": 0.364,
+    "rtf": 1.54,
+    "heard": "Mərk orkestr ki, dostunun haqqı üçün öz başına ortaya qoyar.",
+    "likeness": 0.882
+   },
+   {
+    "i": 19,
+    "wer": 0.286,
+    "rtf": 1.37,
+    "heard": "Çünki haraçat novistlərdəyini bilməyən adam çıxdığı qapıya qaydanda yolu da özünü də görür.",
+    "likeness": 0.874
+   }
+  ]
+ }
+}

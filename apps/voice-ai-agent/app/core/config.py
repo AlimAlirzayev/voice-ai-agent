@@ -78,7 +78,13 @@ class Settings(BaseSettings):
     CLONE_REF_TEXT: str = ""
     CLONE_SPACE: str = "k2-fsa/OmniVoice"
     CLONE_TIMEOUT: float = 45.0
+    # Rung 0: the owner's own fine-tuned Piper model (relative to the app dir).
+    OWNER_MODEL_PATH: str = "data/voices/owner.onnx"
     # Second rung of the owner voice: local timbre converter (divan-vc service).
+    # OFF since 2026-09-26: on the 20 held-out benchmark sentences it scored WER
+    # 0.42 against 0.12 for the plain Microsoft voice (whole sentences became
+    # unintelligible). A clear word beats a familiar timbre. See app/evals/voice_bench.py.
+    VC_ENABLED: bool = False
     VC_URL: str = "http://127.0.0.1:8941"
     VC_TIMEOUT: float = 40.0
     HF_TOKEN: str = ""

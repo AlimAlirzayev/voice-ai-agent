@@ -24,6 +24,7 @@ dependencies = [
     "python-telegram-bot>=22.0",
     "tenacity>=9.1.4",
     "gradio-client>=2.7.1",
+    "piper-tts>=1.8.0",
 ]
 
 [project.optional-dependencies]
