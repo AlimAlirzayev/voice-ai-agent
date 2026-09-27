@@ -148,7 +148,8 @@ async def on_lab_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def on_lab_stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    context.chat_data.pop("voicelab", None)
+    # The training trigger comes first and depends on nothing chat-specific: the
+    # recordings on disk decide, so a broken chat state can never swallow it.
     from app.services import voicelab
 
     try:
@@ -156,6 +157,10 @@ async def on_lab_stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     except Exception as exc:  # noqa: BLE001
         log.warning("training trigger failed: %s", exc)
         trigger = {"training_started": False, "reason": str(exc)}
+    try:
+        context.chat_data.pop("voicelab", None)
+    except (AttributeError, RuntimeError) as exc:  # no chat bound to this update
+        log.warning("could not clear lab state: %s", exc)
     text = "🎓 Səs Məktəbi bağlandı. Sağ ol — hər yazı klonu bir az da yaxşılaşdırır!"
     if trigger.get("training_started"):
         text += "\n\n🎙 Yazılar hədəfə çatıb — səs modelini indi öyrətməyə başladım. Bitəndə nəticəni yazacağam."
