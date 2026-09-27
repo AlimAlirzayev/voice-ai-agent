@@ -76,6 +76,13 @@ async def sample(
         "tts_provider": None,
         **voicelab.progress(),
     }
+    try:
+        trigger = voicelab.maybe_start_training()
+    except Exception as exc:  # noqa: BLE001 - a trigger fault must never lose a recording
+        log.warning("training trigger failed: %s", exc)
+        trigger = {"training_started": False, "reason": f"trigger error: {exc}"}
+    result["training_started"] = trigger["training_started"]
+    result["training_reason"] = trigger["reason"]
     # Each comparison costs a synthesis (GPU quota) and slows the reading loop.
     if voicelab.should_compare():
         clone_audio, mime, engine = await synthesize(expected_text, advisor=None)

@@ -12,6 +12,7 @@ LangGraph agent, the memory and the LangSmith traces all live in one place.
 Run the backend first, then:  uv run python bot.py
 """
 
+import asyncio
 import base64
 import logging
 import sys
@@ -148,7 +149,19 @@ async def on_lab_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 async def on_lab_stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.chat_data.pop("voicelab", None)
-    await update.message.reply_text("🎓 Səs Məktəbi bağlandı. Sağ ol — hər yazı klonu bir az da yaxşılaşdırır!")
+    from app.services import voicelab
+
+    try:
+        trigger = await asyncio.to_thread(voicelab.maybe_start_training)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("training trigger failed: %s", exc)
+        trigger = {"training_started": False, "reason": str(exc)}
+    text = "🎓 Səs Məktəbi bağlandı. Sağ ol — hər yazı klonu bir az da yaxşılaşdırır!"
+    if trigger.get("training_started"):
+        text += "\n\n🎙 Yazılar hədəfə çatıb — səs modelini indi öyrətməyə başladım. Bitəndə nəticəni yazacağam."
+    else:
+        text += f"\n\nℹ️ Model öyrətməsi: {trigger.get('reason')}"
+    await update.message.reply_text(text)
 
 
 async def _on_lab_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -185,6 +198,8 @@ async def _on_lab_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if payload.get("clone_audio_base64"):
         text += (f"\n\n🤖 Klondan eşidilən: {payload['clone_transcript']}\n"
                  f"↳ {_fmt(payload['clone_diffs'])}")
+    if payload.get("training_started"):
+        text += "\n\n🎙 30 dəqiqə tamamlandı — səs modelini indi öyrətməyə başladım. Bitəndə nəticəni yazacağam."
     await message.reply_text(text)
     if payload.get("clone_audio_base64"):
         await message.reply_voice(

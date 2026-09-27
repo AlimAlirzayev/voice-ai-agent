@@ -26,24 +26,52 @@ say "🎙 Divan: səs modelini öyrətməyə başlayıram — $MIN dəq yazı, $
 .venv/bin/python scripts/build_voice_dataset.py --out /opt/divan/voice-dataset | tail -1
 $K datasets version -p /opt/divan/voice-dataset -r zip -m "$MIN min" >/dev/null 2>&1 || { say "❌ Divan: dataset Kaggle-a yüklənmədi."; exit 1; }
 sleep 240
-rm -rf $VT/push && mkdir $VT/push && sed "s/__EXTRA__/$EPOCHS/" $VT/train_owner_voice.py > $VT/push/run.py \
-  && sed 's/"code_file": "train_owner_voice.py"/"code_file": "run.py"/' $VT/kernel-metadata.json > $VT/push/kernel-metadata.json
-$K kernels push -p $VT/push >/dev/null 2>&1 || { say "❌ Divan: Kaggle öyrətməsi başlamadı."; exit 1; }
-sleep 120
-until s=$($K kernels status alimalirzayev/divan-owner-voice-train 2>&1 | tail -1); echo "$s" | grep -qiE "complete|error|cancel"; do sleep 300; done
-OUT=$VT/out-$(date +%Y%m%d-%H%M); mkdir -p $OUT
-$K kernels output alimalirzayev/divan-owner-voice-train -p $OUT --file-pattern '.*\.(onnx|json|log)$' >/dev/null 2>&1
-if [ ! -s $OUT/az_AZ-owner-medium.onnx ]; then say "❌ Divan: öyrətmə bitdi, amma model çıxmadı ($s). Log: $OUT"; exit 1; fi
-cp $OUT/az_AZ-owner-medium.onnx $OUT/owner.onnx && cp $OUT/az_AZ-owner-medium.onnx.json $OUT/owner.onnx.json
-OWNER_MODEL_PATH=$OUT/owner.onnx .venv/bin/python -m app.evals.voice_bench --engines edge,owner-model --out $OUT/bench >/dev/null 2>&1
-R=$(python3 -c "
+# One training round on Kaggle -> $OUT with owner.onnx + bench/report.json; prints PASS|FAIL line.
+train_round() {
+  local EP=$1
+  rm -rf $VT/push && mkdir $VT/push && sed "s/__EXTRA__/$EP/" $VT/train_owner_voice.py > $VT/push/run.py \
+    && sed 's/"code_file": "train_owner_voice.py"/"code_file": "run.py"/' $VT/kernel-metadata.json > $VT/push/kernel-metadata.json
+  $K kernels push -p $VT/push >/dev/null 2>&1 || { echo "ERR Kaggle push failed"; return 1; }
+  sleep 120
+  local s
+  until s=$($K kernels status alimalirzayev/divan-owner-voice-train 2>&1 | tail -1); echo "$s" | grep -qiE "complete|error|cancel"; do sleep 300; done
+  OUT=$VT/out-$(date +%Y%m%d-%H%M)-e$EP; mkdir -p $OUT
+  echo "$OUT" > $VT/.last_out   # the caller runs this in a subshell
+  $K kernels output alimalirzayev/divan-owner-voice-train -p $OUT --file-pattern '.*\.(onnx|json|log)$' >/dev/null 2>&1
+  [ -s $OUT/az_AZ-owner-medium.onnx ] || { echo "ERR no model ($s), log $OUT"; return 1; }
+  cp $OUT/az_AZ-owner-medium.onnx $OUT/owner.onnx && cp $OUT/az_AZ-owner-medium.onnx.json $OUT/owner.onnx.json
+  OWNER_MODEL_PATH=$OUT/owner.onnx .venv/bin/python -m app.evals.voice_bench --engines edge,owner-model --out $OUT/bench >/dev/null 2>&1
+  python3 -c "
 import json; r=json.load(open('$OUT/bench/report.json')); e,o=r['edge'],r['owner-model']
-print(('PASS' if r.get('gate_owner_model') else 'FAIL'), f\"səhv söz {o['wer']:.0%} (Microsoft {e['wer']:.0%}), sənə oxşarlıq {o['likeness']:.2f}, sürət {o['rtf']}x\")")
+print(('PASS' if r.get('gate_owner_model') else 'FAIL'), f\"səhv söz {o['wer']:.0%} (Microsoft {e['wer']:.0%}), sənə oxşarlıq {o['likeness']:.2f}, sürət {o['rtf']}x\")"
+}
+
+R=$(train_round $EPOCHS); ROUND_EPOCHS=$EPOCHS
+if [ "${R%% *}" = FAIL ]; then
+  # Escalation: one more round at double the epochs before giving up (never a loop).
+  EPOCHS2=$((EPOCHS * 2))
+  say "🔁 Divan: $EPOCHS epoxa qapıdan keçmədi (${R#* }). Bir dəfə də $EPOCHS2 epoxa ilə öyrədirəm."
+  R=$(train_round $EPOCHS2); ROUND_EPOCHS=$EPOCHS2
+fi
+OUT=$(cat $VT/.last_out 2>/dev/null)
+case "$R" in ERR*) say "❌ Divan: öyrətmə alınmadı — ${R#ERR }"; exit 1;; esac
 echo "$MIN" > $VT/.last_minutes
 mkdir -p $APP/output/voice-bench && cp $OUT/bench/report.json $APP/output/voice-bench/owner-model-$(date +%Y%m%d).json
 if [ "${R%% *}" = PASS ]; then
-  cp $OUT/owner.onnx $OUT/owner.onnx.json $APP/data/voices/ && systemctl restart divan divan-bot
-  say "✅ Divan artıq SƏNİN öz modelinlə danışır. ${R#* }"
+  # Publish as the system's permanent human Azerbaijani narrator: one shared copy outside
+  # every repo, read by Divan (rung 0) and the audio studio (tts provider "owner").
+  PUB=/opt/voices/owner-az; mkdir -p $PUB
+  [ -s $PUB/owner.onnx ] && mkdir -p $PUB/previous && cp $PUB/owner.onnx* $PUB/MODEL_CARD.json $PUB/previous/ 2>/dev/null
+  cp $OUT/owner.onnx $OUT/owner.onnx.json $PUB/
+  python3 -c "
+import json; r=json.load(open('$OUT/bench/report.json')); o=r['owner-model']
+json.dump({'date': '$(date -u +%FT%TZ)', 'minutes': float('$MIN'), 'epochs': int('$ROUND_EPOCHS'),
+           'wer': o['wer'], 'likeness': o['likeness'], 'rtf': o['rtf'], 'gate': 'PASS',
+           'base': 'rhasspy tr_TR dfki medium', 'speaker': 'owner (Alim), own Voice Lab recordings'},
+          open('$PUB/MODEL_CARD.json', 'w'), ensure_ascii=False, indent=1)"
+  ln -sf $PUB/owner.onnx $APP/data/voices/owner.onnx && ln -sf $PUB/owner.onnx.json $APP/data/voices/owner.onnx.json
+  systemctl restart divan divan-bot
+  say "✅ Divan və audio studio artıq SƏNİN öz modelinlə danışır ($ROUND_EPOCHS epoxa). ${R#* }"
 else
-  say "🟡 Divan: öz model öyrədildi, amma qapıdan keçmədi, canlıya qoymadım. ${R#* }. Daha çox yazı (/ses) keyfiyyəti qaldıracaq."
+  say "🟡 Divan: öz model $ROUND_EPOCHS epoxada da qapıdan keçmədi, canlıya qoymadım. ${R#* }. Daha çox yazı (/ses) keyfiyyəti qaldıracaq."
 fi

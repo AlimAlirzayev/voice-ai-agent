@@ -132,6 +132,65 @@ def progress() -> dict:
     return {"recorded_minutes": round(total / 60, 1), "goal_minutes": GOAL_MINUTES}
 
 
+TRAIN_CMD = "/usr/local/bin/divan-voice-train"
+TRAIN_DIR = Path("/opt/divan/voice-train")
+
+
+def _training_active() -> bool:
+    """A run is live when a divan-voice-train unit is (de)activating/active, or the
+    pipeline's own flock is held (a cron-started run has no unit)."""
+    import subprocess
+
+    try:
+        out = subprocess.run(["systemctl", "list-units", "--all", "--type=service", "--no-legend",
+                              "--plain", "divan-voice-train*"], capture_output=True, text=True,
+                             timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        out = ""
+    for line in out.splitlines():
+        cols = line.split()
+        if len(cols) >= 3 and cols[2] in {"active", "activating", "reloading", "deactivating"}:
+            return True
+    lock = TRAIN_DIR / ".lock"
+    if lock.exists():
+        held = subprocess.run(["flock", "-n", str(lock), "true"], capture_output=True).returncode
+        return held != 0
+    return False
+
+
+def _last_trained_minutes() -> float:
+    try:
+        return float((TRAIN_DIR / ".last_minutes").read_text().strip() or 0)
+    except (OSError, ValueError):
+        return 0.0
+
+
+def maybe_start_training() -> dict:
+    """The owner's voice model trains itself the moment the recordings reach the goal.
+
+    Called after every Voice Lab sample and when the trainer closes the lab (/bitdi).
+    Starts `divan-voice-train` DETACHED in its own transient systemd unit (it runs
+    for hours on Kaggle and must outlive this request and any service restart).
+    Starts at most one run: never below the goal, never twice for the same
+    recordings (+1 min since the last run), never while a run is live."""
+    import subprocess
+
+    p = progress()
+    minutes, goal = p["recorded_minutes"], p["goal_minutes"]
+    if minutes < goal:
+        return {"training_started": False, "reason": f"{minutes} / {goal:.0f} min recorded"}
+    if minutes <= _last_trained_minutes() + 1:
+        return {"training_started": False, "reason": "already trained on these recordings"}
+    if _training_active():
+        return {"training_started": False, "reason": "a training run is already active"}
+    unit = f"divan-voice-train-{time.strftime('%Y%m%d-%H%M%S')}"
+    r = subprocess.run(["systemd-run", f"--unit={unit}", "--collect", "--quiet", TRAIN_CMD],
+                       capture_output=True, text=True, timeout=20)
+    if r.returncode != 0:
+        return {"training_started": False, "reason": f"systemd-run failed: {r.stderr.strip()[:200]}"}
+    return {"training_started": True, "reason": f"{minutes} min recorded, unit {unit}"}
+
+
 def should_compare() -> bool:
     return len(sample_files()) % COMPARE_EVERY == 1
 
