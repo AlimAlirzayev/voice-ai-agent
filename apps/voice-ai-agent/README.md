@@ -53,8 +53,8 @@ uvicorn app.main:app --reload
 Əsas endpoint-lər:
 
 - `GET /`
-- `POST /chat`
-- `POST /voice`
+- `POST /chat`, `POST /chat/stream` (same turn as Server-Sent Events)
+- `POST /voice`, `POST /voice/stream` (same turn as Server-Sent Events)
 
 Telegram bot:
 

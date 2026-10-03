@@ -1,8 +1,12 @@
 import pytest
+from fastapi.testclient import TestClient
 
+import app.api.voice as voice_api
+import app.graph.builder as builder
 from app.core import config as config_module
 from app.core.config import settings
 from app.core.rate_limit import reset_rate_limits
+from app.main import app
 from app.rag import retriever as retriever_module
 from app.services import llm as llm_module
 from app.services import voice as voice_module
@@ -53,3 +57,41 @@ def _no_access_key(monkeypatch):
     from app.core.config import settings
 
     monkeypatch.setattr(settings, "DIVAN_ACCESS_KEY", "")
+
+
+@pytest.fixture
+def make_client(monkeypatch, tmp_path):
+    """Factory: `make_client(model)` -> a TestClient whose council uses `model`."""
+    stack = []
+
+    def _make(model, **settings_overrides):
+        monkeypatch.setattr(settings, "SQLITE_PATH", str(tmp_path / "c.sqlite"))
+        monkeypatch.setattr(settings, "FEEDBACK_PATH", str(tmp_path / "f.sqlite"))
+        for key, value in settings_overrides.items():
+            monkeypatch.setattr(settings, key, value)
+        monkeypatch.setattr(builder, "build_llm", lambda: model)
+        client = TestClient(app)
+        client.__enter__()
+        stack.append(client)
+        return client
+
+    yield _make
+    for client in stack:
+        client.__exit__(None, None, None)
+
+
+@pytest.fixture
+def spoken(monkeypatch):
+    """Replace STT/TTS; `spoken` records (text, advisor) for every synthesized clip."""
+    clips: list[tuple[str, str | None]] = []
+
+    async def fake_transcribe(audio, filename):
+        return audio.decode()
+
+    async def fake_synthesize(text, advisor=None):
+        clips.append((text, advisor))
+        return b"OGG", "audio/ogg", "fake"
+
+    monkeypatch.setattr(voice_api, "transcribe", fake_transcribe)
+    monkeypatch.setattr(voice_api, "synthesize", fake_synthesize)
+    return clips
