@@ -41,6 +41,27 @@ def parse_source(path: Path) -> tuple[dict, str]:
     return meta, "\n".join(lines[body_start:]).strip()
 
 
+_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
+_WIKI_FILE = re.compile(r"\[\[(?:Fayl|File|Şəkil|Image):[^\]]*\]\]", re.IGNORECASE)
+_MEDIA_OPTION_LINE = re.compile(r"^\s*(?:thumb(?:nail)?|miniatür|frame|frameless)\s*$",
+                                re.IGNORECASE | re.MULTILINE)
+
+
+def strip_markup(body: str) -> str:
+    """Drop wiki apparatus that survived the fetch: `{{Başlıq | ...}}` header
+    templates (Nəsimi rübailər), file embeds and bare image options such as
+    the lone `thumbnail` line that opened the Zümrüd quşu tale. The corpus
+    files stay as transcribed; this runs at load time so a citation never
+    quotes markup, and so a re-fetched source is cleaned the same way."""
+    previous = None
+    while previous != body:  # templates can nest
+        previous = body
+        body = _TEMPLATE.sub("", body)
+    body = _WIKI_FILE.sub("", body)
+    body = _MEDIA_OPTION_LINE.sub("", body)
+    return re.sub(r"\n{3,}", "\n\n", body).strip()
+
+
 def chunk_poem(body: str) -> list[tuple[str, str]]:
     parts = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
     chunks: list[str] = []
@@ -113,6 +134,7 @@ def collect_chunks() -> list[dict]:
     chunks = []
     for path in sorted(CORPUS_DIR.rglob("*.txt")):
         meta, body = parse_source(path)
+        body = strip_markup(body)
         if not body or "advisor" not in meta:
             continue
         if not is_usable(body):

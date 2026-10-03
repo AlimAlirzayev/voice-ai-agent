@@ -20,6 +20,15 @@ K1 = 1.5
 B = 0.75
 PREFIX = 5          # suffix-tolerant stem length for an agglutinative language
 MIN_SCORE = 1.0     # below this the advisor answers uncited
+# A passage is only cited when it shares this many distinct stems with the
+# question. Measured on the offline golden set (app/evals/offline.py): every
+# off-topic question still matched one or two common words ("oyun", "hava",
+# "kod") and scored up to 6.1 - inside the range of genuine hits - while every
+# genuine hit shared at least three stems. The score alone cannot separate them.
+# A short question (two stems) cannot share three, so it needs all of its own,
+# and never fewer than two: one common word is not evidence.
+MIN_MATCHED = 3
+MIN_MATCHED_FLOOR = 2
 TOP_K = 2
 
 _UPPER_MAP = str.maketrans({"İ": "i", "I": "ı"})
@@ -61,7 +70,8 @@ class BM25Index:
     def counts(self) -> dict[str, int]:
         return {advisor: len(docs) for advisor, docs in self.by_advisor.items()}
 
-    def search(self, advisor: str, query: str, k: int = TOP_K) -> list[dict]:
+    def search(self, advisor: str, query: str, k: int = TOP_K, *,
+               min_score: float = MIN_SCORE, min_matched: int = MIN_MATCHED) -> list[dict]:
         docs = self.by_advisor.get(advisor)
         if not docs:
             return []
@@ -69,18 +79,22 @@ class BM25Index:
         q_stems = set(stems(query))
         if not q_stems:
             return []
+        required = max(1, min_matched) if min_matched < MIN_MATCHED_FLOOR else max(
+            MIN_MATCHED_FLOOR, min(min_matched, len(q_stems)))
         scored: list[tuple[float, dict]] = []
         for doc in docs:
             score = 0.0
+            matched = 0
             for stem in q_stems:
                 tf = doc["_stems"].get(stem, 0)
                 if not tf:
                     continue
+                matched += 1
                 df = stats["df"].get(stem, 0)
                 idf = math.log(1 + (stats["n"] - df + 0.5) / (df + 0.5))
                 norm = 1 - B + B * doc["_len"] / stats["avg_len"]
                 score += idf * (tf * (K1 + 1)) / (tf + K1 * norm)
-            if score > 0:
+            if score > 0 and matched >= required:
                 scored.append((score, doc))
         scored.sort(key=lambda pair: pair[0], reverse=True)
         return [
@@ -88,7 +102,7 @@ class BM25Index:
              "source": doc.get("source", ""), "text": doc["text"], "score": round(score, 3),
              "retrieval": "bm25"}
             for score, doc in scored[:k]
-            if score >= MIN_SCORE
+            if score >= min_score
         ]
 
 
