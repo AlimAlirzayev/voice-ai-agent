@@ -1,0 +1,376 @@
+[
+ {
+  "item_id": "P001",
+  "source_id": "dedeqorqud-miras",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 4,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "«Xanım hey» dastanda xana müraciətdir, ardınca «oğul» gəlməsi ünvanı qarışdırır",
+   "Sonluqdakı alqış dastandan hərfən köçürülüb, vəziyyətə uyğunlaşdırılmayıb — Dədə Qorqud alqışı barışdan sonra deyər, tapşırıqdan əvvəl yox",
+   "«ata bizə bu daşı yox» ifadəsində «daş» nəyi bildirir — anlaşılmır, obraz yarımçıqdır",
+   "«mal-mülk gəldi-gedərdir» ümumi klişedir, dastanın öz ölçülü-biçili deyimlərindən deyil",
+   "Mirasın özünün halal bölgüsü — ananın payı, kiçiyin payı, şahid — barədə heç bir söz yoxdur, cavab kəsə qırılıb"
+  ]
+ },
+ {
+  "item_id": "P002",
+  "source_id": "koroglu-haqq",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 4,
+   "dil": 4,
+   "bedii": 3,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "Koroğlu nəsrlə danışır, dastanda o qoşma-gəraylı ilə deyir; «ağsaqqalı yanına götür» məsləhəti Çənlibel qaçağının yox, kənd mollasının ağzından çıxır",
+   "Qıratın nalı «yerdə iz qoyar» — nal iz qoymur, at izi qoyur; obraz məcburi düzəldilib",
+   "Nizamidə «Əzizim» müraciəti yad; Nuşirəvan-bayquş hekayəti Məxzənül-əsrardan düzdür, amma onun ibrəti zalım şaha idi, susan şahidə yamamaq bir az çəkib uzatmaqdır",
+   "«qan davası açma» türkcə kalkadır, bizdə «qan düşmənçiliyi», «qanlı olma» deyilir",
+   "İki səs eyni «baş ağrısı keçər, vicdan ağrısı qalar» qarşılaşdırmasını təkrar edir — divan iki nəfər olub bir söz deyir",
+   "«ədalət mərhəmətlə yanaşı gedəndə gözəldir» — Nizami deyil, divar təqvimi cümləsidir",
+   "Sualın ikinci yarısı — «başım ağrıyacaq» — cavabsız qalıb: adam özünü necə qorusun, kimə deyəsi, hansı yolla?"
+  ]
+ },
+ {
+  "item_id": "P003",
+  "source_id": "nizami-sevgi",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Dədə Qorqudun «qız evindən yox, oğlan qapısından alınır» cümləsi mənasız və dolaşıqdır — el adətini əks etdirmir, korlanmış ifadədir",
+   "«Sən qızın könlünü yox, atasının qapısını hədəf götür» — «hədəf götürmək» ozan dilinə yad, müasir-kalka qoxulu ifadədir",
+   "«dedikləri nə olsa, deyinmədən yerinə yetir» — kor-koranə itaət nəsihəti həm real deyil, həm də Beyrəyin, Bamsının qeyrət ruhuna zidd",
+   "Nizaminin cavabı bir nəfəsə uzanan, vergüllə bənd-bənd yapışdırılmış nəsr yığınıdır; şairin beyt tarazlığı, ölçü-qafiyə nəfəsi yoxdur",
+   "«Əzizim» müraciəti Nizami üçün yumşaq və məişət səviyyəsindədir, «Xanım hey» isə yerində — iki üzv arasında üslub balansı pozulub",
+   "Banıçiçək nümunəsi yarımçıq: o, atanın sözünə tabe olduğu üçün yox, öz andına sadiq qaldığı üçün vəfalıdır — misal tərsinə işlədilib"
+  ]
+ },
+ {
+  "item_id": "P004",
+  "source_id": "simurg-bosluq",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 4,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "Simurğ yalnız Əttarın «Məntiqüt-teyr»indən danışır, Azərbaycan nağılının Zümrüd quşu — Məlikməmmədi qaranlıq dünyadan işıqlı dünyaya çıxaran quş — xatırlanmır, halbuki bu mövzuya («qazanıb da boş qalmaq», qaranlıqdan çıxmaq) daha yaxındır",
+   "«otuz quş da yeddi vadini aşıb» — «da» ədatı yersizdir, cümlə «başqaları kimi otuz quş da» kimi oxunur",
+   "İki nəhəng, tire ilə yamanmış cümlə — nəfəs yeri yoxdur, Simurğ yox, tərcümə olunmuş qəsidə kimi səslənir",
+   "Cavab çox qısadır: insan dediyi ev-maşın-vəzifəni artıq qazanıb, «yuvaya dön» deyilir, amma otuz yaşdan sonra ata-ana kandarına qayıtmağın konkret addımı göstərilmir",
+   "Nəsihətlər (yetim, halal tikə, süfrə) siyahı kimi düzülüb, hərəsinə bir cümlə də olsa əhvalat, obraz verilmir"
+  ]
+ },
+ {
+  "item_id": "P005",
+  "source_id": "koroglu-ses",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 3,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "Nəsimidə «ikilik sifətdən ikilik bitər» ifadəsi qaranlıq və mənasız qurulub – hürufi məntiqi yarımçıq qalır",
+   "«bir yığıncağın baxışı səni necə sığdırmasın» – məntiq tərsinədir, «necə sıxa bilər / sığdırmaya bilər» olmalıydı",
+   "Nəsimidə «sözün özünə inansın» – dərvişanə deyil, «özünə inan» tipli self-help notu",
+   "Koroğlunun cümlələri həddən artıq uzun, tirə və iki nöqtəylə yığılıb; dastan nəsri belə yorulmaz",
+   "Məclis ədəbi, ağsaqqalın hüzurunda söz almağın öz qaydası – Azərbaycan yığıncağının bu tərəfi heç toxunulmayıb"
+  ]
+ },
+ {
+  "item_id": "P006",
+  "source_id": "nizami-evlilik",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Nizami hissəsində «közə dönər, kül olmaz — küllərin altında köz» məntiqi çaşqındır: ocaq kül olmursa, kül altındakı köz haradan gəlir?",
+   "«gülabla arxının suyunu durultmaq» — obraz yerinə düşmür, gülab suyu durultmaz; süni bəzək",
+   "«əl uzadan tərəf isə çox vaxt ağıllı olanı olur» — sınıq, tərcümə qoxulu cümlə, Nizami dili deyil",
+   "Nizami bir beyt də deməyib; Xəmsə şairi nəsrlə self-help nəsihətçisinə çevrilib, «Əzizim» xitabı ona yaddır",
+   "Hər iki hissə bir nəfəslik uzun cümlələrlə yığılıb, nəfəs yeri yoxdur, ritm pozulur",
+   "Dədə Qorqud səbəbi yalnız «qonaq gəlmir»də görür — on illik soyuqluğun bircə dərmanı süfrə deyil"
+  ]
+ },
+ {
+  "item_id": "P007",
+  "source_id": "nesimi-fikir",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 3,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "Nəsiminin ağzına qoyulan «ağsaqqalın nəsihətini başın üstə qoy» — hürufi şairin ruhuna yad, mentalitet zorla tikilib",
+   "«iki cahan səndə sığır» — «Məndə sığar iki cahan»ın tərs çevrilmiş, sulanmış variantı; orijinalın gücü itib",
+   "«sözünü sakit, dik başla de» — self-help nəfəsi, Nəsimi belə «tövsiyə» verməz",
+   "Koroğlunun «gülüş özü utanıb kiçilər» — obraz yarımçıqdır, «dəlilərim də Çənlibelə gələndə ilk gün gülənləri çox olub» cümləsi dilə yatmır",
+   "«kənarın rişxəndi» — «kənar adamların» olmalı, sintaksis axsayır",
+   "Praktik məsləhət bir cümləyə sığır: «axıra qədər de» — kimə, nə vaxt, necə — yoxdur"
+  ]
+ },
+ {
+  "item_id": "P008",
+  "source_id": "edge-salam",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 3,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "«məsələ üzrə» — kargüzarlıq-idarə dilidir, rus «по вопросу» kalkası kimi səslənir, xalq danışığına yaraşmır",
+   "«Elə ki ... lazım olsa» — «elə ki» zaman bağlayıcısıdır, burada «əgər» yerinə işlənməsi sintaksisi axsadır",
+   "«Divanın qapısı həmişə açıqdır» — şablon, boş ibarə; canlı obraz yoxdur",
+   "Salamlaşma qısa kəsilir, «xoş gördük», «Allah saxlasın», «kefiniz-halınız» kimi təbii cavab-salam silsiləsi tam qurulmur"
+  ]
+ },
+ {
+  "item_id": "P009",
+  "source_id": "simurg-telesmek",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 4,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "«bugün» səhv yazılıb — «bu gün» olmalıdır",
+   "Molla Nəsrəddinin eşşək lətifəsi heç bir məlum mənbədə yoxdur, uydurmadır və Mollanın yox, adi nəsihətçinin dilindən səslənir — lətifənin gülüşü zəif, əxlaqı açıq-aşkar «izah» olunur",
+   "«çatmaq sürətdən yox, hara uçduğunu bilməkdən gəlir» — tərcümə qoxulu aforizm, self-help kitabından çıxmış kimidir",
+   "«əlinin halal zəhmətini gör» — yad, sünilik hiss olunan ifadə; xalq belə demir",
+   "«eşşəyi çubuqlama» — «çubuq vurmaq/döymək» daha təbii olardı",
+   "Simurğ Əttar ruhunda deyil, sadəcə zirvədən danışan ümumi ağsaqqal obrazıdır; otuz quşun özünü tapması motivi yalnız üstüörtülü toxunulub"
+  ]
+ },
+ {
+  "item_id": "P010",
+  "source_id": "nesreddin-qerar",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 3,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Koroğlunun «cilovu çəkmişəm» deməsi mənaca tərsdir — cilov çəkmək atı saxlamaqdır, irəli çapmaq deyil; hücum obrazı ilə ziddiyyət yaradır",
+   "«evdə asılı qalan bir iş» — yad kalkadır, təbii Azərbaycan dilində «yarımçıq qalan iş» deyilər",
+   "Koroğlu dastan qəhrəmanıdır, nəfəsi şeirlə, «Koroğlu deyər»lə gəlir — burada quru nəsrlə danışır, ürəyi titrəyən Koroğlu obrazı da dastanın lovğa-cəsur ruhuna oturmur",
+   "Uçurum və sel obrazı bir cümlədə qarışdırılıb, mənzərə bulanıqdır",
+   "Molla Nəsrəddinin qazan-su nəsihəti heç bir məlum lətifəyə söykənmir, əsl Molla kinayəsi əvəzinə düzəldilmiş boş məsləhətdir",
+   "«dayanan igid heç vaxt düzəlmir» — xalq ifadəsi deyil, motivasiya plakatı ətri gəlir"
+  ]
+ },
+ {
+  "item_id": "P011",
+  "source_id": "dedeqorqud-toy",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Nizaminin «Əzizim» müraciəti XII əsr şairinə yox, bugünkü söhbətə yaraşır — Xəmsə sahibi belə başlamaz",
+   "Nizami hissəsi nəzm ruhundan çox nəsr şərhinə çevrilib: obrazlar sadalanır, amma beytin ahəngi, qafiyə nəfəsi yoxdur",
+   "«hökm verəndə yanındakının gözünü də görsün» — fikir dumanlı, atanın dilinə düşməz",
+   "«yeddi yüz sünbül» Quran ayəsi ilə Sirlər xəzinəsi əhvalatı bir-birinə qarışdırılıb, mənbə səliqəsi pozulur",
+   "Dədə Qorqud hissəsində «ev sənin qılıcınla yox, onun səbriylə durar» gözəl səslənsə də, boyların dilində ərə bu cür ittiham tərzi yoxdur — az da olsa müasir ton hiss olunur"
+  ]
+ },
+ {
+  "item_id": "P012",
+  "source_id": "nesimi-senet",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Nəsimidə «ürəyinə sal» ifadəsi xalq dilində mənfi (dərd etmək) çalar daşıyır, burada müsbət mənada işlədilib — dil qüsuru",
+   "«kənar istehza» birləşməsi süni, təbii Azərbaycan dilinə yaddır",
+   "Dədə Qorqudda «Xanım hey» (xana müraciət) ilə «oğul» eyni nəfəsdə qarışdırılıb — ünvan dolaşıqdır",
+   "Nəsimi «bir peşə də saxla» kimi məişət-praktik məsləhətə enir; onun tarixi səsi bu qədər ehtiyatlı deyildi",
+   "Hər iki cavab tək bir uzun cümləyə sıxılıb, nəfəs almağa yer qalmır"
+  ]
+ },
+ {
+  "item_id": "P013",
+  "source_id": "simurg-mena",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 4,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "«Ananı yoxla» — kalka səslənir; xalq «anana baş çək» deyər",
+   "İlk cümlə dolaşıqdır: «yolun başında vadidə dayanıb baxanda görünməyib» — mübtəda-xəbər əlaqəsi itir, oxucu iki dəfə oxumalı olur",
+   "«Yeddi vadi» adı çəkilir, amma Əttarın vadiləri (tələb, eşq, mərifət, istiğna, tövhid, heyrət, fəna) boş dekor kimi qalır — Simurğ öz kitabını bilmir kimi",
+   "Məlikməmməd nağılındakı Simurğ — qaranlıq dünyadan işıqlı dünyaya çıxaran quş — heç iz qoymur; obraz Azərbaycan folklorundan yox, yalnız fars təsəvvüfündən alınıb",
+   "«Balam» xitabı ilə Qaf zirvəsi ritorikası bir-birinə yapışmır",
+   "«Qırx» rəqəminin xalq mədəniyyətindəki çəkisi (qırx gün-qırx gecə, «qırxında ağıl gələr») istifadəsiz qalıb",
+   "Ailə-halallıq-qonaq siyahısı sadalanır, hiss olunmur — dəyərlər cədvəldən götürülmüş kimi"
+  ]
+ },
+ {
+  "item_id": "P014",
+  "source_id": "nizami-edalet",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Bir nəfəsə deyilmiş həddən artıq uzun, tirelərlə, nöqtəli vergüllərlə yüklənmiş cümlə — Nizaminin beyt ölçüsündən çox nəsr yığınıdır",
+   "«Əzizim» müraciəti ümumi, şair üslubuna yaddır",
+   "«qanı bağışlatdı» ifadəsi qeyri-dəqiqdir — Məcnun ceyranların qanını qurtardı, at fidyə oldu; oxucu tutula bilər",
+   "«başqa bir iş göstər» — şirkətdə, yoxsa kənarda? Sahibkar üçün konkret deyil",
+   "«mərhəmət ədalətsiz zəhərdir» — aforizm quruluşca qeyri-simmetrikdir, dil sürüşür"
+  ]
+ },
+ {
+  "item_id": "P015",
+  "source_id": "dedeqorqud-ana",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 3,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Dədə Qorqudun boy dilinə xas paralel-ritmik quruluş («...görklü, ...görklü») yoxdur, adi nəsihət cümləsi kimi axır",
+   "Ana üçün «ağsaqqal sözü» deyilir — xalq dilində qadın böyüyə «ağbirçək» deyilir, burada qeyri-dəqiqlik var",
+   "«Xanım hey» müraciəti dastanda xanlara deyilir, burada «oğul» ilə qarışdırılıb, ünvan səlis deyil",
+   "Cavab həddindən artıq qısadır: kənddə tək qocanın xəstələnmək, qışda odunsuz qalmaq təhlükəsi, həkim, telefon, qohumların növbəsi kimi real məsələlərə toxunulmur",
+   "Bir uzun cümləyə çox fikir yığılıb, nəfəs almağa yer qoyulmur"
+  ]
+ },
+ {
+  "item_id": "P016",
+  "source_id": "koroglu-biznes",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 4,
+   "dil": 3,
+   "bedii": 4,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "Koroğlu dastanda dəliləri ac qoymaqdan «çəkinən», Qırata minməzdən əvvəl «tövlədə yem yığan» ehtiyatlı təsərrüfatçı deyil — bu, Alı kişinin qaranlıq tövlədə bəslədiyi Qırat əhvalatını uydurma epizodla əvəz edir və qəhrəmanın hökmlü, qoşma-gəraylı ilə danışan səsini itirir",
+   "Koroğlunun cavabında bir misra da şeir yoxdur; dastanda o, məsləhəti sazla verir",
+   "«Xanım hey!» Kitabi-Dədə Qorqudda ozanın xana müraciət formuludur, burada istifadəçiyə «oğul» deyilərkən eyni cümlədə işlənməsi ünvan qarışıqlığı yaradır",
+   "«iki körpənin çörəyi belində olan kişi» — süni birləşmə, xalq dilində «çörəyi əlində/boynunda» deyilir",
+   "Hər iki replika bir nəfəsə uzanan, vergüllə tikilmiş cümlələrdir — ozan ritmi yox, tərcümə nəfəsi var",
+   "Praktik məsləhət ümumi self-help sxemidir: «pul yığ, işi yanaşı apar, ailə ilə məsləhətləş» — real addımın nə qədər, nə vaxt, nə ilə olduğu yoxdur"
+  ]
+ },
+ {
+  "item_id": "P017",
+  "source_id": "edge-turkish-input",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 3,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 2
+  },
+  "judge_defects": [
+   "Əfsanəvi Simurğun ağzında «balam» kəndçi nənə ləhcəsi kimi səslənir — Attarın, Firdovsinin ucalıqdan danışan hikmət quşu deyil, kənd qonşusudur",
+   "«üst-üstə gələn dağ deyil, bulud kimidir» — sintaksis axsayır, «dağ deyil, buluddur» deməli idi",
+   "«bir vadi dərinə düşüb» — anlaşılmaz, yad quruluş; «yol vadiyə enib» olmalı idi",
+   "«sabahkı qanad bugünkü yorğunluğun içindən böyüyür» — qanad böyümür, açılır; tərcümə qoxulu qarışıq metafora",
+   "Ata-ana ocağı, çörək, ağsaqqal — siyahı kimi düzülüb, yaşanmış deyil, sifarişlə yapışdırılıb",
+   "İki nəfəssiz cümlə — nə nəfəs alır, nə ritm tutur; xalq ifadəsi, atalar sözü, bayatı izi yoxdur",
+   "Yorğun adama konkret bir addım deyilmir: yat, dincəl, əlini işdən çək — heç biri yoxdur"
+  ]
+ },
+ {
+  "item_id": "P018",
+  "source_id": "nesimi-deyer",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 3,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 2
+  },
+  "judge_defects": [
+   "«Məndə sığar iki cahan» beyti nəsrə çevrilib, hürufi nəfəsi — hərf, üz, nöqtə, vəhdət — yoxdur, Nəsimi burada üzü Nəsimi olan adi təsəllivericidir",
+   "«Ata-ana, ağsaqqal sözü göz üstə» cümləsi yamaq kimi tikilib, mətnin axarına qarışmır — mentalitet süni əlavədir",
+   "«kənar ağızdan çıxan söz», «öz üzünə möhür vurma», «həqqini oxu» kimi ifadələr yad qoxuludur, xalq dilində belə deməzlər",
+   "«Hər səhər öz həqqini özün oxu» — bu nə deməkdir? Adam sabah durub nə edəcək? Konkret bir addım, bir məsləhət yoxdur",
+   "Sual «hamı deyir» deyir — kimdir bu «hamı»? Nəsimi bunu soruşmalıydı, dərdi bilmədən dərman yazıb"
+  ]
+ },
+ {
+  "item_id": "P019",
+  "source_id": "nesreddin-qonsu",
+  "judge": {
+   "xarakter": 3,
+   "mentalitet": 5,
+   "dil": 4,
+   "bedii": 4,
+   "fayda": 4
+  },
+  "judge_defects": [
+   "Molla Nəsrəddin lətifə deyil, aforizm danışır — onun silahı əhvalat və gözlənilməz sondur, burada isə quru öyüdə çevrilib",
+   "Dədə Qorqudun səsi bir uzun, nəfəssiz cümləyə sıxılıb; boylama ritmi, alliterasiya, «görəlim, xanım, nə soyladı» ahəngi yoxdur",
+   "«Xanım hey» xanlara müraciətdir, «oğul» ilə qarışdırılması formulu sındırır",
+   "«bir araya gəlin» türk kalkasıdır — «bir yerə yığışın» olmalıdır",
+   "«gülüş də bölünür, yarısı sənə qalır» süni, uydurma məcazdır",
+   "Yerin rəsmi olub-olmaması (ayrılmış yer, yoxsa küçə) heç toxunulmayıb"
+  ]
+ },
+ {
+  "item_id": "P020",
+  "source_id": "nesreddin-reis",
+  "judge": {
+   "xarakter": 4,
+   "mentalitet": 3,
+   "dil": 3,
+   "bedii": 3,
+   "fayda": 3
+  },
+  "judge_defects": [
+   "«sinəsini yerə vermeyən» — türkcə imla («verməyən» olmalıdır), Koroğlunun ağzından yad hərf çıxıb",
+   "«gözünü yerə dikmə» ifadəsi hər iki natiqdə eynilə təkrarlanır — Divan bir ağızla danışır, iki fərqli səs yoxdur",
+   "«kənar ağızdan çıxan söz sənin vücudunu» — kalka qoxulu, ağır sintaksis; Nəsimi belə yazmazdı",
+   "«meydanda susduğunu qeyrətlə susur» — mənasız, təkrar feli tərkib, ritm qırılır",
+   "Nəsiminin cavabı əslində «özünə dəyər ver, boş ver» self-help nəsihətidir, hürufi don geyindirilib",
+   "Koroğlunun məsləhəti — rəisə tək-təkə «üzümə de» deyib «qürurla çıxmaq» — sualın əsas qorxusuna (işdən çıxarılma) cavab vermir; nə ağsaqqala, nə həmkara, nə sənədə, nə səbrə işarə var",
+   "Sual «hamının qabağında» deyir, Nəsimi «məclisin darlığı» deyib keçir — konkret vəziyyət, konkret addım yoxdur"
+  ]
+ }
+]
