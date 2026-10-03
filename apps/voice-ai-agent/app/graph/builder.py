@@ -31,8 +31,11 @@ Council roster: Molla Nəsrəddin (wit), Koroğlu (courage/action), Simurğ (wis
                 required for `interrupt()`/`Command(resume=...)` to work.
 """
 
+import asyncio
 import hashlib
+import logging
 import os
+import re
 import uuid
 from dataclasses import dataclass
 from typing import Annotated, TypedDict
@@ -50,7 +53,7 @@ from langgraph.graph.message import add_messages
 from langgraph.types import Command, interrupt
 
 from app.core.config import settings
-from app.graph.guardrails import crisis_response, is_self_harm_risk
+from app.graph.guardrails import crisis_response, is_self_harm_risk, sanitize_user_text
 from app.prompts.divan import (
     GREETING_PROMPT,
     NARRATION_HITL,
@@ -62,12 +65,60 @@ from app.prompts.divan import (
     supervisor_prompt,
 )
 from app.rag.retriever import evidence_for
-from app.services.llm import ainvoke_with_retry, build_llm
+from app.services.llm import LLMError, ainvoke_with_retry, build_llm
+
+log = logging.getLogger(__name__)
 
 ADVISOR_KEYS = tuple(ROSTER.keys())
 MAX_ADVISORS = 2
 RECURSION_LIMIT = 10
 APPROVAL_ADVISOR = "koroglu"  # bold/risky calls to action are what pause for a human
+
+
+_FOLD = str.maketrans("əğıöüşçİ", "egiousci")
+
+
+def _fold(text: str) -> str:
+    return text.translate(_FOLD).lower()
+
+
+def _route_aliases() -> dict[str, str]:
+    """First-word spellings the router may use for each member: the key
+    (KOROGLU), the display name (Koroğlu, Nəsimi) or its first word (Molla)."""
+    aliases: dict[str, str] = {}
+    for key, info in ROSTER.items():
+        aliases[key] = key
+        aliases[_fold(info["name"].split()[0])] = key
+        aliases[_fold(info["name"].replace(" ", ""))] = key
+    return aliases
+
+
+def resolve_route(raw: str, remaining: list[str]) -> str | None:
+    """The member the router named, or None when it did not (clearly) name one.
+
+    Only the FIRST word counts: a router that explains itself, or a user message
+    that talks the router into prose, is not a routing decision. A member who
+    already spoke is not eligible again."""
+    match = re.match(r"\W*(\w+)", _fold(raw or ""))
+    if not match:
+        return None
+    key = _route_aliases().get(match.group(1))
+    return key if key in remaining else None
+
+
+class NoPendingApproval(ValueError):
+    """`resume_turn` was called on a thread that is not paused at the approval
+    gate (never started, already resolved, or the id is wrong)."""
+
+
+async def _within_turn_budget(awaitable):
+    """Bound one graph run by `TURN_TIMEOUT_SECONDS` (0 disables). A timeout is
+    an `LLMError` so the API answers 503 like any other provider failure."""
+    budget = settings.TURN_TIMEOUT_SECONDS
+    try:
+        return await asyncio.wait_for(awaitable, timeout=budget or None)
+    except TimeoutError as exc:
+        raise LLMError(f"The council did not answer within {budget:.0f}s - try again.") from exc
 
 
 class ChatState(TypedDict):
@@ -162,21 +213,21 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
             [SystemMessage(content=supervisor_prompt(consulted)), *state["messages"]],
             label="llm-supervisor",
         )
-        raw = (decision.content or "").strip().lower()
-        token = raw.split()[0].strip(".,!?") if raw else ""
+        raw = (decision.content or "").strip()
+        next_node = resolve_route(raw, remaining)
 
         # Measured 2026-09-25: on the second hop the router was never told who
-        # had already spoken, so it named the same member again; that token is
-        # not in `remaining`, and the old fallback `remaining[0]` then picked the
-        # first roster key - Molla Nəsrəddin - on 17 of 18 questions. The router
-        # now sees the speakers, and an unusable answer ends the council
-        # instead of summoning whoever happens to be first in the dict.
-        if token in remaining:
-            next_node = token
-        elif token.startswith("yek") or consulted:
+        # had already spoken, so it named the same member again; the old
+        # fallback `remaining[0]` then picked the first roster key - Molla
+        # Nəsrəddin - on 17 of 18 questions. The router now sees the speakers,
+        # and an unusable answer ends the council instead of summoning whoever
+        # happens to be first in the dict (d01: that now holds on hop one too -
+        # a router that answers in prose, or is talked into it by the user's
+        # text, gets the host's reply, never a surprise advisor).
+        if next_node is None:
+            if raw and not raw.lower().startswith("yek"):
+                log.warning("supervisor gave no usable route, ending the council: %.80r", raw)
             next_node = "synthesize"
-        else:
-            next_node = remaining[0]
 
         if next_node in NARRATION_ROUTING:
             narration = [*narration, NARRATION_ROUTING[next_node]]
@@ -272,15 +323,17 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
         )
         action = decision.get("decision", "approve") if isinstance(decision, dict) else str(decision)
 
-        if action == "reject":
+        if action == "approve":
+            final = state["draft"]
+        elif action == "edit" and isinstance(decision, dict) and (decision.get("text") or "").strip():
+            final = decision["text"]
+        else:
+            # Fail closed: "reject" and anything the gate does not recognise
+            # (a typo, a new client's vocabulary) never publish the risky draft.
             final = (
                 "Onda bunu qəti tövsiyə kimi bildirmirəm — bu, sadəcə şuranın "
                 "fikir mübadiləsi olaraq qaldı."
             )
-        elif action == "edit" and isinstance(decision, dict) and decision.get("text"):
-            final = decision["text"]
-        else:
-            final = state["draft"]
 
         return {"messages": [AIMessage(content=final)]}
 
@@ -417,6 +470,7 @@ async def run_turn(
     A message flagged as a self-harm risk never reaches the council at all -
     no persona, however well-meaning, should role-play a reply to that. It
     gets a direct, human, out-of-character response instead."""
+    message = sanitize_user_text(message)
     if is_self_harm_risk(message):
         return TurnResult(
             status="ok",
@@ -427,9 +481,11 @@ async def run_turn(
             turn_id=_new_turn_id(),
         )
 
-    raw = await graph.ainvoke(
-        {"messages": [HumanMessage(content=message)]},
-        config=_trace_config(thread_id, channel=channel, modality=modality),
+    raw = await _within_turn_budget(
+        graph.ainvoke(
+            {"messages": [HumanMessage(content=message)]},
+            config=_trace_config(thread_id, channel=channel, modality=modality),
+        )
     )
     return _extract_result(raw)
 
@@ -445,8 +501,12 @@ async def resume_turn(
     """Continue a `pending_approval` turn with a human decision, e.g.
     `{"decision": "approve"}`, `{"decision": "reject"}`, or
     `{"decision": "edit", "text": "..."}`."""
-    raw = await graph.ainvoke(
-        Command(resume=decision),
-        config=_trace_config(thread_id, channel=channel, modality=modality),
+    if await get_pending(graph, thread_id) is None:
+        raise NoPendingApproval(f"thread {thread_id!r} has no turn awaiting approval")
+    raw = await _within_turn_budget(
+        graph.ainvoke(
+            Command(resume=decision),
+            config=_trace_config(thread_id, channel=channel, modality=modality),
+        )
     )
     return _extract_result(raw)

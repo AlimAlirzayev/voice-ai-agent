@@ -8,14 +8,16 @@ speaker in the order they spoke, plus the Divan's own synthesis/question.
 
 import base64
 import uuid
+from typing import Literal
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 
 from app.core.rate_limit import enforce_turn_rate_limit
 from app.graph import TurnResult, get_pending, resume_turn, run_turn
-from app.graph.builder import closing_of
+from app.core.config import settings
+from app.graph.builder import NoPendingApproval, closing_of
 from app.graph.guardrails import is_self_harm_risk
-from app.models.schemas import VoiceResponse, VoiceSegment
+from app.models.schemas import THREAD_ID_PATTERN, VoiceResponse, VoiceSegment
 from app.services.llm import LLMError
 from app.services.moderation import MODERATION_FALLBACK_TEXT, is_disallowed_content
 from app.services.voice import VoiceError, synthesize, transcribe
@@ -122,7 +124,7 @@ async def _speak_segments(result: TurnResult) -> list[VoiceSegment]:
 async def voice(
     request: Request,
     file: UploadFile = File(..., description="Voice note or audio file (ogg, m4a, mp3, wav)"),
-    thread_id: str = Form("demo"),
+    thread_id: str = Form("demo", pattern=THREAD_ID_PATTERN),
 ) -> VoiceResponse:
     """The full voice round trip in one call.
 
@@ -130,7 +132,10 @@ async def voice(
     of this `thread_id`, and the answer comes back as one base64 OGG/Opus clip
     per council member who spoke (see `segments`) - each in their own voice.
     """
-    audio = await file.read()
+    limit = settings.MAX_UPLOAD_BYTES
+    audio = await file.read(limit + 1 if limit else -1)
+    if limit and len(audio) > limit:
+        raise HTTPException(status_code=413, detail=f"Audio larger than {limit} bytes")
 
     try:
         transcript = await transcribe(audio, file.filename or "audio.ogg")
@@ -139,6 +144,8 @@ async def voice(
 
     if not transcript:
         raise HTTPException(status_code=422, detail="No speech detected in the audio")
+    if settings.MAX_MESSAGE_CHARS and len(transcript) > settings.MAX_MESSAGE_CHARS:
+        raise HTTPException(status_code=413, detail="The recording is too long - send a shorter one")
 
     try:
         result = await get_pending(request.app.state.graph, thread_id)
@@ -172,18 +179,27 @@ async def voice(
 @router.post("/voice/resume", response_model=VoiceResponse)
 async def voice_resume(
     request: Request,
-    thread_id: str = Form(...),
-    decision: str = Form(..., description="approve | reject | edit"),
-    text: str | None = Form(None, description="Replacement text when decision is 'edit'."),
+    thread_id: str = Form(..., pattern=THREAD_ID_PATTERN),
+    decision: Literal["approve", "reject", "edit"] = Form(..., description="approve | reject | edit"),
+    text: str | None = Form(
+        None,
+        max_length=settings.MAX_EDIT_CHARS or None,
+        description="Replacement text when decision is 'edit'.",
+    ),
 ) -> VoiceResponse:
     """Resolve a `pending_approval` voice turn - the reply comes back spoken
     in the advisor's own voice, same as `/voice`."""
+    if decision == "edit" and not (text or "").strip():
+        raise HTTPException(status_code=422, detail="text is required when decision is 'edit'")
+
     try:
         result = await resume_turn(
             request.app.state.graph,
             thread_id,
             {"decision": decision, "text": text},
         )
+    except NoPendingApproval as exc:
+        raise HTTPException(status_code=409, detail="Bu söhbətdə təsdiq gözləyən cavab yoxdur.") from exc
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 

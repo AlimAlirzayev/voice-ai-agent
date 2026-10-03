@@ -7,6 +7,7 @@ from fastapi import HTTPException
 
 from app.core.rate_limit import enforce_turn_rate_limit
 from app.graph import TurnResult, get_pending, resume_turn, run_turn
+from app.graph.builder import NoPendingApproval
 from app.graph.guardrails import is_self_harm_risk
 from app.models.schemas import ChatRequest, ChatResponse, ResumeRequest
 from app.services.llm import LLMError
@@ -80,6 +81,8 @@ async def chat_resume(payload: ResumeRequest, request: Request) -> ChatResponse:
 
     try:
         result = await resume_turn(request.app.state.graph, payload.thread_id, decision)
+    except NoPendingApproval as exc:
+        raise HTTPException(status_code=409, detail="Bu söhbətdə təsdiq gözləyən cavab yoxdur.") from exc
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 

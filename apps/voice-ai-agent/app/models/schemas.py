@@ -1,22 +1,46 @@
 """Request and response bodies for the API."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StringConstraints, model_validator
+
+from app.core.config import settings
+
+# Every thread id the product itself mints (web-xxxx, tg-<chat>-<n>, n8n-demo,
+# demo) fits this; anything else is rejected before it reaches the checkpointer.
+THREAD_ID_PATTERN = r"^[A-Za-z0-9_.:@-]{1,128}$"
+ThreadId = Annotated[str, StringConstraints(pattern=THREAD_ID_PATTERN)]
 
 
 class ChatRequest(BaseModel):
-    message: str = Field(..., min_length=1, examples=["Mənim adım Alim."])
-    thread_id: str = Field(
+    message: str = Field(
+        ...,
+        min_length=1,
+        max_length=settings.MAX_MESSAGE_CHARS or None,
+        examples=["Mənim adım Alim."],
+    )
+    thread_id: ThreadId = Field(
         "demo",
         description="Conversation id. The same thread_id continues the same memory.",
     )
 
 
 class ResumeRequest(BaseModel):
-    thread_id: str
-    decision: str = Field(..., description="approve | reject | edit")
-    text: str | None = Field(None, description="Replacement text when decision is 'edit'.")
+    thread_id: ThreadId
+    decision: Literal["approve", "reject", "edit"] = Field(
+        ..., description="approve | reject | edit"
+    )
+    text: str | None = Field(
+        None,
+        max_length=settings.MAX_EDIT_CHARS or None,
+        description="Replacement text when decision is 'edit'.",
+    )
+
+    @model_validator(mode="after")
+    def _edit_needs_text(self) -> "ResumeRequest":
+        if self.decision == "edit" and not (self.text or "").strip():
+            raise ValueError("text is required when decision is 'edit'")
+        return self
 
 
 class ChatResponse(BaseModel):
@@ -45,11 +69,11 @@ class ChatResponse(BaseModel):
 
 
 class FeedbackRequest(BaseModel):
-    turn_id: str = Field(..., min_length=1)
-    thread_id: str = Field(..., min_length=1)
+    turn_id: str = Field(..., min_length=1, max_length=128)
+    thread_id: str = Field(..., min_length=1, max_length=128)
     kind: Literal["up", "down", "correction"]
-    text: str | None = Field(None, description="Required for kind='correction': what the reply should have said.")
-    advisor: str | None = Field(None, description="Advisor key the feedback targets, if known.")
+    text: str | None = Field(None, max_length=4000, description="Required for kind='correction': what the reply should have said.")
+    advisor: str | None = Field(None, max_length=64, description="Advisor key the feedback targets, if known.")
 
 
 class FeedbackResponse(BaseModel):

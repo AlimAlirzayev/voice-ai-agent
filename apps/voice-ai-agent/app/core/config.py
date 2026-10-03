@@ -169,6 +169,20 @@ class Settings(BaseSettings):
     MODERATION_ENABLED: bool = True
     MODERATION_MODEL: str = "omni-moderation-latest"
 
+    # --- Input limits and turn budget (d01 hardening). All overridable; a value
+    # of 0 disables the matching check, so a deployment that needs the old
+    # unlimited behaviour can restore it from the environment. ---
+    # Longest accepted chat message / voice transcript, in characters.
+    MAX_MESSAGE_CHARS: int = 4000
+    # Longest accepted voice upload, in bytes (Telegram voice notes are far smaller).
+    MAX_UPLOAD_BYTES: int = 15_000_000
+    # Longest human-edited replacement text accepted on resume, in characters.
+    MAX_EDIT_CHARS: int = 2000
+    # Wall-clock budget for one graph run (supervisor + advisors); on expiry the
+    # caller gets the same clean 503 as any other LLM failure. The default sits
+    # above the Claude CLI worst case for a two-advisor turn.
+    TURN_TIMEOUT_SECONDS: float = 300.0
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         extra="ignore",
