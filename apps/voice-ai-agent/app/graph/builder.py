@@ -50,7 +50,7 @@ from langgraph.graph.message import add_messages
 from langgraph.types import Command, interrupt
 
 from app.core.config import settings
-from app.graph.guardrails import crisis_response, is_out_of_scope, is_self_harm_risk
+from app.graph.guardrails import crisis_response, is_self_harm_risk
 from app.prompts.divan import (
     GREETING_PROMPT,
     NARRATION_HITL,
@@ -128,12 +128,6 @@ def closing_of(reply: str) -> str:
     return reply[idx + len(CLOSING_MARK):].strip() if idx >= 0 else ""
 
 
-def _last_human_text(state: "ChatState") -> str:
-    return next(
-        (m.content for m in reversed(state["messages"]) if isinstance(m, HumanMessage)), ""
-    )
-
-
 def build_graph(checkpointer, llm: BaseChatModel | None = None):
     """Compile the agent. `llm` is injectable so tests can pass a fake model."""
     keep = settings.MAX_HISTORY_MESSAGES
@@ -159,14 +153,6 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
         narration = state.get("narration", [])
         if hops == 1:
             narration = [*narration, NARRATION_OPENING]
-
-        # A plain task request (code, quotes, weather...) is not the council's to
-        # answer: skip the router, no advisor speaks, no citation is claimed, and
-        # the Divanbəyi declines warmly in `synthesize`. Deterministic, so it does
-        # not depend on the router LLM holding the line.
-        if hops == 1 and not consulted and _last_human_text(state) and is_out_of_scope(
-                _last_human_text(state)):
-            return Command(update={"hops": hops, "narration": narration}, goto="synthesize")
 
         if not remaining or len(consulted) >= MAX_ADVISORS or hops > MAX_ADVISORS + 2:
             return Command(update={"hops": hops, "narration": narration}, goto="synthesize")

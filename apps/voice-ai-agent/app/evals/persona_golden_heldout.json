@@ -1,51 +1,115 @@
 {
-  "_note": "Held-out set. Written AFTER the BM25 thresholds (MIN_MATCHED=3, floor 2) and the is_out_of_scope patterns were frozen (commit 52dde5f); never used to choose either. Report-only in CI-less runs: python -m app.evals.offline --heldout. Same schema as persona_golden.json; 'retrieval' here holds in-scope questions phrased loosely that should still be cited (gold = verbatim corpus span).",
+  "_note": "Held-out set. Written AFTER the BM25 gate (MIN_MATCHED=3, floor 2) was frozen at commit 52dde5f; it did not choose the shipped setting. 'retrieval' holds in-scope questions phrased loosely that should still be cited (gold = verbatim corpus span); 'abstain' holds off-topic questions. Report-only: python -m app.evals.offline --heldout.",
   "retrieval": [
-    {"id": "ho-nuširəvan", "advisor": "nizami", "query": "Nuşirəvan və vəzir bayquşların söhbətini ovda eşitdi", "gold": "NUŞİRƏVANLA VƏZİRİ VƏ BAYQUŞLARIN SÖHBƏTİ"},
-    {"id": "ho-qari", "advisor": "nizami", "query": "qarı Sultan Səncərə şikayət etdi, darğa onu daxmadan atmışdı", "gold": "QARI VƏ SULTAN SƏNCƏR DASTANI"},
-    {"id": "ho-suleyman", "advisor": "nizami", "query": "Süleyman səhrada qoca əkinçiyə dən verdi", "gold": "SÜLEYMAN VƏ QOCA ƏKİNÇİ"},
-    {"id": "ho-nesimiyem", "advisor": "nesimi", "query": "mən Nəsimiyəm, haşimiyəm, qureyşiyəm, ayətim bundan uludur", "gold": "Gərçi bu gün Nəsimiyəm"},
-    {"id": "ho-can-cahan", "advisor": "nesimi", "query": "can ilə cahan mənəm, dəhr ilə zaman mənəm", "gold": "Can ilə həm cahan mənəm"},
-    {"id": "ho-qoyun-sutu", "advisor": "koroglu", "query": "Koroğlu tapdığı uşağı qoyun südü ilə böyütməyə başladı", "gold": "Qoyun südü pişirif uşağı yedizdirdi"},
-    {"id": "ho-dustaq", "advisor": "nesreddin", "query": "fərraşlar qapıda oturan Mollanı da dustaq kimi təhvil verdilər", "gold": "Mollanı da tutub dustaq adına təhvil verirlər"},
-    {"id": "ho-baldir", "advisor": "simurg", "query": "Məlikməmməd baldırının ətini quşa yedizdirdi və axsayırdı", "gold": "baldırımın əti"}
+    {
+      "id": "ho-nuširəvan",
+      "advisor": "nizami",
+      "query": "Nuşirəvan və vəzir bayquşların söhbətini ovda eşitdi",
+      "gold": "NUŞİRƏVANLA VƏZİRİ VƏ BAYQUŞLARIN SÖHBƏTİ"
+    },
+    {
+      "id": "ho-qari",
+      "advisor": "nizami",
+      "query": "qarı Sultan Səncərə şikayət etdi, darğa onu daxmadan atmışdı",
+      "gold": "QARI VƏ SULTAN SƏNCƏR DASTANI"
+    },
+    {
+      "id": "ho-suleyman",
+      "advisor": "nizami",
+      "query": "Süleyman səhrada qoca əkinçiyə dən verdi",
+      "gold": "SÜLEYMAN VƏ QOCA ƏKİNÇİ"
+    },
+    {
+      "id": "ho-nesimiyem",
+      "advisor": "nesimi",
+      "query": "mən Nəsimiyəm, haşimiyəm, qureyşiyəm, ayətim bundan uludur",
+      "gold": "Gərçi bu gün Nəsimiyəm"
+    },
+    {
+      "id": "ho-can-cahan",
+      "advisor": "nesimi",
+      "query": "can ilə cahan mənəm, dəhr ilə zaman mənəm",
+      "gold": "Can ilə həm cahan mənəm"
+    },
+    {
+      "id": "ho-qoyun-sutu",
+      "advisor": "koroglu",
+      "query": "Koroğlu tapdığı uşağı qoyun südü ilə böyütməyə başladı",
+      "gold": "Qoyun südü pişirif uşağı yedizdirdi"
+    },
+    {
+      "id": "ho-dustaq",
+      "advisor": "nesreddin",
+      "query": "fərraşlar qapıda oturan Mollanı da dustaq kimi təhvil verdilər",
+      "gold": "Mollanı da tutub dustaq adına təhvil verirlər"
+    },
+    {
+      "id": "ho-baldir",
+      "advisor": "simurg",
+      "query": "Məlikməmməd baldırının ətini quşa yedizdirdi və axsayırdı",
+      "gold": "baldırımın əti"
+    }
   ],
   "abstain": [
-    {"id": "ho-off-notion", "advisor": "nesimi", "query": "Notion-da layihə şablonunu necə qurum?"},
-    {"id": "ho-off-bankomat", "advisor": "koroglu", "query": "Ən yaxın bankomat harada yerləşir?"},
-    {"id": "ho-off-paytaxt", "advisor": "dedeqorqud", "query": "Azərbaycanın paytaxtı hansı şəhərdir?"},
-    {"id": "ho-off-dag", "advisor": "simurg", "query": "Dünyanın ən hündür dağı hansıdır?"},
-    {"id": "ho-off-cv", "advisor": "nizami", "query": "Mənə LinkedIn üçün CV nümunəsi hazırla."},
-    {"id": "ho-off-yag", "advisor": "nesreddin", "query": "Avtomobilin mühərrik yağını neçə kilometrdən bir dəyişmək lazımdır?"},
-    {"id": "ho-off-komp", "advisor": "nesimi", "query": "Kompüterim yavaş işləyir, nə edim?"},
-    {"id": "ho-off-dollar", "advisor": "koroglu", "query": "Dollar bu gün neçə manatdır?"},
-    {"id": "ho-off-bilet", "advisor": "nizami", "query": "Bakıdan İstanbula təyyarə bileti nə qədərdir?"},
-    {"id": "ho-off-ml", "advisor": "simurg", "query": "Maşın öyrənməsi nədir, sadə izah et."},
-    {"id": "ho-off-protein", "advisor": "dedeqorqud", "query": "Hansı proteinli yeməklər arıqlamağa kömək edir?"},
-    {"id": "ho-off-batareya", "advisor": "nesreddin", "query": "Telefonumun batareyası tez bitir, düzəltmək olar?"}
-  ],
-  "council_scope": [
-    {"id": "ho-sc-notion", "query": "Notion-da layihə şablonunu necə qurum?", "out_of_scope": true},
-    {"id": "ho-sc-bankomat", "query": "Ən yaxın bankomat harada yerləşir?", "out_of_scope": true},
-    {"id": "ho-sc-paytaxt", "query": "Azərbaycanın paytaxtı hansı şəhərdir?", "out_of_scope": true},
-    {"id": "ho-sc-dag", "query": "Dünyanın ən hündür dağı hansıdır?", "out_of_scope": true},
-    {"id": "ho-sc-cv", "query": "Mənə LinkedIn üçün CV nümunəsi hazırla.", "out_of_scope": true},
-    {"id": "ho-sc-yag", "query": "Avtomobilin mühərrik yağını neçə kilometrdən bir dəyişmək lazımdır?", "out_of_scope": true},
-    {"id": "ho-sc-komp", "query": "Kompüterim yavaş işləyir, nə edim?", "out_of_scope": true},
-    {"id": "ho-sc-dollar", "query": "Dollar bu gün neçə manatdır?", "out_of_scope": true},
-    {"id": "ho-sc-bilet", "query": "Bakıdan İstanbula təyyarə bileti nə qədərdir?", "out_of_scope": true},
-    {"id": "ho-sc-ml", "query": "Maşın öyrənməsi nədir, sadə izah et.", "out_of_scope": true},
-    {"id": "ho-sc-protein", "query": "Hansı proteinli yeməklər arıqlamağa kömək edir?", "out_of_scope": true},
-    {"id": "ho-sc-batareya", "query": "Telefonumun batareyası tez bitir, düzəltmək olar?", "out_of_scope": true},
-    {"id": "ho-bd-layihe", "query": "İşdə yeni layihə rəhbəri təyin olunub, məni kənara qoyur, nə edim?", "out_of_scope": false},
-    {"id": "ho-bd-ata", "query": "Atam xəstəxanadadır, mən isə iş səfərinə getməliyəm.", "out_of_scope": false},
-    {"id": "ho-bd-sahe", "query": "Təcrübəm yoxdur, amma yeni sahədə işləmək istəyirəm; qorxuram.", "out_of_scope": false},
-    {"id": "ho-bd-kusku", "query": "Dostumla pul üstündə küsmüşük, barışmaq istəyirəm.", "out_of_scope": false},
-    {"id": "ho-bd-borc", "query": "Maşın almaq üçün borca girmək düzgündürmü?", "out_of_scope": false},
-    {"id": "ho-bd-sosial", "query": "Bir həftə sosial şəbəkələrdən uzaq qalmaq istəyirəm, buna dəyərmi?", "out_of_scope": false},
-    {"id": "ho-bd-futbol", "query": "Futbol oynayanda həmişə qalib gəlmək istəyirəm, uduzanda özümü pis hiss edirəm.", "out_of_scope": false},
-    {"id": "ho-bd-python", "query": "Python öyrənməyə başlamışam, amma özümə inamım yoxdur.", "out_of_scope": false},
-    {"id": "ho-bd-oglum", "query": "Oğlumun həyat hekayəsini yazmaq istəyirəm, ona nə deyim?", "out_of_scope": false},
-    {"id": "ho-bd-hava", "query": "Hava soyuyanda ürəyim sıxılır, bu nədir?", "out_of_scope": false}
+    {
+      "id": "ho-off-notion",
+      "advisor": "nesimi",
+      "query": "Notion-da layihə şablonunu necə qurum?"
+    },
+    {
+      "id": "ho-off-bankomat",
+      "advisor": "koroglu",
+      "query": "Ən yaxın bankomat harada yerləşir?"
+    },
+    {
+      "id": "ho-off-paytaxt",
+      "advisor": "dedeqorqud",
+      "query": "Azərbaycanın paytaxtı hansı şəhərdir?"
+    },
+    {
+      "id": "ho-off-dag",
+      "advisor": "simurg",
+      "query": "Dünyanın ən hündür dağı hansıdır?"
+    },
+    {
+      "id": "ho-off-cv",
+      "advisor": "nizami",
+      "query": "Mənə LinkedIn üçün CV nümunəsi hazırla."
+    },
+    {
+      "id": "ho-off-yag",
+      "advisor": "nesreddin",
+      "query": "Avtomobilin mühərrik yağını neçə kilometrdən bir dəyişmək lazımdır?"
+    },
+    {
+      "id": "ho-off-komp",
+      "advisor": "nesimi",
+      "query": "Kompüterim yavaş işləyir, nə edim?"
+    },
+    {
+      "id": "ho-off-dollar",
+      "advisor": "koroglu",
+      "query": "Dollar bu gün neçə manatdır?"
+    },
+    {
+      "id": "ho-off-bilet",
+      "advisor": "nizami",
+      "query": "Bakıdan İstanbula təyyarə bileti nə qədərdir?"
+    },
+    {
+      "id": "ho-off-ml",
+      "advisor": "simurg",
+      "query": "Maşın öyrənməsi nədir, sadə izah et."
+    },
+    {
+      "id": "ho-off-protein",
+      "advisor": "dedeqorqud",
+      "query": "Hansı proteinli yeməklər arıqlamağa kömək edir?"
+    },
+    {
+      "id": "ho-off-batareya",
+      "advisor": "nesreddin",
+      "query": "Telefonumun batareyası tez bitir, düzəltmək olar?"
+    }
   ]
 }

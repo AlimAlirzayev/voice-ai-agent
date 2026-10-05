@@ -15,6 +15,7 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
+from dataclasses import dataclass
 
 K1 = 1.5
 B = 0.75
@@ -49,6 +50,44 @@ def stems(text: str) -> list[str]:
     return [t[:PREFIX] for t in tokens(text) if len(t) >= 3]
 
 
+# Pronouns, conjunctions, quantifiers and light verbs that carry no topic. They
+# are rare in this small literary corpus, so document frequency cannot find them
+# ("mənim" appears in 2 chunks, "istəy" in 1) - but a question matching a passage
+# only through them is matching by accident. Listed as words, stored as stems.
+_GENERIC_WORDS = (
+    "mən məni mənim sən səni sənin biz bizi siz onu onun bunu buna bunun nə necə niyə kim kimi "
+    "hər heç çox daha amma ancaq lakin isə var yox bir iki üçün ilə və ola olur olan olub edir "
+    "edib edən deyir deyən dedi istəyirəm istəmirəm istəyir istər lazım gəlir çıxar çıxıb çıxır "
+    "qabağ vaxt"
+)
+GENERIC_STEMS = frozenset(w[:PREFIX] for w in _GENERIC_WORDS.split() if len(w) >= 3)
+
+
+@dataclass(frozen=True)
+class Gate:
+    """When is a retrieved passage good enough to cite? Every field is a floor;
+    zero disables it. `min_matched` keeps the two-stem rule: a question with
+    fewer stems than `min_matched` needs all of them, never fewer than `floor`.
+    With `drop_generic`, GENERIC_STEMS count for nothing in the other measures."""
+    min_matched: int = 3
+    floor: int = 2
+    min_idf_sum: float = 0.0     # IDF-weighted overlap of the matched stems
+    min_best_idf: float = 0.0    # the rarest matched stem
+    min_coverage: float = 0.0    # share of the question's IDF mass the passage explains
+    drop_generic: bool = False
+
+    def passes(self, matched: list[float], total_idf: float, n_query_stems: int) -> bool:
+        required = max(1, self.min_matched) if self.min_matched < self.floor else max(
+            self.floor, min(self.min_matched, n_query_stems))
+        if len(matched) < required:
+            return False
+        if self.min_idf_sum and sum(matched) < self.min_idf_sum:
+            return False
+        if self.min_best_idf and max(matched, default=0.0) < self.min_best_idf:
+            return False
+        return not (self.min_coverage and total_idf and sum(matched) / total_idf < self.min_coverage)
+
+
 class BM25Index:
     """BM25 partitioned by advisor: a member only ever searches its own texts."""
 
@@ -71,7 +110,10 @@ class BM25Index:
         return {advisor: len(docs) for advisor, docs in self.by_advisor.items()}
 
     def search(self, advisor: str, query: str, k: int = TOP_K, *,
-               min_score: float = MIN_SCORE, min_matched: int = MIN_MATCHED) -> list[dict]:
+               min_score: float = MIN_SCORE, min_matched: int = MIN_MATCHED,
+               gate: Gate | None = None) -> list[dict]:
+        gate = gate if gate is not None else DEFAULT_GATE if min_matched == MIN_MATCHED else Gate(
+            min_matched=min_matched)
         docs = self.by_advisor.get(advisor)
         if not docs:
             return []
@@ -79,22 +121,23 @@ class BM25Index:
         q_stems = set(stems(query))
         if not q_stems:
             return []
-        required = max(1, min_matched) if min_matched < MIN_MATCHED_FLOOR else max(
-            MIN_MATCHED_FLOOR, min(min_matched, len(q_stems)))
+        idfs = {st: math.log(1 + (stats["n"] - stats["df"].get(st, 0) + 0.5)
+                             / (stats["df"].get(st, 0) + 0.5)) for st in q_stems}
+        counted = {st for st in q_stems if not (gate.drop_generic and st in GENERIC_STEMS)}
+        total_idf = sum(idfs[st] for st in counted)
         scored: list[tuple[float, dict]] = []
         for doc in docs:
             score = 0.0
-            matched = 0
+            matched: list[float] = []
             for stem in q_stems:
                 tf = doc["_stems"].get(stem, 0)
                 if not tf:
                     continue
-                matched += 1
-                df = stats["df"].get(stem, 0)
-                idf = math.log(1 + (stats["n"] - df + 0.5) / (df + 0.5))
+                if stem in counted:
+                    matched.append(idfs[stem])
                 norm = 1 - B + B * doc["_len"] / stats["avg_len"]
-                score += idf * (tf * (K1 + 1)) / (tf + K1 * norm)
-            if score > 0 and matched >= required:
+                score += idfs[stem] * (tf * (K1 + 1)) / (tf + K1 * norm)
+            if score > 0 and gate.passes(matched, total_idf, len(counted)):
                 scored.append((score, doc))
         scored.sort(key=lambda pair: pair[0], reverse=True)
         return [
@@ -104,6 +147,9 @@ class BM25Index:
             for score, doc in scored[:k]
             if score >= min_score
         ]
+
+
+DEFAULT_GATE = Gate()
 
 
 class BM25Retriever:

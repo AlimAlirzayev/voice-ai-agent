@@ -1,58 +1,183 @@
 {
   "_note": "Retrieval and abstention golden set for the council's BM25 grounding. Authored with the gate change; gold phrases are verbatim spans of the corpus and are re-checked on every run.",
   "retrieval": [
-    {"id": "nes-incir", "advisor": "nesreddin", "query": "Molla padşaha əncir nübar apardı", "gold": "əncirdən padşaha nübar"},
-    {"id": "nes-eshshek", "advisor": "nesreddin", "query": "Teymur Mollaya dedi ki eşşəklə sənin aranda nə fərq var", "gold": "uzunqulaq bir eşşəklə"},
-    {"id": "nes-geyirmek", "advisor": "nesreddin", "query": "Teymur xörəkdən sonra Mollanın qabağında bərkdən gəyirdi", "gold": "bərkdən gəyirir"},
-    {"id": "nes-qazi", "advisor": "nesreddin", "query": "şəhər qazısının Molladan acığı gəlirdi", "gold": "Şəhər qazısının Molladan çox acığı gəlirdi"},
-    {"id": "nsm-iki-cahan", "advisor": "nesimi", "query": "mənə iki cahan sığar amma bu cahana sığmaram", "gold": "Məndə sığar iki cahan"},
-    {"id": "nsm-iraq", "advisor": "nesimi", "query": "səndən uzaq şam səhər yanıram sənəm", "gold": "Səndən iraq, ey sənəm"},
-    {"id": "nsm-mehebbet", "advisor": "nesimi", "query": "məhəbbət möhkəm işdir qafil olma", "gold": "Məhəbbət möhkəm işdir"},
-    {"id": "nsm-ikilik", "advisor": "nesimi", "query": "ikilikdə qalan əzazil olur", "gold": "Ikilikdə qalan əzazil"},
-    {"id": "niz-soz", "advisor": "nizami", "query": "sözün lətafəti var, az demək daha xoşdur", "gold": "Hər sözü az demək daha xoş olar"},
-    {"id": "niz-ovcu", "advisor": "nizami", "query": "ovçu ilə tülkünün hekayəti", "gold": "OVÇU İLƏ TÜLKÜNÜN HEKAYƏTİ"},
-    {"id": "niz-elci", "advisor": "nizami", "query": "Məcnunun atası Leyliyə elçi getdi", "gold": "MƏCNUNUN ATASININ LEYLİYƏ ELÇİ GETMƏSİ"},
-    {"id": "niz-qenaet", "advisor": "nizami", "query": "şadlıq və qənaət, öz qismətinə şad ol", "gold": "ŞADLIQ VƏ QƏNAƏT"},
-    {"id": "sim-divle", "advisor": "simurg", "query": "Məlikməmməd divlə qırx gün qırx gecə güləşdi", "gold": "qırx gün, qırx gecə güləşib"},
-    {"id": "sim-ejdaha", "advisor": "simurg", "query": "əjdahanın əlindən balalarımı qurtardın bu yaxşılığın əvəzi", "gold": "əjdahanın əlindən bala üzünə həsrət"},
-    {"id": "sim-bulbul", "advisor": "simurg", "query": "bülbül həmd oxuyur quşlar ebcədi əzbərləyir", "gold": "Bülbül \"həmd\" oxumaqda"},
-    {"id": "kor-qirat", "advisor": "koroglu", "query": "Qırat Alapaçanın səsini eşidib dayandı", "gold": "Qırat Alapaçanın səsini eşitcək"},
-    {"id": "kor-dalilar", "advisor": "koroglu", "query": "Koroğlu yeddi min yeddi yüz yetmiş yeddi dəli atlandı", "gold": "yeddi min yeddi yüz yetmiş yeddi dəli atlandı"},
-    {"id": "kor-aslan", "advisor": "koroglu", "query": "Aslan paşa Koroğlunun üç dəlisini asdıracaq", "gold": "Aslan paşa bu gün Koroğlunun üç dəlisini asdıracaq"},
-    {"id": "ded-dirse", "advisor": "dedeqorqud", "query": "oğlu qızı olmayanı Tanrı qarğayıb, Dirsə xan qara otağa qondu", "gold": "oğlı-qızı olmayanı"},
-    {"id": "ded-yuzuk", "advisor": "dedeqorqud", "query": "Beyrək barmağından qızıl üzüyü çıxarıb xan qızına nişan verdi", "gold": "altun yüzügi"},
-    {"id": "ded-domrul", "advisor": "dedeqorqud", "query": "Dəli Domrulun körpüsünün yanında bir yaxşı igid öldü", "gold": "Mənim köprüm yanmda bu qovğa nədir"}
+    {
+      "id": "nes-incir",
+      "advisor": "nesreddin",
+      "query": "Molla padşaha əncir nübar apardı",
+      "gold": "əncirdən padşaha nübar"
+    },
+    {
+      "id": "nes-eshshek",
+      "advisor": "nesreddin",
+      "query": "Teymur Mollaya dedi ki eşşəklə sənin aranda nə fərq var",
+      "gold": "uzunqulaq bir eşşəklə"
+    },
+    {
+      "id": "nes-geyirmek",
+      "advisor": "nesreddin",
+      "query": "Teymur xörəkdən sonra Mollanın qabağında bərkdən gəyirdi",
+      "gold": "bərkdən gəyirir"
+    },
+    {
+      "id": "nes-qazi",
+      "advisor": "nesreddin",
+      "query": "şəhər qazısının Molladan acığı gəlirdi",
+      "gold": "Şəhər qazısının Molladan çox acığı gəlirdi"
+    },
+    {
+      "id": "nsm-iki-cahan",
+      "advisor": "nesimi",
+      "query": "mənə iki cahan sığar amma bu cahana sığmaram",
+      "gold": "Məndə sığar iki cahan"
+    },
+    {
+      "id": "nsm-iraq",
+      "advisor": "nesimi",
+      "query": "səndən uzaq şam səhər yanıram sənəm",
+      "gold": "Səndən iraq, ey sənəm"
+    },
+    {
+      "id": "nsm-mehebbet",
+      "advisor": "nesimi",
+      "query": "məhəbbət möhkəm işdir qafil olma",
+      "gold": "Məhəbbət möhkəm işdir"
+    },
+    {
+      "id": "nsm-ikilik",
+      "advisor": "nesimi",
+      "query": "ikilikdə qalan əzazil olur",
+      "gold": "Ikilikdə qalan əzazil"
+    },
+    {
+      "id": "niz-soz",
+      "advisor": "nizami",
+      "query": "sözün lətafəti var, az demək daha xoşdur",
+      "gold": "Hər sözü az demək daha xoş olar"
+    },
+    {
+      "id": "niz-ovcu",
+      "advisor": "nizami",
+      "query": "ovçu ilə tülkünün hekayəti",
+      "gold": "OVÇU İLƏ TÜLKÜNÜN HEKAYƏTİ"
+    },
+    {
+      "id": "niz-elci",
+      "advisor": "nizami",
+      "query": "Məcnunun atası Leyliyə elçi getdi",
+      "gold": "MƏCNUNUN ATASININ LEYLİYƏ ELÇİ GETMƏSİ"
+    },
+    {
+      "id": "niz-qenaet",
+      "advisor": "nizami",
+      "query": "şadlıq və qənaət, öz qismətinə şad ol",
+      "gold": "ŞADLIQ VƏ QƏNAƏT"
+    },
+    {
+      "id": "sim-divle",
+      "advisor": "simurg",
+      "query": "Məlikməmməd divlə qırx gün qırx gecə güləşdi",
+      "gold": "qırx gün, qırx gecə güləşib"
+    },
+    {
+      "id": "sim-ejdaha",
+      "advisor": "simurg",
+      "query": "əjdahanın əlindən balalarımı qurtardın bu yaxşılığın əvəzi",
+      "gold": "əjdahanın əlindən bala üzünə həsrət"
+    },
+    {
+      "id": "sim-bulbul",
+      "advisor": "simurg",
+      "query": "bülbül həmd oxuyur quşlar ebcədi əzbərləyir",
+      "gold": "Bülbül \"həmd\" oxumaqda"
+    },
+    {
+      "id": "kor-qirat",
+      "advisor": "koroglu",
+      "query": "Qırat Alapaçanın səsini eşidib dayandı",
+      "gold": "Qırat Alapaçanın səsini eşitcək"
+    },
+    {
+      "id": "kor-dalilar",
+      "advisor": "koroglu",
+      "query": "Koroğlu yeddi min yeddi yüz yetmiş yeddi dəli atlandı",
+      "gold": "yeddi min yeddi yüz yetmiş yeddi dəli atlandı"
+    },
+    {
+      "id": "kor-aslan",
+      "advisor": "koroglu",
+      "query": "Aslan paşa Koroğlunun üç dəlisini asdıracaq",
+      "gold": "Aslan paşa bu gün Koroğlunun üç dəlisini asdıracaq"
+    },
+    {
+      "id": "ded-dirse",
+      "advisor": "dedeqorqud",
+      "query": "oğlu qızı olmayanı Tanrı qarğayıb, Dirsə xan qara otağa qondu",
+      "gold": "oğlı-qızı olmayanı"
+    },
+    {
+      "id": "ded-yuzuk",
+      "advisor": "dedeqorqud",
+      "query": "Beyrək barmağından qızıl üzüyü çıxarıb xan qızına nişan verdi",
+      "gold": "altun yüzügi"
+    },
+    {
+      "id": "ded-domrul",
+      "advisor": "dedeqorqud",
+      "query": "Dəli Domrulun körpüsünün yanında bir yaxşı igid öldü",
+      "gold": "Mənim köprüm yanmda bu qovğa nədir"
+    }
   ],
   "abstain": [
-    {"id": "off-python", "advisor": "nesimi", "query": "Python-da siyahını necə sıralayım?"},
-    {"id": "off-bitcoin", "advisor": "koroglu", "query": "Bitcoin-in qiyməti bu gün nə qədərdir?"},
-    {"id": "off-hava", "advisor": "simurg", "query": "Sabah Bakıda hava necə olacaq?"},
-    {"id": "off-iphone", "advisor": "nesreddin", "query": "iPhone ilə Samsung telefonunun hansı daha yaxşıdır?"},
-    {"id": "off-vergi", "advisor": "nizami", "query": "Vergi bəyannaməsini necə doldurum?"},
-    {"id": "off-pizza", "advisor": "dedeqorqud", "query": "Evdə pizza resepti ver"},
-    {"id": "off-qarabag", "advisor": "koroglu", "query": "Qarabağ dünənki oyunda neçə xal topladı?"},
-    {"id": "off-excel", "advisor": "nizami", "query": "Excel-də iki cədvəli necə birləşdirim?"},
-    {"id": "off-tercume", "advisor": "nesimi", "query": "Bu cümləni ingilis dilinə tərcümə et"},
-    {"id": "off-tenlik", "advisor": "simurg", "query": "x kvadrat üstəgəl iki x bərabərdir səkkiz tənliyini həll et"}
-  ],
-  "council_scope": [
-    {"id": "scope-python", "query": "Python-da siyahını necə sıralayım?", "out_of_scope": true},
-    {"id": "scope-bitcoin", "query": "Bitcoin-in qiyməti bu gün nə qədərdir?", "out_of_scope": true},
-    {"id": "scope-hava", "query": "Sabah Bakıda hava necə olacaq?", "out_of_scope": true},
-    {"id": "scope-iphone", "query": "iPhone ilə Samsung telefonunun hansı daha yaxşıdır?", "out_of_scope": true},
-    {"id": "scope-vergi", "query": "Vergi bəyannaməsini necə doldurum?", "out_of_scope": true},
-    {"id": "scope-pizza", "query": "Evdə pizza resepti ver", "out_of_scope": true},
-    {"id": "scope-futbol-hesab", "query": "Qarabağ dünənki oyunda neçə xal topladı?", "out_of_scope": true},
-    {"id": "scope-excel", "query": "Excel-də iki cədvəli necə birləşdirim?", "out_of_scope": true},
-    {"id": "scope-tercume", "query": "Bu cümləni ingilis dilinə tərcümə et", "out_of_scope": true},
-    {"id": "scope-kod", "query": "JavaScript ilə sayt üçün giriş formu kodu yaz", "out_of_scope": true},
-    {"id": "border-futbol-kapitan", "query": "Futbol komandasının kapitanıyam, komanda dağılır, nə edim?", "out_of_scope": false},
-    {"id": "border-biznes", "query": "İşimdən çıxıb öz biznesimi qurmaq istəyirəm, amma qorxuram.", "out_of_scope": false},
-    {"id": "border-pul-dost", "query": "Dostum borc pul alıb qaytarmır, nə edim?", "out_of_scope": false},
-    {"id": "border-programci", "query": "Proqramçıyam, rəisim məni hamının qabağında kiçildir.", "out_of_scope": false},
-    {"id": "border-hava-ruh", "query": "Havalar soyuyub, içimdə də bir kədər var.", "out_of_scope": false},
-    {"id": "border-nesimi", "query": "Nəsimi kimdir və niyə dərisi soyulub?", "out_of_scope": false},
-    {"id": "border-koroglu-kredit", "query": "Koroğlu kimi cəsarətlə kredit götürüb ev alım?", "out_of_scope": false},
-    {"id": "border-tercume-sozu", "query": "Dədə Qorqudun bu sözü mənə nə öyrədir?", "out_of_scope": false}
+    {
+      "id": "off-python",
+      "advisor": "nesimi",
+      "query": "Python-da siyahını necə sıralayım?"
+    },
+    {
+      "id": "off-bitcoin",
+      "advisor": "koroglu",
+      "query": "Bitcoin-in qiyməti bu gün nə qədərdir?"
+    },
+    {
+      "id": "off-hava",
+      "advisor": "simurg",
+      "query": "Sabah Bakıda hava necə olacaq?"
+    },
+    {
+      "id": "off-iphone",
+      "advisor": "nesreddin",
+      "query": "iPhone ilə Samsung telefonunun hansı daha yaxşıdır?"
+    },
+    {
+      "id": "off-vergi",
+      "advisor": "nizami",
+      "query": "Vergi bəyannaməsini necə doldurum?"
+    },
+    {
+      "id": "off-pizza",
+      "advisor": "dedeqorqud",
+      "query": "Evdə pizza resepti ver"
+    },
+    {
+      "id": "off-qarabag",
+      "advisor": "koroglu",
+      "query": "Qarabağ dünənki oyunda neçə xal topladı?"
+    },
+    {
+      "id": "off-excel",
+      "advisor": "nizami",
+      "query": "Excel-də iki cədvəli necə birləşdirim?"
+    },
+    {
+      "id": "off-tercume",
+      "advisor": "nesimi",
+      "query": "Bu cümləni ingilis dilinə tərcümə et"
+    },
+    {
+      "id": "off-tenlik",
+      "advisor": "simurg",
+      "query": "x kvadrat üstəgəl iki x bərabərdir səkkiz tənliyini həll et"
+    }
   ]
 }
