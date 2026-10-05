@@ -1,6 +1,6 @@
 """Offline retrieval, citation and abstention evaluation (no network, no LLM).
 
-    python -m app.evals.offline [--json] [--no-gate]
+    python -m app.evals.offline [--json] [--no-gate] [--heldout]
 
 Scores the council's BM25 grounding against `persona_golden.json`:
 
@@ -15,6 +15,9 @@ Scores the council's BM25 grounding against `persona_golden.json`:
                      host while borderline in-scope questions still reach it
 
 Exit code 1 when a gate in `GATES` is missed, so CI can run it as a step.
+`--heldout` scores `persona_golden_heldout.json` instead: cases written after the
+thresholds and scope patterns were frozen, so they were never used to pick them.
+That run is report-only (no gate), to keep it from becoming a second tuning set.
 """
 
 from __future__ import annotations
@@ -30,6 +33,7 @@ from app.rag.bm25 import BM25Index, az_lower
 from app.rag.ingest import collect_chunks
 
 GOLDEN = Path(__file__).with_name("persona_golden.json")
+HELDOUT = Path(__file__).with_name("persona_golden_heldout.json")
 K = bm25.TOP_K
 QUOTE_LEN = 160  # app/graph/builder.py: citation["quote"] = text[:160]
 GATES_MAX = {"markup_chunks": 0}
@@ -115,7 +119,8 @@ def _unfloored(index: BM25Index, case: dict, k: int) -> list[dict]:
 
 
 def main(argv: list[str]) -> int:
-    golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
+    heldout = "--heldout" in argv
+    golden = json.loads((HELDOUT if heldout else GOLDEN).read_text(encoding="utf-8"))
     result = evaluate(golden, gate="--no-gate" not in argv)
     if "--json" in argv:
         print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -129,9 +134,12 @@ def main(argv: list[str]) -> int:
                 print("  cited off-topic:", row["id"], row["cited"])
         for rid in result["scope_fail"]:
             print("  scope miss:", rid)
+        for row in result["retrieval_rows"]:
+            if row.get("rank") is None and "unfaithful" not in row:
+                print("  not in top-k:", row["id"], "(deep rank", row["deep_rank"], ")")
     missed = [g for g, floor in GATES.items() if result[g] < floor]
     missed += [g for g, ceiling in GATES_MAX.items() if result[g] > ceiling]
-    if missed and "--no-gate" not in argv:
+    if missed and "--no-gate" not in argv and not heldout:
         print("GATE MISSED:", ", ".join(missed))
         return 1
     return 0
