@@ -71,7 +71,11 @@ _OUT_OF_SCOPE = re.compile("|".join(_OUT_OF_SCOPE_PATTERNS), re.IGNORECASE | re.
 
 def is_out_of_scope(text: str) -> bool:
     """True for a plain task request the council cannot ground in its sources
-    (code, quotes, weather, recipes, scores, translation, tax forms)."""
+    (code, quotes, weather, recipes, scores, translation, tax forms).
+
+    Measured limit: the patterns were written against the tuning set and catch
+    none of the 12 off-topic questions in the held-out set
+    (persona_golden_heldout.json). A narrow stopgap, not a topic classifier."""
     return bool(_OUT_OF_SCOPE.search(text or ""))
 
 

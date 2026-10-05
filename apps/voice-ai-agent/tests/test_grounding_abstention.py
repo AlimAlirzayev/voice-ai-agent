@@ -156,3 +156,15 @@ def test_default_gate_only_ever_removes_hits():
         gated = {h["ref"] for h in index.search(case["advisor"], case["query"], 50)}
         loose = {h["ref"] for h in index.search(case["advisor"], case["query"], 50, min_matched=1)}
         assert gated <= loose
+
+
+def test_heldout_set_is_independent_and_the_retrieval_gate_generalises():
+    held = json.loads(offline.HELDOUT.read_text(encoding="utf-8"))
+    tuned = _golden()
+    queries = lambda g: {c["query"] for k in ("retrieval", "abstain", "council_scope") for c in g[k]}  # noqa: E731
+    assert not queries(held) & queries(tuned)
+    assert len(held["abstain"]) + len(held["council_scope"]) >= 20
+    result = offline.evaluate(held)  # asserts every gold span exists in the corpus
+    assert result["abstention"] >= 0.9 and result["hit_at_k"] >= 0.85
+    assert result["faithfulness"] == 1.0 and result["borderline_pass"] == 1.0
+    # scope_abstention is deliberately NOT asserted: the keyword gate scores 0/12 here (see report).
