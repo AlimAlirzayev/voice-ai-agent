@@ -1,0 +1,299 @@
+{
+ "_note": "Grounding cases for the citation gate (python -m app.evals.gate_sweep; tests/test_grounding_abstention.py). 'tuning' was written together with the gate; 'heldout' was written after the first gate version was frozen (commit 52dde5f of the abandoned pre-rebase branch) and did not choose it - but the rule has since been retuned against persona_golden.json plus both sets, so treat 'heldout' as a second tuning set from now on. retrieval: gold = verbatim corpus span; abstain: off-topic questions that must retrieve nothing. Authored by the brief's implementer, not the owner.",
+ "tuning": {
+  "retrieval": [
+   {
+    "id": "nes-incir",
+    "advisor": "nesreddin",
+    "query": "Molla padşaha əncir nübar apardı",
+    "gold": "əncirdən padşaha nübar"
+   },
+   {
+    "id": "nes-eshshek",
+    "advisor": "nesreddin",
+    "query": "Teymur Mollaya dedi ki eşşəklə sənin aranda nə fərq var",
+    "gold": "uzunqulaq bir eşşəklə"
+   },
+   {
+    "id": "nes-geyirmek",
+    "advisor": "nesreddin",
+    "query": "Teymur xörəkdən sonra Mollanın qabağında bərkdən gəyirdi",
+    "gold": "bərkdən gəyirir"
+   },
+   {
+    "id": "nes-qazi",
+    "advisor": "nesreddin",
+    "query": "şəhər qazısının Molladan acığı gəlirdi",
+    "gold": "Şəhər qazısının Molladan çox acığı gəlirdi"
+   },
+   {
+    "id": "nsm-iki-cahan",
+    "advisor": "nesimi",
+    "query": "mənə iki cahan sığar amma bu cahana sığmaram",
+    "gold": "Məndə sığar iki cahan"
+   },
+   {
+    "id": "nsm-iraq",
+    "advisor": "nesimi",
+    "query": "səndən uzaq şam səhər yanıram sənəm",
+    "gold": "Səndən iraq, ey sənəm"
+   },
+   {
+    "id": "nsm-mehebbet",
+    "advisor": "nesimi",
+    "query": "məhəbbət möhkəm işdir qafil olma",
+    "gold": "Məhəbbət möhkəm işdir"
+   },
+   {
+    "id": "nsm-ikilik",
+    "advisor": "nesimi",
+    "query": "ikilikdə qalan əzazil olur",
+    "gold": "Ikilikdə qalan əzazil"
+   },
+   {
+    "id": "niz-soz",
+    "advisor": "nizami",
+    "query": "sözün lətafəti var, az demək daha xoşdur",
+    "gold": "Hər sözü az demək daha xoş olar"
+   },
+   {
+    "id": "niz-ovcu",
+    "advisor": "nizami",
+    "query": "ovçu ilə tülkünün hekayəti",
+    "gold": "OVÇU İLƏ TÜLKÜNÜN HEKAYƏTİ"
+   },
+   {
+    "id": "niz-elci",
+    "advisor": "nizami",
+    "query": "Məcnunun atası Leyliyə elçi getdi",
+    "gold": "MƏCNUNUN ATASININ LEYLİYƏ ELÇİ GETMƏSİ"
+   },
+   {
+    "id": "niz-qenaet",
+    "advisor": "nizami",
+    "query": "şadlıq və qənaət, öz qismətinə şad ol",
+    "gold": "ŞADLIQ VƏ QƏNAƏT"
+   },
+   {
+    "id": "sim-divle",
+    "advisor": "simurg",
+    "query": "Məlikməmməd divlə qırx gün qırx gecə güləşdi",
+    "gold": "qırx gün, qırx gecə güləşib"
+   },
+   {
+    "id": "sim-ejdaha",
+    "advisor": "simurg",
+    "query": "əjdahanın əlindən balalarımı qurtardın bu yaxşılığın əvəzi",
+    "gold": "əjdahanın əlindən bala üzünə həsrət"
+   },
+   {
+    "id": "sim-bulbul",
+    "advisor": "simurg",
+    "query": "bülbül həmd oxuyur quşlar ebcədi əzbərləyir",
+    "gold": "Bülbül \"həmd\" oxumaqda"
+   },
+   {
+    "id": "kor-qirat",
+    "advisor": "koroglu",
+    "query": "Qırat Alapaçanın səsini eşidib dayandı",
+    "gold": "Qırat Alapaçanın səsini eşitcək"
+   },
+   {
+    "id": "kor-dalilar",
+    "advisor": "koroglu",
+    "query": "Koroğlu yeddi min yeddi yüz yetmiş yeddi dəli atlandı",
+    "gold": "yeddi min yeddi yüz yetmiş yeddi dəli atlandı"
+   },
+   {
+    "id": "kor-aslan",
+    "advisor": "koroglu",
+    "query": "Aslan paşa Koroğlunun üç dəlisini asdıracaq",
+    "gold": "Aslan paşa bu gün Koroğlunun üç dəlisini asdıracaq"
+   },
+   {
+    "id": "ded-dirse",
+    "advisor": "dedeqorqud",
+    "query": "oğlu qızı olmayanı Tanrı qarğayıb, Dirsə xan qara otağa qondu",
+    "gold": "oğlı-qızı olmayanı"
+   },
+   {
+    "id": "ded-yuzuk",
+    "advisor": "dedeqorqud",
+    "query": "Beyrək barmağından qızıl üzüyü çıxarıb xan qızına nişan verdi",
+    "gold": "altun yüzügi"
+   },
+   {
+    "id": "ded-domrul",
+    "advisor": "dedeqorqud",
+    "query": "Dəli Domrulun körpüsünün yanında bir yaxşı igid öldü",
+    "gold": "Mənim köprüm yanmda bu qovğa nədir"
+   }
+  ],
+  "abstain": [
+   {
+    "id": "off-python",
+    "advisor": "nesimi",
+    "query": "Python-da siyahını necə sıralayım?"
+   },
+   {
+    "id": "off-bitcoin",
+    "advisor": "koroglu",
+    "query": "Bitcoin-in qiyməti bu gün nə qədərdir?"
+   },
+   {
+    "id": "off-hava",
+    "advisor": "simurg",
+    "query": "Sabah Bakıda hava necə olacaq?"
+   },
+   {
+    "id": "off-iphone",
+    "advisor": "nesreddin",
+    "query": "iPhone ilə Samsung telefonunun hansı daha yaxşıdır?"
+   },
+   {
+    "id": "off-vergi",
+    "advisor": "nizami",
+    "query": "Vergi bəyannaməsini necə doldurum?"
+   },
+   {
+    "id": "off-pizza",
+    "advisor": "dedeqorqud",
+    "query": "Evdə pizza resepti ver"
+   },
+   {
+    "id": "off-qarabag",
+    "advisor": "koroglu",
+    "query": "Qarabağ dünənki oyunda neçə xal topladı?"
+   },
+   {
+    "id": "off-excel",
+    "advisor": "nizami",
+    "query": "Excel-də iki cədvəli necə birləşdirim?"
+   },
+   {
+    "id": "off-tercume",
+    "advisor": "nesimi",
+    "query": "Bu cümləni ingilis dilinə tərcümə et"
+   },
+   {
+    "id": "off-tenlik",
+    "advisor": "simurg",
+    "query": "x kvadrat üstəgəl iki x bərabərdir səkkiz tənliyini həll et"
+   }
+  ]
+ },
+ "heldout": {
+  "retrieval": [
+   {
+    "id": "ho-nuširəvan",
+    "advisor": "nizami",
+    "query": "Nuşirəvan və vəzir bayquşların söhbətini ovda eşitdi",
+    "gold": "NUŞİRƏVANLA VƏZİRİ VƏ BAYQUŞLARIN SÖHBƏTİ"
+   },
+   {
+    "id": "ho-qari",
+    "advisor": "nizami",
+    "query": "qarı Sultan Səncərə şikayət etdi, darğa onu daxmadan atmışdı",
+    "gold": "QARI VƏ SULTAN SƏNCƏR DASTANI"
+   },
+   {
+    "id": "ho-suleyman",
+    "advisor": "nizami",
+    "query": "Süleyman səhrada qoca əkinçiyə dən verdi",
+    "gold": "SÜLEYMAN VƏ QOCA ƏKİNÇİ"
+   },
+   {
+    "id": "ho-nesimiyem",
+    "advisor": "nesimi",
+    "query": "mən Nəsimiyəm, haşimiyəm, qureyşiyəm, ayətim bundan uludur",
+    "gold": "Gərçi bu gün Nəsimiyəm"
+   },
+   {
+    "id": "ho-can-cahan",
+    "advisor": "nesimi",
+    "query": "can ilə cahan mənəm, dəhr ilə zaman mənəm",
+    "gold": "Can ilə həm cahan mənəm"
+   },
+   {
+    "id": "ho-qoyun-sutu",
+    "advisor": "koroglu",
+    "query": "Koroğlu tapdığı uşağı qoyun südü ilə böyütməyə başladı",
+    "gold": "Qoyun südü pişirif uşağı yedizdirdi"
+   },
+   {
+    "id": "ho-dustaq",
+    "advisor": "nesreddin",
+    "query": "fərraşlar qapıda oturan Mollanı da dustaq kimi təhvil verdilər",
+    "gold": "Mollanı da tutub dustaq adına təhvil verirlər"
+   },
+   {
+    "id": "ho-baldir",
+    "advisor": "simurg",
+    "query": "Məlikməmməd baldırının ətini quşa yedizdirdi və axsayırdı",
+    "gold": "baldırımın əti"
+   }
+  ],
+  "abstain": [
+   {
+    "id": "ho-off-notion",
+    "advisor": "nesimi",
+    "query": "Notion-da layihə şablonunu necə qurum?"
+   },
+   {
+    "id": "ho-off-bankomat",
+    "advisor": "koroglu",
+    "query": "Ən yaxın bankomat harada yerləşir?"
+   },
+   {
+    "id": "ho-off-paytaxt",
+    "advisor": "dedeqorqud",
+    "query": "Azərbaycanın paytaxtı hansı şəhərdir?"
+   },
+   {
+    "id": "ho-off-dag",
+    "advisor": "simurg",
+    "query": "Dünyanın ən hündür dağı hansıdır?"
+   },
+   {
+    "id": "ho-off-cv",
+    "advisor": "nizami",
+    "query": "Mənə LinkedIn üçün CV nümunəsi hazırla."
+   },
+   {
+    "id": "ho-off-yag",
+    "advisor": "nesreddin",
+    "query": "Avtomobilin mühərrik yağını neçə kilometrdən bir dəyişmək lazımdır?"
+   },
+   {
+    "id": "ho-off-komp",
+    "advisor": "nesimi",
+    "query": "Kompüterim yavaş işləyir, nə edim?"
+   },
+   {
+    "id": "ho-off-dollar",
+    "advisor": "koroglu",
+    "query": "Dollar bu gün neçə manatdır?"
+   },
+   {
+    "id": "ho-off-bilet",
+    "advisor": "nizami",
+    "query": "Bakıdan İstanbula təyyarə bileti nə qədərdir?"
+   },
+   {
+    "id": "ho-off-ml",
+    "advisor": "simurg",
+    "query": "Maşın öyrənməsi nədir, sadə izah et."
+   },
+   {
+    "id": "ho-off-protein",
+    "advisor": "dedeqorqud",
+    "query": "Hansı proteinli yeməklər arıqlamağa kömək edir?"
+   },
+   {
+    "id": "ho-off-batareya",
+    "advisor": "nesreddin",
+    "query": "Telefonumun batareyası tez bitir, düzəltmək olar?"
+   }
+  ]
+ }
+}

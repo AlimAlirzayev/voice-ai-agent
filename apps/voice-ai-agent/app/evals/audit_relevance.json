@@ -1,0 +1,9 @@
+{
+  "_note": "Author's verdicts (not the owner's) on the OLD top citation (score floor only) for each audit_set.json question. yes = the passage speaks to the question; weak = thematically near but the match is not about the asked point; no = lexical accident. Passages are quoted in reports/d01-divan-reinforcement-d03-divan-grounding.md so the owner can overrule any verdict.",
+  "nesreddin-qonsu": "no", "nesreddin-reis": "no", "nesreddin-qerar": "no",
+  "koroglu-biznes": "no", "koroglu-haqq": "no", "koroglu-ses": "no",
+  "simurg-mena": "no", "simurg-bosluq": "no", "simurg-telesmek": "no",
+  "nesimi-deyer": "weak", "nesimi-fikir": "no", "nesimi-senet": "none",
+  "dedeqorqud-miras": "no", "dedeqorqud-toy": "weak", "dedeqorqud-ana": "no",
+  "nizami-sevgi": "weak", "nizami-edalet": "no", "nizami-evlilik": "weak"
+}

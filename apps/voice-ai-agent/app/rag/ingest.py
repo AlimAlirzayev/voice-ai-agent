@@ -41,6 +41,28 @@ def parse_source(path: Path) -> tuple[dict, str]:
     return meta, "\n".join(lines[body_start:]).strip()
 
 
+_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
+_WIKI_FILE = re.compile(r"\[\[(?:Fayl|File|Şəkil|Image):[^\]]*\]\]", re.IGNORECASE)
+_MEDIA_OPTION_LINE = re.compile(r"^\s*(?:thumb(?:nail)?|miniatür|frame|frameless)\s*$",
+                                re.IGNORECASE | re.MULTILINE)
+
+
+def strip_markup(body: str) -> str:
+    """Drop wiki apparatus that survived the fetch: `{{Başlıq | ...}}` header
+    templates (Nəsimi rübailər), file embeds and bare image options such as
+    the lone `thumbnail` line that opened the Zümrüd quşu tale. The corpus
+    files stay as transcribed; this runs at load time (per chunk, after refs
+    are assigned) so a citation never quotes markup and never changes its ref,
+    and so a re-fetched source is cleaned the same way."""
+    previous = None
+    while previous != body:  # templates can nest
+        previous = body
+        body = _TEMPLATE.sub("", body)
+    body = _WIKI_FILE.sub("", body)
+    body = _MEDIA_OPTION_LINE.sub("", body)
+    return re.sub(r"\n{3,}", "\n\n", body).strip()
+
+
 def chunk_poem(body: str) -> list[tuple[str, str]]:
     parts = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
     chunks: list[str] = []
@@ -110,16 +132,23 @@ def is_usable(body: str) -> bool:
 
 
 def collect_chunks() -> list[dict]:
+    """Chunk every corpus file. Refs are numbered on the file as transcribed and
+    markup is stripped per chunk afterwards, so a citation ref never moves when
+    debris is removed: Rübailər "bənd 2" is still "bənd 2" (its "bənd 1" was only
+    the `{{Başlıq}}` template and no longer exists as a citable chunk)."""
     chunks = []
     for path in sorted(CORPUS_DIR.rglob("*.txt")):
         meta, body = parse_source(path)
         if not body or "advisor" not in meta:
             continue
-        if not is_usable(body):
+        if not is_usable(strip_markup(body)):
             print(f"SKIP (failed validation): {path.relative_to(CORPUS_DIR)}")
             continue
         chunker = chunk_poem if meta.get("type") == "poem" else chunk_prose
-        for text, ref in chunker(body):
+        for raw_text, ref in chunker(body):
+            text = strip_markup(raw_text)
+            if not text:
+                continue
             chunks.append({
                 "advisor": meta["advisor"],
                 "work": meta.get("work", path.stem),
