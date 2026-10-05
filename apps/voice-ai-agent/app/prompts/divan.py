@@ -276,7 +276,9 @@ NARRATION_HITL = _reg["hitl"]
 NARRATION_SYNTHESIS = _reg["synthesis"]
 
 
-def supervisor_prompt(consulted: list[str] | None = None) -> str:
+def supervisor_prompt(consulted: list[str] | None = None, *, multi: bool = False) -> str:
+    """`multi=True` is the single-call council: the router may name both members
+    at once, so it is never asked a second time."""
     consulted = consulted or []
     lines = "\n".join(
         f"- {key.upper()} ({info['name']}): {info['domain']}"
@@ -288,6 +290,12 @@ def supervisor_prompt(consulted: list[str] | None = None) -> str:
         names = ", ".join(ROSTER[k]["name"] for k in consulted if k in ROSTER)
         spoken = (f"\nBu sual üzrə artıq danışıb: {names}. Onu yenidən seçmə. İkinci üzv yalnız "
                   "sual açıq-aydın başqa bir sahəyə də aiddirsə lazımdır; əks halda YEKUN de.\n")
+    if multi:
+        answer_rule = (f"Yalnız bir söz ilə cavab ver: {tokens} və ya YEKUN. Yalnız sual açıq-aydın iki "
+                       "sahəyə aiddirsə, iki söz yaz, danışma sırası ilə, boşluqla ayır "
+                       "(məsələn: SIMURG KOROGLU). Başqa heç nə yazma.")
+    else:
+        answer_rule = f"Yalnız bir söz ilə cavab ver: {tokens} və ya YEKUN. Başqa heç nə yazma."
     return f"""Sən 'Divan' adlı əfsanəvi məsləhətçilər şurasının rəhbərisən (Divanbəyi).
 Şurada bu əfsanəvi üzvlər var:
 {lines}
@@ -298,7 +306,7 @@ fərqli sahəyə aid olanda seç (məsələn, həm ailə barışığı, həm cə
 Nəsrəddin yalnız sualın özündə gülüşə, tərs məntiqə ehtiyac olanda danışır.
 Salamlaşma, hal-əhval, şuraya aid olmayan söz — YEKUN.
 
-Yalnız bir söz ilə cavab ver: {tokens} və ya YEKUN. Başqa heç nə yazma."""
+{answer_rule}"""
 
 
 def prior_words_note(opinions: list[dict]) -> str:

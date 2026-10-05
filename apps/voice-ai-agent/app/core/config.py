@@ -183,6 +183,17 @@ class Settings(BaseSettings):
     # above the Claude CLI worst case for a two-advisor turn.
     TURN_TIMEOUT_SECONDS: float = 300.0
 
+    # How the council is convened. "single_call" (default): ONE router call
+    # names up to two members, who then speak in turn - 2 model calls for a
+    # one-member turn, 3 for two members. "iterative": the pre-d02 behaviour,
+    # the router is asked again after every member (3 / 4 calls); kept as a
+    # rollback switch.
+    COUNCIL_ROUTING: str = "single_call"
+
+    # Upper bound on simultaneous TTS requests for one reply (the segments of a
+    # reply are synthesized in parallel). 1 = serial, the pre-d02 behaviour.
+    TTS_CONCURRENCY: int = 4
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         extra="ignore",

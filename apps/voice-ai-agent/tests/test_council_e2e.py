@@ -2,58 +2,16 @@
 whole council path (routing -> advisors -> HITL -> memory -> voice segments)
 runs for real, only the paid providers are scripted."""
 
-import pytest
-from fastapi.testclient import TestClient
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
 import app.api.voice as voice_api
-import app.graph.builder as builder
 from app.core.config import settings
 from app.evals.fakes import ScriptedCouncilModel
 from app.graph import build_graph, run_turn
-from app.main import app
 from app.memory.sqlite import Checkpointer
 from app.services.llm import LLMError
 from app.services.voice import VoiceError
-
-
-@pytest.fixture
-def make_client(monkeypatch, tmp_path):
-    """Factory: `make_client(model)` -> a TestClient whose council uses `model`."""
-    stack = []
-
-    def _make(model, **settings_overrides):
-        monkeypatch.setattr(settings, "SQLITE_PATH", str(tmp_path / "c.sqlite"))
-        monkeypatch.setattr(settings, "FEEDBACK_PATH", str(tmp_path / "f.sqlite"))
-        for key, value in settings_overrides.items():
-            monkeypatch.setattr(settings, key, value)
-        monkeypatch.setattr(builder, "build_llm", lambda: model)
-        client = TestClient(app)
-        client.__enter__()
-        stack.append(client)
-        return client
-
-    yield _make
-    for client in stack:
-        client.__exit__(None, None, None)
-
-
-@pytest.fixture
-def spoken(monkeypatch):
-    """Replace STT/TTS; `spoken` records (text, advisor) for every synthesized clip."""
-    clips: list[tuple[str, str | None]] = []
-
-    async def fake_transcribe(audio, filename):
-        return audio.decode()
-
-    async def fake_synthesize(text, advisor=None):
-        clips.append((text, advisor))
-        return b"OGG", "audio/ogg", "fake"
-
-    monkeypatch.setattr(voice_api, "transcribe", fake_transcribe)
-    monkeypatch.setattr(voice_api, "synthesize", fake_synthesize)
-    return clips
 
 
 def _voice(client, text, thread="v1"):
@@ -62,8 +20,8 @@ def _voice(client, text, thread="v1"):
 
 # ---------------------------------------------------------------- chat
 def test_chat_hitl_approve_edit_and_reject_over_http(make_client):
-    # one router script per turn: Koroğlu, then the council is done (x3 threads)
-    client = make_client(ScriptedCouncilModel(route=["KOROGLU", "YEKUN"] * 3, reply="Qalx, irəli get."))
+    # one router call per turn (single-call routing): Koroğlu, x3 threads
+    client = make_client(ScriptedCouncilModel(route=["KOROGLU"] * 3, reply="Qalx, irəli get."))
 
     paused = client.post("/chat", json={"message": "Riskli addım atım?", "thread_id": "a"}).json()
     assert paused["status"] == "pending_approval"
@@ -93,7 +51,7 @@ def test_new_message_on_a_paused_thread_returns_the_pending_approval_not_a_new_r
 
 
 def test_two_advisors_speak_in_order_and_the_second_hears_the_first(make_client):
-    model = ScriptedCouncilModel(route=["NESIMI", "NIZAMI"], reply="Söz.")
+    model = ScriptedCouncilModel(route="NESIMI NIZAMI", reply="Söz.")
     client = make_client(model)
     body = client.post("/chat", json={"message": "Sevgidə özümü itirirəm", "thread_id": "two"}).json()
     assert body["consulted"] == ["nesimi", "nizami"]
@@ -104,7 +62,7 @@ def test_two_advisors_speak_in_order_and_the_second_hears_the_first(make_client)
 
 
 def test_council_never_exceeds_two_advisors(make_client):
-    model = ScriptedCouncilModel(route=["NESIMI", "NIZAMI", "SIMURG", "KOROGLU"])
+    model = ScriptedCouncilModel(route="NESIMI NIZAMI SIMURG KOROGLU")
     client = make_client(model)
     body = client.post("/chat", json={"message": "Çox mövzulu sual", "thread_id": "cap"}).json()
     assert len(body["consulted"]) == 2
@@ -122,7 +80,7 @@ def test_llm_failure_is_a_clean_503(make_client):
 
 # ---------------------------------------------------------------- voice
 def test_voice_round_trip_speaks_each_member_in_their_own_voice(make_client, spoken):
-    client = make_client(ScriptedCouncilModel(route=["NESIMI", "NIZAMI"], reply="Bir söz."))
+    client = make_client(ScriptedCouncilModel(route="NESIMI NIZAMI", reply="Bir söz."))
     body = _voice(client, "Sevgidə özümü itirirəm").json()
     assert body["transcript"] == "Sevgidə özümü itirirəm"
     voices = [(s["advisor"], s["name"]) for s in body["segments"]]
@@ -204,7 +162,7 @@ async def test_history_is_trimmed_to_the_configured_window(monkeypatch):
 
 
 async def test_per_turn_scratch_does_not_leak_into_the_next_turn():
-    graph = build_graph(InMemorySaver(), ScriptedCouncilModel(route=["NESIMI", "YEKUN"]))
+    graph = build_graph(InMemorySaver(), ScriptedCouncilModel(route="NESIMI"))
     first = await run_turn(graph, "Dəyərsizəm", "leak")
     assert first.consulted == ["nesimi"]
     second = await run_turn(graph, "Sağ ol", "leak")  # router: YEKUN

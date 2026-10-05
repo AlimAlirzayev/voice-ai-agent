@@ -106,6 +106,30 @@ def resolve_route(raw: str, remaining: list[str]) -> str | None:
     return key if key in remaining else None
 
 
+def resolve_routes(raw: str, remaining: list[str], limit: int = MAX_ADVISORS) -> list[str]:
+    """The members a single-call router named, in speaking order (at most
+    `limit`). Same first-word rule as `resolve_route`: nothing is named unless
+    the answer OPENS with a member. A second member counts only when it comes
+    directly after the first (space, comma, "+", "/", "&"), so prose that
+    happens to mention another name later never summons them."""
+    first = resolve_route(raw, remaining)
+    if first is None:
+        return []
+    picked = [first]
+    rest = _fold(raw or "")
+    rest = rest[re.match(r"\W*\w+", rest).end():]
+    follow = re.match(r"[\s,+/&]+(\w+)", rest)
+    if follow and limit > 1:
+        second = _route_aliases().get(follow.group(1))
+        if second in remaining and second != first:
+            picked.append(second)
+    return picked[:limit]
+
+
+def _single_call() -> bool:
+    return settings.COUNCIL_ROUTING != "iterative"
+
+
 class NoPendingApproval(ValueError):
     """`resume_turn` was called on a thread that is not paused at the approval
     gate (never started, already resolved, or the id is wrong)."""
@@ -140,6 +164,7 @@ class ChatState(TypedDict):
     needs_approval: bool
     narration: list[str]
     citations: list[dict]
+    plan: list[str]  # single-call routing: members still to speak, in order
 
 
 @dataclass
@@ -195,6 +220,7 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
             "needs_approval": False,
             "narration": [],
             "citations": [],
+            "plan": [],
         }
 
     async def supervisor(state: ChatState) -> Command:
@@ -208,12 +234,25 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
         if not remaining or len(consulted) >= MAX_ADVISORS or hops > MAX_ADVISORS + 2:
             return Command(update={"hops": hops, "narration": narration}, goto="synthesize")
 
+        single = _single_call()
         decision = await ainvoke_with_retry(
             get_model(),
-            [SystemMessage(content=supervisor_prompt(consulted)), *state["messages"]],
+            [SystemMessage(content=supervisor_prompt(consulted, multi=single)), *state["messages"]],
             label="llm-supervisor",
         )
         raw = (decision.content or "").strip()
+        if single:
+            # One router call convenes the whole council (d02/B1): the members
+            # it named speak in turn, the router is not asked again.
+            plan = resolve_routes(raw, remaining)
+            if not plan:
+                if raw and not raw.lower().startswith("yek"):
+                    log.warning("supervisor gave no usable route, ending the council: %.80r", raw)
+                return Command(update={"hops": hops, "narration": narration}, goto="synthesize")
+            for key in plan:
+                if key in NARRATION_ROUTING:
+                    narration = [*narration, NARRATION_ROUTING[key]]
+            return Command(update={"hops": hops, "narration": narration, "plan": plan[1:]}, goto=plan[0])
         next_node = resolve_route(raw, remaining)
 
         # Measured 2026-09-25: on the second hop the router was never told who
@@ -269,14 +308,16 @@ def build_graph(checkpointer, llm: BaseChatModel | None = None):
                  "ref": e["ref"], "quote": e["text"][:160], "source": e["source"]}
                 for e in evidence
             ]
-            return Command(
-                update={
-                    "opinions": state.get("opinions", []) + [opinion],
-                    "consulted": state.get("consulted", []) + [key],
-                    "citations": state.get("citations", []) + new_citations,
-                },
-                goto="supervisor",
-            )
+            update = {
+                "opinions": state.get("opinions", []) + [opinion],
+                "consulted": state.get("consulted", []) + [key],
+                "citations": state.get("citations", []) + new_citations,
+            }
+            plan = state.get("plan", []) if _single_call() else []
+            if _single_call():
+                update["plan"] = plan[1:]
+                return Command(update=update, goto=plan[0] if plan else "synthesize")
+            return Command(update=update, goto="supervisor")
 
         return advisor
 
@@ -488,6 +529,57 @@ async def run_turn(
         )
     )
     return _extract_result(raw)
+
+
+async def stream_turn(
+    graph,
+    message: str,
+    thread_id: str,
+    *,
+    channel: str = "api",
+    modality: str = "text",
+):
+    """Run one turn and yield events as the council produces them (d02/B5):
+
+        ("narration", str)   a Divanbəyi line, as soon as the router decided
+        ("opinion", dict)    one member's finished words, before the next speaks
+        ("result", TurnResult)  last event; same object `run_turn` returns
+
+    The guardrails and the turn budget are `run_turn`'s. `LLMError` is raised
+    from the generator, like the non-streaming path raises it."""
+    message = sanitize_user_text(message)
+    if is_self_harm_risk(message):
+        yield "result", await run_turn(graph, message, thread_id, channel=channel, modality=modality)
+        return
+
+    budget = settings.TURN_TIMEOUT_SECONDS
+    raw: dict = {}
+    # The Divanbəyi's opening line is the same on every turn and the supervisor
+    # always puts it first, so the client gets it before any model call returns.
+    yield "narration", NARRATION_OPENING
+    seen_narration = 1
+    seen_opinions = 0
+    try:
+        async with asyncio.timeout(budget or None):
+            async for mode, chunk in graph.astream(
+                {"messages": [HumanMessage(content=message)]},
+                config=_trace_config(thread_id, channel=channel, modality=modality),
+                stream_mode=["updates", "values"],
+            ):
+                if mode == "values":
+                    raw = chunk
+                    lines = chunk.get("narration", [])
+                    for line in lines[seen_narration:]:
+                        yield "narration", line
+                    seen_narration = max(seen_narration, len(lines))
+                    for opinion in chunk.get("opinions", [])[seen_opinions:]:
+                        yield "opinion", opinion
+                    seen_opinions = len(chunk.get("opinions", []))
+                elif "__interrupt__" in chunk:
+                    raw = {**raw, "__interrupt__": chunk["__interrupt__"]}
+    except TimeoutError as exc:
+        raise LLMError(f"The council did not answer within {budget:.0f}s - try again.") from exc
+    yield "result", _extract_result(raw)
 
 
 async def resume_turn(

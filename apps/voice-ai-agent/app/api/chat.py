@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, Request
 from fastapi import HTTPException
 
 from app.core.rate_limit import enforce_turn_rate_limit
-from app.graph import TurnResult, get_pending, resume_turn, run_turn
+from app.api.sse import event, sse_response
+from app.graph import TurnResult, get_pending, resume_turn, run_turn, stream_turn
 from app.graph.builder import NoPendingApproval
 from app.graph.guardrails import is_self_harm_risk
 from app.models.schemas import ChatRequest, ChatResponse, ResumeRequest
@@ -29,6 +30,20 @@ def _moderation_blocked_result() -> TurnResult:
         consulted=[],
         opinions=[],
         turn_id=uuid.uuid4().hex[:12],
+    )
+
+
+def _response(thread_id: str, result: TurnResult) -> ChatResponse:
+    return ChatResponse(
+        thread_id=thread_id,
+        reply=result.reply,
+        history_length=result.history_length,
+        status=result.status,
+        approval=result.approval,
+        consulted=result.consulted or [],
+        turn_id=result.turn_id,
+        narration=result.narration or [],
+        citations=result.citations or [],
     )
 
 
@@ -61,17 +76,7 @@ async def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
-    return ChatResponse(
-        thread_id=payload.thread_id,
-        reply=result.reply,
-        history_length=result.history_length,
-        status=result.status,
-        approval=result.approval,
-        consulted=result.consulted or [],
-        turn_id=result.turn_id,
-        narration=result.narration or [],
-        citations=result.citations or [],
-    )
+    return _response(payload.thread_id, result)
 
 
 @router.post("/chat/resume", response_model=ChatResponse)
@@ -86,14 +91,39 @@ async def chat_resume(payload: ResumeRequest, request: Request) -> ChatResponse:
     except LLMError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
-    return ChatResponse(
-        thread_id=payload.thread_id,
-        reply=result.reply,
-        history_length=result.history_length,
-        status=result.status,
-        approval=result.approval,
-        consulted=result.consulted or [],
-        turn_id=result.turn_id,
-        narration=result.narration or [],
-        citations=result.citations or [],
-    )
+    return _response(payload.thread_id, result)
+
+
+@router.post("/chat/stream", dependencies=[Depends(enforce_turn_rate_limit)])
+async def chat_stream(payload: ChatRequest, request: Request):
+    """`POST /chat`, delivered as Server-Sent Events while the council works.
+
+    Events, in order: `narration` (a Divanbəyi line, string), `opinion` (one
+    member's finished words: `{advisor, name, text}`) as each is ready, then
+    `done` carrying the exact `ChatResponse` body `POST /chat` would have
+    returned. A failure after the stream opened arrives as `error`
+    (`{"status": 503, "detail": ...}`) - the HTTP status is already 200 by then.
+    `/chat` itself is unchanged."""
+    graph = request.app.state.graph
+
+    async def frames():
+        try:
+            result = await get_pending(graph, payload.thread_id)
+            if result is None:
+                if not is_self_harm_risk(payload.message) and await is_disallowed_content(
+                    payload.message
+                ):
+                    result = _moderation_blocked_result()
+                else:
+                    async for kind, value in stream_turn(
+                        graph, payload.message, payload.thread_id, channel=_channel(request)
+                    ):
+                        if kind == "result":
+                            result = value
+                        else:
+                            yield event(kind, value)
+            yield event("done", _response(payload.thread_id, result).model_dump(mode="json"))
+        except LLMError as exc:
+            yield event("error", {"status": 503, "detail": str(exc)})
+
+    return sse_response(frames())

@@ -107,13 +107,15 @@ class _RepeatsFirstPickModel:
 
 
 @pytest.mark.asyncio
-async def test_a_repeated_pick_ends_the_council_instead_of_summoning_the_first_roster_key():
+async def test_a_repeated_pick_ends_the_council_instead_of_summoning_the_first_roster_key(monkeypatch):
     """Measured 2026-09-25: the old fallback `remaining[0]` turned every
     repeated pick into Molla Nəsrəddin (the first key) on 17 of 18 questions."""
     from langgraph.checkpoint.memory import InMemorySaver
 
+    from app.core.config import settings
     from app.graph.builder import build_graph, run_turn
 
+    monkeypatch.setattr(settings, "COUNCIL_ROUTING", "iterative")  # the router loop this guards
     model = _RepeatsFirstPickModel()
     graph = build_graph(InMemorySaver(), llm=model)
     result = await run_turn(graph, "Qardaşımla küsülüyük.", "second-voice-1")
