@@ -81,7 +81,11 @@ def render_transcript(messages: Sequence[BaseMessage]) -> tuple[str, str]:
         content = m.content if isinstance(m.content, str) else json.dumps(m.content, ensure_ascii=False)
         if isinstance(m, SystemMessage):
             system_parts.append(content)
-        elif isinstance(m, HumanMessage):
+            continue
+        # Continuation lines are indented so user text can never start a line
+        # with "Assistant:" / "User:" and forge a turn in the flat transcript.
+        content = content.replace("\r\n", "\n").replace("\n", "\n    ")
+        if isinstance(m, HumanMessage):
             lines.append(f"User: {content}")
         elif isinstance(m, AIMessage):
             lines.append(f"Assistant: {content}")

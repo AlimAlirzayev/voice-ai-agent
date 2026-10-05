@@ -26,3 +26,5 @@ jobs:
         run: pytest
       - name: Offline golden evaluation
         run: python -m app.evals.run
+      - name: Offline persona / grounding evaluation
+        run: python -m app.evals.offline

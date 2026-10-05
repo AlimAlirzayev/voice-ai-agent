@@ -39,11 +39,24 @@ _SELF_HARM_PATTERNS = (
 )
 _PATTERN = re.compile("|".join(_SELF_HARM_PATTERNS), re.IGNORECASE | re.UNICODE)
 
+# Control characters, zero-width and bidi-override characters: invisible to a
+# human reviewer, meaningless to a spoken advisor, and a way to split a keyword
+# ("inti\u200bhar") so the check below never sees it.
+_INVISIBLE = re.compile(
+    "[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]"
+)
+
+
+def sanitize_user_text(text: str) -> str:
+    """Strip invisible characters from user text before it is checked, routed
+    or stored in the checkpoint."""
+    return _INVISIBLE.sub("", text or "").strip()
+
 
 def is_self_harm_risk(text: str) -> bool:
     """Deliberately high-recall, low-precision: a false positive costs one
     honest safety message; a false negative costs far more."""
-    return bool(_PATTERN.search(text or ""))
+    return bool(_PATTERN.search(sanitize_user_text(text)))
 
 
 def crisis_response() -> str:
